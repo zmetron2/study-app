@@ -31,6 +31,7 @@ export default function PracticePage() {
   const [filteredProjects, setFilteredProjects] = useState<PracticeProject[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Filter States
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['전체']);
@@ -94,6 +95,7 @@ export default function PracticePage() {
         setIsAdmin(user.username === 'ljj');
       } catch (e) {}
     }
+    setMounted(true);
   }, []);
 
   // Filtering & Sorting Logic
@@ -159,6 +161,12 @@ export default function PracticePage() {
       setSelectedCategory([...newCats, cat]);
     }
   };
+
+  if (!mounted) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans transition-colors">
