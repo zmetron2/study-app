@@ -7,9 +7,12 @@ import Logo from './Logo';
 
 export default function Footer() {
   // Fix hydration error by using a static year or mounting check
-  const [year, setYear] = React.useState(2026);
+  const [year, setYear] = React.useState<number | null>(null);
+  const [mounted, setMounted] = React.useState(false);
+
   React.useEffect(() => {
     setYear(new Date().getFullYear());
+    setMounted(true);
   }, []);
 
   return (
@@ -25,7 +28,7 @@ export default function Footer() {
               UX디자인, 퍼블리싱, 프런트엔드 개발 지식을 공유하고<br />
               함께 성장하는 바이브 코딩 스터디 공간입니다.
             </p>
-            {process.env.NEXT_PUBLIC_BUILD_TIME && (
+            {mounted && process.env.NEXT_PUBLIC_BUILD_TIME && (
               <p className="mt-2 text-[10px] font-medium opacity-30 text-foreground tracking-wider">
                 Updated at {new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
               </p>
