@@ -521,14 +521,14 @@ function ResourceItem({
                     </table>
                   </div>
                 ),
-                thead: ({children}) => <thead className="bg-slate-100/80 dark:bg-white/10">{children}</thead>,
+                thead: ({children}) => <thead className="bg-slate-100/90 dark:bg-white/10">{children}</thead>,
                 th: ({children}) => (
-                  <th className="px-4 py-3 text-left text-[11px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest border-b border-slate-200 dark:border-white/20 border-r border-dotted border-slate-300 dark:border-white/20 last:border-r-0">
+                  <th className="px-4 py-3 text-left text-[11px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest border-b border-slate-300 dark:border-white/20 border-r border-slate-300 dark:border-white/20 last:border-r-0">
                     {children}
                   </th>
                 ),
                 td: ({children}) => (
-                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400 border-b border-slate-100/50 dark:border-white/5 last:border-b-0 border-r border-dotted border-slate-200 dark:border-white/10 last:border-r-0">
+                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400 border-b border-slate-200/60 dark:border-white/10 border-r border-slate-200/60 dark:border-white/10 last:border-r-0">
                     {children}
                   </td>
                 )
