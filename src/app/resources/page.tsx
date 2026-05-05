@@ -33,6 +33,7 @@ const CATEGORIES = [
   { label: '서버', icon: Cloud },
   { label: '도메인', icon: Shield },
   { label: '이슈', icon: Server },
+  { label: 'API', icon: Database },
   { label: '기타', icon: MoreHorizontal }
 ];
 
@@ -182,6 +183,7 @@ export default function ResourcesPage() {
     total: resources.length,
     docs: resources.filter(r => r.category === '문서/가이드').length,
     tools: resources.filter(r => r.category === '개발도구').length,
+    api: resources.filter(r => r.category === 'API').length,
     server: resources.filter(r => r.category === '서버').length,
     issues: resources.filter(r => r.category === '이슈').length
   };
@@ -232,7 +234,7 @@ export default function ResourcesPage() {
           <div className="flex-1 w-full max-w-lg">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 bg-white/50 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl border border-white dark:border-white/5 shadow-2xl shadow-indigo-500/5">
               <StatusCard icon={Folder} label="전체 자료" count={stats.total.toString()} color="text-indigo-500" />
-              <StatusCard icon={Cloud} label="서버/호스팅" count={stats.server.toString()} color="text-blue-500" />
+              <StatusCard icon={Database} label="API 명세" count={stats.api.toString()} color="text-blue-500" />
               <StatusCard icon={Server} label="이슈/해결" count={stats.issues.toString()} color="text-red-500" />
               <StatusCard icon={FileText} label="문서/가이드" count={stats.docs.toString()} color="text-emerald-500" />
             </div>
