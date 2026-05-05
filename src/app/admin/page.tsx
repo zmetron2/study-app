@@ -29,6 +29,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'inquiries' | 'students' | 'video-chat'>('inquiries');
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
+  const [usageData, setUsageData] = useState({ totalMinutes: 0, limit: 10000, percentage: '0.0' });
   const [loading, setLoading] = useState(true);
 
   // Modal State
@@ -57,8 +58,22 @@ export default function AdminDashboard() {
       fetchInquiries();
     } else if (activeTab === 'students') {
       fetchStudents();
+    } else if (activeTab === 'video-chat') {
+      fetchUsageData();
     }
   }, [activeTab]);
+
+  const fetchUsageData = async () => {
+    try {
+      const response = await fetch('/api/admin/agora-usage');
+      if (response.ok) {
+        const data = await response.json();
+        setUsageData(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch usage data:', error);
+    }
+  };
 
   const fetchInquiries = async () => {
     setLoading(true);
@@ -386,20 +401,27 @@ export default function AdminDashboard() {
               <div className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 space-y-6">
                 <div className="flex justify-between items-center">
                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Monthly Usage</h4>
-                  <span className="text-[10px] font-black text-indigo-600">65.4% Used</span>
+                  <span className={`text-[10px] font-black ${Number(usageData.percentage) > 80 ? 'text-rose-500' : 'text-indigo-600'}`}>
+                    {usageData.percentage}% Used
+                  </span>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between items-end">
-                    <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">6,540 <span className="text-sm text-slate-400 font-medium">/ 10,000 min</span></span>
+                    <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
+                      {usageData.totalMinutes.toLocaleString()} <span className="text-sm text-slate-400 font-medium">/ {usageData.limit.toLocaleString()} min</span>
+                    </span>
                   </div>
                   <div className="w-full h-2.5 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full" style={{ width: '65.4%' }} />
+                    <div 
+                      className={`h-full rounded-full transition-all duration-1000 ${Number(usageData.percentage) > 80 ? 'bg-rose-500' : 'bg-gradient-to-r from-indigo-500 to-indigo-600'}`} 
+                      style={{ width: `${usageData.percentage}%` }} 
+                    />
                   </div>
                 </div>
 
                 <div className="pt-2 flex items-center gap-2 text-[9px] font-bold text-slate-400 italic leading-tight">
-                  <Clock size={10} /> 실시간 사용량은 Agora API 연동 후 표시됩니다.
+                  <Clock size={10} /> 실시간 Agora 사용량이 동기화되었습니다.
                 </div>
               </div>
             </div>
