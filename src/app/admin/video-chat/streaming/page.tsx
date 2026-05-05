@@ -361,7 +361,7 @@ export default function StreamingHostPage() {
       </header>
 
       {/* Main Broadcast Area */}
-      <main className="flex-1 p-8 grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-[1600px] mx-auto w-full">
+      <main className="flex-1 p-8 grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-[1600px] mx-auto w-full min-h-[800px]">
         {/* Main Feed */}
         <div className="lg:col-span-3 flex flex-col gap-6">
           <div id="streaming-container" className="flex-1 bg-black rounded-[4px] border border-white/5 overflow-hidden shadow-2xl relative">

@@ -349,8 +349,8 @@ export default function OneToOneVideoChat() {
       </header>
 
       {/* Main Video Area */}
-      <main className="flex-1 relative p-6 max-w-7xl mx-auto w-full z-10 h-[calc(100vh-140px)]">
-        <div className="w-full h-full bg-slate-900 rounded-[4px] border border-white/5 overflow-hidden shadow-2xl relative">
+      <main className="flex-1 relative p-6 max-w-7xl mx-auto w-full z-10 min-h-[700px] flex flex-col">
+        <div className="flex-1 bg-slate-900 rounded-[4px] border border-white/5 overflow-hidden shadow-2xl relative">
           
           {/* 1. Main View (Full Container) */}
           <div className="w-full h-full relative group">
