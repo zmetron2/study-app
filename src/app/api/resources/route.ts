@@ -64,3 +64,61 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: 'Failed to add resource' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    const { env } = getRequestContext();
+    const db = env.DB;
+
+    if (!id || !db) {
+      return NextResponse.json({ success: false, error: 'ID and DB required' }, { status: 400 });
+    }
+
+    await db.prepare('DELETE FROM vibe_resources WHERE id = ?').bind(id).run();
+    return NextResponse.json({ success: true, message: 'Resource deleted' });
+  } catch (error) {
+    console.error('Resources DELETE Error:', error);
+    return NextResponse.json({ success: false, error: 'Failed to delete resource' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json() as { 
+      id: number;
+      title: string; 
+      description: string; 
+      url: string; 
+      category: string; 
+      tags: string; 
+      provider: string; 
+      icon_text: string;
+    };
+    const { env } = getRequestContext();
+    const db = env.DB;
+
+    if (!body.id || !db) {
+      return NextResponse.json({ success: false, error: 'ID and DB required' }, { status: 400 });
+    }
+
+    await db.prepare(
+      'UPDATE vibe_resources SET title = ?, description = ?, url = ?, category = ?, tags = ?, provider = ?, icon_text = ? WHERE id = ?'
+    ).bind(
+      body.title, 
+      body.description, 
+      body.url, 
+      body.category, 
+      body.tags, 
+      body.provider, 
+      body.icon_text,
+      body.id
+    ).run();
+
+    return NextResponse.json({ success: true, message: 'Resource updated' });
+  } catch (error) {
+    console.error('Resources PUT Error:', error);
+    return NextResponse.json({ success: false, error: 'Failed to update resource' }, { status: 500 });
+  }
+}

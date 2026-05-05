@@ -6,7 +6,7 @@ import {
   ChevronDown, Star, 
   MoreHorizontal, 
   FileText, Globe, Video, ChevronLeft, ChevronRight, Layout, Search, X, MessageSquare, Plus, Link as LinkIcon,
-  Server, Globe2, Shield, ExternalLink, ChevronUp, Folder, Terminal, Database, Palette, Cloud, Heart
+  Server, Globe2, Shield, ExternalLink, ChevronUp, Folder, Terminal, Database, Palette, Cloud, Bookmark, Edit3, Trash2
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -94,10 +94,17 @@ export default function ResourcesPage() {
   const [activeCategory, setActiveCategory] = useState('전체');
   const [searchQuery, setSearchQuery] = useState('');
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+  const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr) as { role: string };
+      setIsAdmin(user.role === 'admin');
+    }
   }, []);
 
   const fetchResources = useCallback(async () => {
@@ -155,6 +162,27 @@ export default function ResourcesPage() {
     }
     setFilteredResources(result);
   }, [resources, activeCategory, searchQuery]);
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('정말 이 자료를 삭제하시겠습니까?')) return;
+    
+    try {
+      const res = await fetch(`/api/resources?id=${id}`, { method: 'DELETE' });
+      const data = await res.json() as { success: boolean };
+      if (data.success) {
+        alert('삭제되었습니다.');
+        fetchResources();
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleEdit = (resource: Resource) => {
+    setEditingResource(resource);
+    setIsProposalModalOpen(true);
+  };
 
   const stats = {
     total: resources.length,
@@ -279,7 +307,13 @@ export default function ResourcesPage() {
           ) : filteredResources.length > 0 ? (
             <div className="grid grid-cols-1 gap-6">
               {filteredResources.map((resource) => (
-                <ResourceItem key={resource.id} resource={resource} />
+                <ResourceItem 
+                  key={resource.id} 
+                  resource={resource} 
+                  isAdmin={isAdmin}
+                  onEdit={() => handleEdit(resource)}
+                  onDelete={() => handleDelete(resource.id)}
+                />
               ))}
             </div>
           ) : (
@@ -304,8 +338,15 @@ export default function ResourcesPage() {
       {/* --- Proposal Modal --- */}
       {isProposalModalOpen && (
         <ResourceProposalModal 
-          onClose={() => setIsProposalModalOpen(false)} 
-          onSuccess={fetchResources}
+          onClose={() => {
+            setIsProposalModalOpen(false);
+            setEditingResource(null);
+          }} 
+          onSuccess={() => {
+            fetchResources();
+            setEditingResource(null);
+          }}
+          editData={editingResource}
         />
       )}
     </div>
@@ -342,7 +383,17 @@ function CategoryItem({ label, count, icon: Icon, active, onClick }: { label: st
   );
 }
 
-function ResourceItem({ resource }: { resource: Resource }) {
+function ResourceItem({ 
+  resource, 
+  isAdmin, 
+  onEdit, 
+  onDelete 
+}: { 
+  resource: Resource, 
+  isAdmin: boolean,
+  onEdit: () => void,
+  onDelete: () => void
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const preview = parseMarkdownPreview(resource.description);
 
@@ -383,11 +434,29 @@ function ResourceItem({ resource }: { resource: Resource }) {
         <div className="shrink-0 flex md:flex-col justify-between items-end md:justify-center border-t md:border-t-0 md:border-l border-slate-50 dark:border-white/5 pt-4 md:pt-0 md:pl-5 gap-3">
           <div className="flex flex-col items-end gap-2 w-full">
             <div className="flex items-center justify-between w-full md:w-auto md:justify-end gap-3">
+              {isAdmin && (
+                <div className="flex items-center gap-1">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors"
+                    title="수정"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                    className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+                    title="삭제"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
               <button 
-                onClick={(e) => { e.stopPropagation(); /* Favorite Toggle */ }}
-                className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-colors active:scale-95"
+                onClick={(e) => { e.stopPropagation(); /* Bookmark Toggle */ }}
+                className="p-1.5 text-slate-300 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-full transition-colors active:scale-95"
               >
-                <Heart className="w-4 h-4" />
+                <Bookmark className="w-4 h-4" />
               </button>
               <div className="flex items-center gap-1.5 text-sm text-yellow-500 font-black">
                 <Star className="w-3.5 h-3.5 fill-yellow-500" /> {resource.rating}
@@ -451,8 +520,24 @@ function TabItem({ label, active }: { label: string, active?: boolean }) {
   );
 }
 
-function ResourceProposalModal({ onClose, onSuccess }: { onClose: () => void, onSuccess: () => void }) {
-  const [formData, setFormData] = useState({ title: '', url: '', description: '', category: '개발도구', tags: '', provider: '', icon_text: '' });
+function ResourceProposalModal({ 
+  onClose, 
+  onSuccess, 
+  editData 
+}: { 
+  onClose: () => void, 
+  onSuccess: () => void,
+  editData?: Resource | null
+}) {
+  const [formData, setFormData] = useState({ 
+    title: editData?.title || '', 
+    url: editData?.url || '', 
+    description: editData?.description || '', 
+    category: editData?.category || '개발도구', 
+    tags: editData?.tags || '', 
+    provider: editData?.provider || '', 
+    icon_text: editData?.icon_text || '' 
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
@@ -463,30 +548,30 @@ function ResourceProposalModal({ onClose, onSuccess }: { onClose: () => void, on
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/resources', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const method = editData ? 'PUT' : 'POST';
+      const bodyData = editData 
+        ? { ...formData, id: editData.id }
+        : {
           ...formData,
           rating: 4.5,
-          icon_text: formData.title.substring(0, 3).toUpperCase()
-        })
+          icon_text: formData.icon_text || formData.title.substring(0, 3).toUpperCase()
+        };
+
+      const res = await fetch('/api/resources', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyData)
       });
-      const data = await res.json() as { success: boolean, message?: string, data?: any };
+      const data = await res.json() as { success: boolean, message?: string };
       
       if (data.success) {
-        if (data.message?.includes('Mock')) {
-          const localData = localStorage.getItem('local_vibe_resources');
-          const currentResources = localData ? JSON.parse(localData) as Resource[] : DEFAULT_RESOURCES;
-          const newResource = { ...formData, id: Date.now(), rating: 4.5, icon_text: formData.title.substring(0, 3).toUpperCase(), created_at: new Date().toISOString() };
-          localStorage.setItem('local_vibe_resources', JSON.stringify([newResource, ...currentResources]));
-        }
-        alert('소중한 자료 추천 감사합니다!');
+        alert(editData ? '자료가 수정되었습니다.' : '소중한 자료 추천 감사합니다!');
         onSuccess();
         onClose();
       }
     } catch (e) {
       console.error(e);
+      alert('처리 중 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -498,7 +583,9 @@ function ResourceProposalModal({ onClose, onSuccess }: { onClose: () => void, on
       <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-8 space-y-6">
           <div className="flex justify-between items-center">
-            <div className="bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Propose Asset</div>
+            <div className="bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">
+              {editData ? 'Edit Asset' : 'Propose Asset'}
+            </div>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full transition-colors">
               <X className="w-5 h-5 text-slate-400" />
             </button>
@@ -506,9 +593,11 @@ function ResourceProposalModal({ onClose, onSuccess }: { onClose: () => void, on
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">자료 제안하기</h3>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
+                {editData ? '자료 수정하기' : '자료 제안하기'}
+              </h3>
               <p className="text-slate-500 dark:text-slate-400 text-xs font-medium leading-relaxed">
-                스터디원들과 함께 공유하고 싶은<br />훌륭한 기술 자료나 사이트를 알려주세요!
+                {editData ? '자료의 정보를 최신 상태로 업데이트합니다.' : '스터디원들과 함께 공유하고 싶은 훌륭한 기술 자료나 사이트를 알려주세요!'}
               </p>
             </div>
             
@@ -562,23 +651,34 @@ function ResourceProposalModal({ onClose, onSuccess }: { onClose: () => void, on
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">태그 (쉼표 구분)</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">아이콘 텍스트</label>
                   <input 
                     type="text" 
-                    value={formData.tags}
-                    onChange={(e) => setFormData({...formData, tags: e.target.value})}
-                    placeholder="React, Frontend" 
+                    value={formData.icon_text}
+                    onChange={(e) => setFormData({...formData, icon_text: e.target.value})}
+                    placeholder="예: REA" 
+                    maxLength={4}
                     className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white"
                   />
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">추천 사유</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">태그 (쉼표 구분)</label>
+                <input 
+                  type="text" 
+                  value={formData.tags}
+                  onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                  placeholder="React, Frontend" 
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">상세 내용 (마크다운 지원)</label>
                 <textarea 
-                  rows={2}
+                  rows={4}
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="이 자료가 왜 도움이 되는지 짧게 적어주세요." 
+                  placeholder="자료에 대한 상세 설명이나 유용한 정보를 마크다운 형식으로 작성해주세요." 
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white resize-none"
                 />
               </div>
@@ -591,7 +691,7 @@ function ResourceProposalModal({ onClose, onSuccess }: { onClose: () => void, on
               disabled={isSubmitting}
               className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl font-black transition-all shadow-xl shadow-indigo-600/25 active:scale-[0.98] disabled:opacity-50"
             >
-              {isSubmitting ? '제출 중...' : '추천 제안 제출하기'}
+              {isSubmitting ? '처리 중...' : (editData ? '수정 완료하기' : '추천 제안 제출하기')}
             </button>
           </div>
         </div>
