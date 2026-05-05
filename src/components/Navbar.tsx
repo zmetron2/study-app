@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sun, Moon, Search, Menu, X, ArrowRight, User, LogOut, Settings, ChevronDown, UserCircle, Shield } from 'lucide-react';
+import { Sun, Moon, Search, Menu, X, ArrowRight, User, LogOut, Settings, ChevronDown, UserCircle, Shield, Video } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Navbar() {
