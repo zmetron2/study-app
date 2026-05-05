@@ -372,13 +372,35 @@ export default function AdminDashboard() {
               </div>
             </div>
             
-            <div className="mt-12 p-8 bg-indigo-50 dark:bg-indigo-500/5 rounded-3xl border border-indigo-100 dark:border-indigo-500/10 flex items-center gap-6">
-              <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
-                <CheckCircle2 size={24} />
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 p-8 bg-indigo-50 dark:bg-indigo-500/5 rounded-3xl border border-indigo-100 dark:border-indigo-500/10 flex items-center gap-8 shadow-inner">
+                <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
+                  <CheckCircle2 size={32} />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-black text-slate-800 dark:text-white mb-1">Agora Infrastructure Ready</h4>
+                  <p className="text-[11px] text-slate-500 font-medium">매월 10,000분 무료 통화가 제공되는 Agora SDK가 활성화되어 있습니다.</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="text-sm font-black text-slate-800 dark:text-white mb-1">Agora Infrastructure Ready</h4>
-                <p className="text-[11px] text-slate-500 font-medium">매월 10,000분 무료 통화가 제공되는 Agora SDK가 활성화되어 있습니다.</p>
+
+              <div className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 space-y-6">
+                <div className="flex justify-between items-center">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Monthly Usage</h4>
+                  <span className="text-[10px] font-black text-indigo-600">65.4% Used</span>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-end">
+                    <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">6,540 <span className="text-sm text-slate-400 font-medium">/ 10,000 min</span></span>
+                  </div>
+                  <div className="w-full h-2.5 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full" style={{ width: '65.4%' }} />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center gap-2 text-[9px] font-bold text-slate-400 italic leading-tight">
+                  <Clock size={10} /> 실시간 사용량은 Agora API 연동 후 표시됩니다.
+                </div>
               </div>
             </div>
           </div>
