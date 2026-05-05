@@ -25,6 +25,12 @@ interface Student {
   joined_at: string;
 }
 
+interface AgoraUsage {
+  totalMinutes: number;
+  limit: number;
+  percentage: string;
+}
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'inquiries' | 'students' | 'video-chat'>('inquiries');
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
@@ -67,7 +73,7 @@ export default function AdminDashboard() {
     try {
       const response = await fetch('/api/admin/agora-usage');
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as AgoraUsage;
         setUsageData(data);
       }
     } catch (error) {
@@ -175,10 +181,10 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2">관리자 대쉬보드</h1>
             <p className="text-slate-500 font-medium">플랫폼의 데이터를 통합 관리합니다.</p>
           </div>
-          <div className="flex bg-white dark:bg-slate-900 rounded-xl p-1 shadow-sm border border-slate-200 dark:border-white/5">
+          <div className="flex bg-white dark:bg-slate-900 rounded-[4px] p-1 shadow-sm border border-slate-200 dark:border-white/5">
             <button
               onClick={() => setActiveTab('inquiries')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'inquiries' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-[4px] text-sm font-bold transition-all ${activeTab === 'inquiries' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5'}`}
             >
               <MessageSquare size={16} /> 문의하기 관리
             </button>
@@ -198,7 +204,7 @@ export default function AdminDashboard() {
         </div>
 
         {activeTab === 'inquiries' && (
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 overflow-hidden animate-in fade-in duration-300">
+          <div className="bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 overflow-hidden animate-in fade-in duration-300">
             <div className="p-6 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30">
               <h2 className="text-lg font-black text-slate-800 dark:text-white">최근 접수된 문의</h2>
               <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-black">총 {inquiries.length}건</span>
@@ -221,7 +227,7 @@ export default function AdminDashboard() {
                             {inq.status === 'pending' ? '답변대기' : '답변완료'}
                           </span>
                         </div>
-                        <div className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-white/5 p-4 rounded-xl whitespace-pre-wrap">
+                        <div className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-white/5 p-4 rounded-[4px] whitespace-pre-wrap">
                           {inq.message}
                         </div>
                         <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -232,7 +238,7 @@ export default function AdminDashboard() {
                       
                       <div className="flex lg:flex-col gap-2 shrink-0">
                         {inq.status === 'pending' ? (
-                          <button onClick={() => updateStatus(inq.id, 'completed')} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-lg transition-colors flex items-center justify-center gap-2">
+                          <button onClick={() => updateStatus(inq.id, 'completed')} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-[4px] transition-colors flex items-center justify-center gap-2">
                             <CheckCircle2 size={14} /> 답변완료 처리
                           </button>
                         ) : (
@@ -250,7 +256,7 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === 'students' && (
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 overflow-hidden animate-in fade-in duration-300">
+          <div className="bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 overflow-hidden animate-in fade-in duration-300">
             <div className="p-6 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30">
               <div className="flex items-center gap-4">
                 <h2 className="text-lg font-black text-slate-800 dark:text-white">교육생 명단</h2>
@@ -258,7 +264,7 @@ export default function AdminDashboard() {
               </div>
               <button 
                 onClick={() => handleOpenModal()}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition-all shadow-lg shadow-indigo-600/20 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[4px] text-xs font-black transition-all shadow-lg shadow-indigo-600/20 active:scale-95"
               >
                 <Plus size={16} /> 교육생 등록
               </button>
@@ -319,7 +325,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-5 text-right">
                           <button 
                             onClick={() => handleOpenModal(student)}
-                            className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg transition-all text-slate-400"
+                            className="p-2 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-[4px] transition-all text-slate-400"
                           >
                             <MoreHorizontal size={18} />
                           </button>
@@ -339,13 +345,13 @@ export default function AdminDashboard() {
               {/* 1:1 Video Chat Option */}
               <div 
                 onClick={() => window.location.href = '/admin/video-chat/one-to-one'}
-                className="group relative bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-white/5 p-10 shadow-xl shadow-indigo-500/5 cursor-pointer hover:border-indigo-500 transition-all hover:shadow-indigo-500/10 overflow-hidden"
+                className="group relative bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 p-10 shadow-xl shadow-indigo-500/5 cursor-pointer hover:border-indigo-500 transition-all hover:shadow-indigo-500/10 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
                   <Monitor className="w-40 h-40" />
                 </div>
                 <div className="relative z-10 space-y-6">
-                  <div className="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 bg-indigo-600 rounded-[4px] flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
                     <Monitor size={32} />
                   </div>
                   <div>
@@ -364,13 +370,13 @@ export default function AdminDashboard() {
               {/* 1-Person Streaming Option */}
               <div 
                 onClick={() => window.location.href = '/admin/video-chat/streaming'}
-                className="group relative bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-white/5 p-10 shadow-xl shadow-indigo-500/5 cursor-pointer hover:border-rose-500 transition-all hover:shadow-rose-500/10 overflow-hidden"
+                className="group relative bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 p-10 shadow-xl shadow-indigo-500/5 cursor-pointer hover:border-rose-500 transition-all hover:shadow-rose-500/10 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
                   <Radio className="w-40 h-40" />
                 </div>
                 <div className="relative z-10 space-y-6">
-                  <div className="w-16 h-16 bg-rose-500 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-rose-500/20 group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 bg-rose-500 rounded-[4px] flex items-center justify-center text-white shadow-lg shadow-rose-500/20 group-hover:scale-110 transition-transform">
                     <Radio size={32} />
                   </div>
                   <div>
@@ -388,8 +394,8 @@ export default function AdminDashboard() {
             </div>
             
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2 p-8 bg-indigo-50 dark:bg-indigo-500/5 rounded-3xl border border-indigo-100 dark:border-indigo-500/10 flex items-center gap-8 shadow-inner">
-                <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
+              <div className="md:col-span-2 p-8 bg-indigo-50 dark:bg-indigo-500/5 rounded-[4px] border border-indigo-100 dark:border-indigo-500/10 flex items-center gap-8 shadow-inner">
+                <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-[4px] flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
                   <CheckCircle2 size={32} />
                 </div>
                 <div className="flex-1">
@@ -398,7 +404,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 space-y-6">
+              <div className="p-8 bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 space-y-6">
                 <div className="flex justify-between items-center">
                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Monthly Usage</h4>
                   <span className={`text-[10px] font-black ${Number(usageData.percentage) > 80 ? 'text-rose-500' : 'text-indigo-600'}`}>
@@ -435,11 +441,11 @@ export default function AdminDashboard() {
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setIsModalOpen(false)}></div>
           <form 
             onSubmit={handleModalSubmit}
-            className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[2.5rem] w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+            className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
           >
             <div className="p-8 border-b border-slate-100 dark:border-white/5 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
+                <div className="w-12 h-12 bg-indigo-600 rounded-[4px] flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
                   <Users size={24} />
                 </div>
                 <div>
@@ -462,7 +468,7 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">이름</label>
-                  <input required value={modalData.name} onChange={e => setModalData({...modalData, name: e.target.value})} type="text" placeholder="성함 입력" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                  <input required value={modalData.name} onChange={e => setModalData({...modalData, name: e.target.value})} type="text" placeholder="성함 입력" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">전화번호</label>
@@ -497,7 +503,7 @@ export default function AdminDashboard() {
               
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">관리자 메모</label>
-                <textarea value={modalData.memo} onChange={e => setModalData({...modalData, memo: e.target.value})} placeholder="교육생에 대한 참고사항을 입력해 주세요." rows={3} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold resize-none"></textarea>
+                <textarea value={modalData.memo} onChange={e => setModalData({...modalData, memo: e.target.value})} placeholder="교육생에 대한 참고사항을 입력해 주세요." rows={3} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold resize-none"></textarea>
               </div>
             </div>
             
@@ -505,7 +511,7 @@ export default function AdminDashboard() {
               <button 
                 type="button" 
                 onClick={() => setIsModalOpen(false)}
-                className="flex-1 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 rounded-2xl text-sm font-black hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
+                className="flex-1 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 rounded-[4px] text-sm font-black hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
               >
                 취소
               </button>
