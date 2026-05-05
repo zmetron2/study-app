@@ -6,7 +6,11 @@ import { ChevronUp } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  // Fix hydration error by using a static year or mounting check
+  const [year, setYear] = React.useState(2026);
+  React.useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="bg-slate-50 dark:bg-slate-900/50 border-t border-border pt-16 pb-8">
@@ -47,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-6">
-          <p className="text-xs opacity-40 font-medium text-foreground">© {currentYear} 엘쯔의 바이브코딩. All rights reserved.</p>
+          <p className="text-xs opacity-40 font-medium text-foreground">© {year} 엘쯔의 바이브코딩. All rights reserved.</p>
           <button
             className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-border shadow-sm flex items-center justify-center text-foreground hover:border-primary hover:text-primary transition-all group"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

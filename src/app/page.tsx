@@ -10,9 +10,13 @@ import {
 } from 'lucide-react';
 
 export default function HomePage() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(2026);
   const [activeIndex, setActiveIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(true);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   const practiceHighlights = [
     {

@@ -15,8 +15,13 @@ export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState<{ username: string; role: string } | null>(null);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     if (mounted) {
+      const loginStatus = localStorage.getItem('isLoggedIn') === 'true';
+      setIsLoggedIn(loginStatus);
+      
       const savedUser = localStorage.getItem('user');
       if (savedUser) {
         setUser(JSON.parse(savedUser));
@@ -133,7 +138,7 @@ export default function Navbar() {
             </button>
 
             {mounted && (
-              localStorage.getItem('isLoggedIn') === 'true' ? (
+              isLoggedIn ? (
                 <div className="relative profile-container">
                   <button 
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -206,7 +211,7 @@ export default function Navbar() {
         {/* Mobile Slide-down Menu */}
         {isMobileMenuOpen && (
           <div className="min-[701px]:hidden bg-background border-b border-border absolute w-full top-16 left-0 z-[60] p-6 flex flex-col gap-4 shadow-xl animate-in slide-in-from-top duration-200">
-            {mounted && localStorage.getItem('isLoggedIn') === 'true' && (
+            {mounted && isLoggedIn && (
               <Link
                 href="/mypage"
                 onClick={() => setIsMobileMenuOpen(false)}
