@@ -168,6 +168,15 @@ export default function Navbar() {
                       <Link href="/admin" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                         <Shield size={18} /> 관리자 대쉬보드
                       </Link>
+                      <button 
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          window.location.href = '/admin?tab=video-chat';
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-left"
+                      >
+                        <Video size={18} /> 화상채팅 관리
+                      </button>
                       <Link href="/profile/edit" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                         <Settings size={18} /> 프로필 수정
                       </Link>

@@ -44,9 +44,18 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
+    // URL 파라미터로 탭 자동 선택
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab === 'video-chat') {
+      setActiveTab('video-chat');
+    }
+  }, []);
+
+  useEffect(() => {
     if (activeTab === 'inquiries') {
       fetchInquiries();
-    } else {
+    } else if (activeTab === 'students') {
       fetchStudents();
     }
   }, [activeTab]);
