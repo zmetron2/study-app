@@ -116,21 +116,18 @@ export default function ResourcesPage() {
       if (data.success) {
         let allResources = data.data;
         
-        // Merge with defaults to ensure core guides are always available
-        // Avoid duplicates by checking titles
-        const dbTitles = new Set(allResources.map(r => r.title));
-        const missingDefaults = DEFAULT_RESOURCES.filter(r => !dbTitles.has(r.title));
+        // Only use defaults if DB is empty and not in Mock mode
+        if (allResources.length === 0 && !data.message?.includes('Mock')) {
+          allResources = DEFAULT_RESOURCES;
+        }
         
-        allResources = [...allResources, ...missingDefaults];
-        
-        // Handle local storage for Mock mode (if needed)
+        // Handle local storage for Mock mode
         if (data.message?.includes('Mock')) {
           const localData = localStorage.getItem('local_vibe_resources');
           if (localData) {
-            const localResources = JSON.parse(localData) as Resource[];
-            const currentTitles = new Set(allResources.map(r => r.title));
-            const newLocal = localResources.filter(r => !currentTitles.has(r.title));
-            allResources = [...allResources, ...newLocal];
+            allResources = JSON.parse(localData) as Resource[];
+          } else {
+            allResources = DEFAULT_RESOURCES;
           }
         }
         
