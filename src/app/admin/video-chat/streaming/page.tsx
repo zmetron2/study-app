@@ -1,8 +1,14 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import type { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { Camera, CameraOff, Mic, MicOff, Radio, Settings, Power, Users, Clock, Share2 } from 'lucide-react';
+
+// Agora SDK는 클라이언트 사이드에서만 로드되어야 합니다.
+let AgoraRTC: any;
+if (typeof window !== 'undefined') {
+  AgoraRTC = require('agora-rtc-sdk-ng');
+}
 
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || '';
 const CHANNEL = 'vibe-streaming-room';
