@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import type { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
-import { Camera, CameraOff, Mic, MicOff, PhoneOff, Settings, Users, ShieldCheck } from 'lucide-react';
+import { Camera, CameraOff, Mic, MicOff, PhoneOff, Settings, Users, ShieldCheck, Plus } from 'lucide-react';
 
 // Agora SDK는 클라이언트 사이드에서만 로드되어야 합니다.
 let AgoraRTC: any;
