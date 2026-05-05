@@ -538,8 +538,8 @@ function ResourceProposalModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!formData.title || !formData.url) {
-      alert('자료 명칭과 URL은 필수입니다.');
+    if (!formData.title) {
+      alert('자료 명칭은 필수입니다.');
       return;
     }
 
@@ -577,7 +577,7 @@ function ResourceProposalModal({
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-8 space-y-6">
           <div className="flex justify-between items-center">
             <div className="bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">
@@ -598,7 +598,7 @@ function ResourceProposalModal({
               </p>
             </div>
             
-            <div className="space-y-4 pt-2 max-h-[400px] overflow-y-auto px-1 custom-scrollbar">
+            <div className="space-y-4 pt-2 max-h-[70vh] overflow-y-auto px-1 custom-scrollbar">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">자료 명칭</label>
