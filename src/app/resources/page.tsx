@@ -108,15 +108,25 @@ export default function ResourcesPage() {
       
       if (data.success) {
         let allResources = data.data;
+        
+        // Merge with defaults to ensure core guides are always available
+        // Avoid duplicates by checking titles
+        const dbTitles = new Set(allResources.map(r => r.title));
+        const missingDefaults = DEFAULT_RESOURCES.filter(r => !dbTitles.has(r.title));
+        
+        allResources = [...allResources, ...missingDefaults];
+        
+        // Handle local storage for Mock mode (if needed)
         if (data.message?.includes('Mock')) {
           const localData = localStorage.getItem('local_vibe_resources');
           if (localData) {
-            allResources = JSON.parse(localData) as Resource[];
-          } else {
-            allResources = DEFAULT_RESOURCES;
-            localStorage.setItem('local_vibe_resources', JSON.stringify(DEFAULT_RESOURCES));
+            const localResources = JSON.parse(localData) as Resource[];
+            const currentTitles = new Set(allResources.map(r => r.title));
+            const newLocal = localResources.filter(r => !currentTitles.has(r.title));
+            allResources = [...allResources, ...newLocal];
           }
         }
+        
         setResources(allResources);
       }
     } catch (error) {
