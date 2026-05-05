@@ -380,6 +380,37 @@ function CategoryItem({ label, count, icon: Icon, active, onClick }: { label: st
   );
 }
 
+function CustomCodeBlock({ children, className, inline, ...props }: any) {
+  const [copied, setCopied] = useState(false);
+  const code = String(children).replace(/\n$/, '');
+
+  if (inline) {
+    return <code className="bg-slate-200 dark:bg-white/10 px-1.5 py-0.5 rounded text-indigo-600 dark:text-indigo-400 font-mono text-[12px]" {...props}>{children}</code>;
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative group my-6">
+      <div className="absolute right-3 top-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button 
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-lg text-[10px] font-black text-white transition-all active:scale-95"
+        >
+          {copied ? 'COPIED!' : 'COPY'}
+        </button>
+      </div>
+      <pre className="bg-slate-950 text-slate-200 p-6 rounded-2xl overflow-x-auto font-mono text-[13px] leading-relaxed border border-white/5 shadow-2xl custom-scrollbar">
+        <code className={className} {...props}>{children}</code>
+      </pre>
+    </div>
+  );
+}
+
 function ResourceItem({ 
   resource, 
   isAdmin, 
@@ -481,8 +512,26 @@ function ResourceItem({
                 li: ({node, ...props}) => <li className="pl-1" {...props} />,
                 a: ({node, ...props}) => <a className="text-indigo-600 hover:underline font-bold" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} {...props} />,
                 strong: ({node, ...props}) => <strong className="font-black text-slate-800 dark:text-slate-200" {...props} />,
-                code: ({node, ...props}) => <code className="bg-slate-200 dark:bg-white/10 px-1.5 py-0.5 rounded text-indigo-600 dark:text-indigo-400 font-mono text-[12px]" {...props} />,
-                hr: ({node, ...props}) => <hr className="my-8 border-slate-200 dark:border-white/10" {...props} />
+                code: CustomCodeBlock,
+                hr: ({node, ...props}) => <hr className="my-8 border-slate-200 dark:border-white/10" {...props} />,
+                table: ({children}) => (
+                  <div className="overflow-x-auto my-8 px-1">
+                    <table className="w-full border-collapse border-t-2 border-b-2 border-slate-200/50 dark:border-white/10 border-l-0 border-r-0">
+                      {children}
+                    </table>
+                  </div>
+                ),
+                thead: ({children}) => <thead className="bg-slate-50/50 dark:bg-white/5">{children}</thead>,
+                th: ({children}) => (
+                  <th className="px-4 py-3 text-left text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200/50 dark:border-white/10 border-r border-dotted last:border-r-0">
+                    {children}
+                  </th>
+                ),
+                td: ({children}) => (
+                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400 border-b border-slate-100/50 dark:border-white/5 last:border-b-0 border-r border-dotted last:border-r-0">
+                    {children}
+                  </td>
+                )
               }}
             >
               {resource.description}
