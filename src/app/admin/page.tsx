@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save } from 'lucide-react';
+import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio } from 'lucide-react';
 
 interface Inquiry {
   id: number;
@@ -26,7 +26,7 @@ interface Student {
 }
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'inquiries' | 'students'>('inquiries');
+  const [activeTab, setActiveTab] = useState<'inquiries' | 'students' | 'video-chat'>('inquiries');
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -164,6 +164,12 @@ export default function AdminDashboard() {
             >
               <Users size={16} /> 교육생 관리
             </button>
+            <button
+              onClick={() => setActiveTab('video-chat')}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'video-chat' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+            >
+              <Video size={16} /> 화상채팅 관리
+            </button>
           </div>
         </div>
 
@@ -300,6 +306,72 @@ export default function AdminDashboard() {
                 </table>
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'video-chat' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* 1:1 Video Chat Option */}
+              <div 
+                onClick={() => window.location.href = '/admin/video-chat/one-to-one'}
+                className="group relative bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-white/5 p-10 shadow-xl shadow-indigo-500/5 cursor-pointer hover:border-indigo-500 transition-all hover:shadow-indigo-500/10 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                  <Monitor className="w-40 h-40" />
+                </div>
+                <div className="relative z-10 space-y-6">
+                  <div className="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
+                    <Monitor size={32} />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight mb-2">1:1 화상 채팅</h3>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      학생과 실시간으로 마주보며<br />
+                      심층적인 학습 상담을 진행합니다.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-sm font-black uppercase tracking-widest pt-2">
+                    Start Session <Plus size={16} />
+                  </div>
+                </div>
+              </div>
+
+              {/* 1-Person Streaming Option */}
+              <div 
+                onClick={() => window.location.href = '/admin/video-chat/streaming'}
+                className="group relative bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-white/5 p-10 shadow-xl shadow-indigo-500/5 cursor-pointer hover:border-rose-500 transition-all hover:shadow-rose-500/10 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                  <Radio className="w-40 h-40" />
+                </div>
+                <div className="relative z-10 space-y-6">
+                  <div className="w-16 h-16 bg-rose-500 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-rose-500/20 group-hover:scale-110 transition-transform">
+                    <Radio size={32} />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight mb-2">1인 라이브 스트리밍</h3>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      다수의 학생들에게 화면과 음성을<br />
+                      동시에 송출하는 강의용 모드입니다.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 text-rose-500 text-sm font-black uppercase tracking-widest pt-2">
+                    Go Live <Radio size={16} className="animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-12 p-8 bg-indigo-50 dark:bg-indigo-500/5 rounded-3xl border border-indigo-100 dark:border-indigo-500/10 flex items-center gap-6">
+              <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                <CheckCircle2 size={24} />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-black text-slate-800 dark:text-white mb-1">Agora Infrastructure Ready</h4>
+                <p className="text-[11px] text-slate-500 font-medium">매월 10,000분 무료 통화가 제공되는 Agora SDK가 활성화되어 있습니다.</p>
+              </div>
+            </div>
           </div>
         )}
       </div>

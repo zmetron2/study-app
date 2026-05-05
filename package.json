@@ -13,6 +13,7 @@
     "pages:deploy": "npx @cloudflare/next-on-pages && npx wrangler pages deploy .vercel/output"
   },
   "dependencies": {
+    "agora-rtc-sdk-ng": "^4.24.3",
     "lucide-react": "^0.473.0",
     "next": "15.1.0",
     "react": "19.0.0",
