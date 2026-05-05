@@ -15,6 +15,8 @@ const CHANNEL = 'vibe-consulting';
 const TOKEN = null; // 테스트용 (App ID 보안 설정이 'Testing'일 때 가능)
 
 export default function OneToOneVideoChat() {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [password, setPassword] = useState('');
   const [joined, setJoined] = useState(false);
   const [localVideoTrack, setLocalVideoTrack] = useState<ICameraVideoTrack | null>(null);
   const [localAudioTrack, setLocalAudioTrack] = useState<IMicrophoneAudioTrack | null>(null);
@@ -24,6 +26,16 @@ export default function OneToOneVideoChat() {
   
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const localVideoRef = useRef<HTMLDivElement>(null);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === '7777') {
+      setIsAuthorized(true);
+    } else {
+      alert('비밀번호가 일치하지 않습니다.');
+      setPassword('');
+    }
+  };
 
   useEffect(() => {
     if (!APP_ID) return;
@@ -123,6 +135,54 @@ export default function OneToOneVideoChat() {
             className="w-full py-4 bg-white/10 hover:bg-white/20 text-white rounded-2xl text-sm font-black transition-all"
           >
             대시보드로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center p-6 font-sans relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] -z-10" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rose-500/10 rounded-full blur-[120px] -z-10" />
+
+        <div className="max-w-md w-full space-y-8 animate-in fade-in zoom-in duration-500 relative z-10">
+          <div className="text-center space-y-4">
+            <div className="w-20 h-20 bg-indigo-600/10 rounded-3xl flex items-center justify-center text-indigo-500 mx-auto shadow-2xl shadow-indigo-600/20 border border-indigo-500/20">
+              <ShieldCheck size={40} />
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tighter">Security Verification</h1>
+            <p className="text-slate-400 font-medium leading-relaxed">
+              1:1 화상 채팅 입장을 위해<br />관리자 비밀번호를 입력해주세요.
+            </p>
+          </div>
+          
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div className="relative group">
+              <input 
+                type="password" 
+                placeholder="••••" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-center text-2xl font-black text-white tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all placeholder:tracking-normal placeholder:text-slate-600"
+                autoFocus
+              />
+            </div>
+            <button 
+              type="submit"
+              className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-indigo-600/30 transition-all active:scale-95 flex items-center justify-center gap-3 group"
+            >
+              Verify & Enter
+              <Plus size={18} className="group-hover:rotate-90 transition-transform" />
+            </button>
+          </form>
+          
+          <button 
+            onClick={() => window.history.back()}
+            className="w-full py-4 text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors"
+          >
+            Cancel and Return
           </button>
         </div>
       </div>
