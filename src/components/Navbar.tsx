@@ -75,6 +75,7 @@ export default function Navbar() {
     { href: '/resources', label: '자료실' },
     { href: '/guide', label: '사전학습' },
     { href: '/contact', label: '문의하기' },
+    { href: '/admin?tab=video-chat', label: '화상채팅' },
   ];
 
   return (
