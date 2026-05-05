@@ -35,6 +35,13 @@
 9. **React Directives (CRITICAL)**: `useState`, `useEffect`, `useContext` 등 리액트 훅을 사용하는 모든 페이지나 컴포넌트 파일 최상단에는 반드시 **`'use client';`** 지시어를 명시하여 `ModuleBuildError`를 원천 방지합니다.
 10. **File Encoding & CLI Safety (CRITICAL)**: 모든 소스코드 파일은 반드시 **BOM 없는 UTF-8** 인코딩으로 저장되어야 합니다. 특히 Windows PowerShell의 `Set-Content`나 `Out-File` 등을 사용하여 텍스트를 수정할 경우, 기본 인코딩이 UTF-16으로 변경되어 `ModuleBuildError (Invalid UTF-8 stream)`를 유발할 수 있으므로 절대 주의합니다. 파일 수정 시에는 가급적 인코딩이 보장되는 전용 에디터 도구를 사용합니다.
 
+11. **Resources Content Writing Rules (Agent Standard)**:
+   - **No Emojis in Titles/Previews**: 자료실 게시물의 **제목**과 **미리보기용 서두(첫 1~2줄)**에는 가급적 이모지를 사용하지 않습니다.
+   - **Markdown Structure**: 소제목은 반드시 `##` (H2)부터 시작하며, 목록은 가급적 순서 없는 리스트(`-`)를 사용합니다.
+   - **Emoji Usage**: 이모지는 본문의 핵심 내용을 강조하는 용도로만 제한적으로 사용합니다.
+   - **Code Blocks**: 반드시 언어 이름을 명시하여 다크 스타일 및 복사 기능이 활성화되도록 합니다. (예: ` ```tsx `)
+   - **Table Design**: 표준 마크다운 표 문법을 사용하되, 시스템에서 정의한 특수 스타일(상하단 굵은 선, 내부 점선 등)이 적용되도록 정확한 문법을 유지합니다.
+
 ## 🚀 CI/CD Flow
 - 빌드 결과물: `.next` 디렉토리를 `next-on-pages`로 변환하여 배포.
 - 브랜치: `main` 브랜치가 프로덕션 배포 기준입니다. (Cloudflare Pages가 `main` 브랜치를 프로덕션으로 인식)
