@@ -69,22 +69,26 @@ export async function GET() {
     const domains = ['api.agora.io', 'api.sd-rtn.com'];
     let lastError: any = null;
 
-    // 시도할 경로 목록 (v1.0 포함)
+    // 시도할 경로 목록 (v1.0, appid/app_id 변동성 대응)
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
+      `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&app_id=${APP_ID}`,
       `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
     ];
+
+    const commonHeaders = {
+      'Authorization': `Basic ${credentials}`,
+      'Content-Type': 'application/json;charset=utf-8',
+      'Accept': 'application/json'
+    };
 
     for (const domain of domains) {
       for (const path of paths) {
         const url = `https://${domain}${path}`;
         try {
           const response = await fetch(url, {
-            headers: {
-              'Authorization': `Basic ${credentials}`,
-              'Content-Type': 'application/json'
-            }
+            headers: commonHeaders
           });
 
           if (response.ok) {
@@ -104,7 +108,7 @@ export async function GET() {
           }
 
           const errorText = await response.text();
-          lastError = { domain, status: response.status, details: errorText };
+          lastError = { domain, path: path.split('?')[0], status: response.status, details: errorText };
           if (response.status === 401 || response.status === 403) break;
         } catch (e: any) {
           lastError = { domain, status: 500, details: e.message };
@@ -132,12 +136,12 @@ export async function GET() {
       debug: {
         appId: safeMask(APP_ID),
         customerId: safeMask(CUSTOMER_ID),
+        credentialsLength: credentials.length,
         appIdExistsInAccount: appIdExists,
         availableProjectsInAccount: availableProjectCount,
         diagnosticError: diagError,
-        lastErrorStatus: lastError?.status,
-        lastErrorDetails: typeof lastError?.details === 'string' ? lastError.details : JSON.stringify(lastError?.details),
-        tip: 'Agora 콘솔 [RESTful API] 페이지에서 해당 Secret의 [View Details]를 클릭하여 "Project Management" 권한이 활성화되어 있는지 확인해 주세요. 404 에러는 대부분 이 권한이 없거나 도메인이 일치하지 않을 때 발생합니다.'
+        lastError: lastError,
+        tip: '1. Agora 콘솔 [RESTful API] > [View Details]에서 "Project Management" 권한 확인. 2. 해당 프로젝트에 "Project Certificate"가 활성화되어 있는지 확인. 3. [White List]에 IP가 등록되어 있다면 제거 후 시도.'
       }
     }, { status: 500 });
 
