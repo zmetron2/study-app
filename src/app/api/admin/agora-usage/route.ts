@@ -116,15 +116,20 @@ export async function GET() {
           if (response.ok) {
             const data: any = await response.json();
             let totalMinutes = 0;
+            let dataSample = null;
+
             if (data.data && Array.isArray(data.data)) {
+              if (data.data.length > 0) dataSample = data.data[0];
+              
               data.data.forEach((item: any) => {
-                // 기존 Usage API 구조 합산
-                const legacySum = (item.video_hd || 0) + (item.video_hdp || 0) + (item.video_full_hd || 0) + (item.audio || 0);
-                totalMinutes += legacySum;
-                
-                // Analytics API 구조 (value 필드) 합산
-                if (item.value !== undefined) {
-                  totalMinutes += Number(item.value);
+                // 숫자로 된 모든 필드를 찾아서 합산 (video_hd, audio, video_2k, value 등 모두 대응)
+                for (const key in item) {
+                  const val = item[key];
+                  if (typeof val === 'number') {
+                    totalMinutes += val;
+                  } else if (typeof val === 'string' && !isNaN(Number(val)) && key !== 'date' && key !== 'ts') {
+                    totalMinutes += Number(val);
+                  }
                 }
               });
             }
@@ -133,7 +138,12 @@ export async function GET() {
               totalMinutes: Math.round(totalMinutes),
               limit: 10000,
               percentage: Math.min(((totalMinutes / 10000) * 100), 100).toFixed(1),
-              debug: { workingPath: path.split('?')[0], workingDomain: domain } // 성공 경로 확인용
+              debug: { 
+                workingPath: path.split('?')[0], 
+                workingDomain: domain,
+                dataCount: data.data?.length || 0,
+                sample: dataSample
+              }
             });
           }
 
