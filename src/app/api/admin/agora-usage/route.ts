@@ -87,15 +87,15 @@ export async function GET() {
 
     // 시도할 경로 목록 (v1.0, /dev, appid/app_id, v2, Analytics Beta 대응)
     const startTs = Math.floor(new Date(startDay).getTime() / 1000);
-    const endTs = Math.floor(new Date(endDay).getTime() / 1000);
+    const endTs = Math.floor(new Date(endDay).getTime() / 1000) + 86400; // 종료일 포함을 위해 24시간 추가
 
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      // Insight API (더 다양한 metric 시도)
-      `/beta/insight/usage/by_time?start_ts=${startTs}&end_ts=${endTs}&appId=${APP_ID}&metric=audio_duration,video_hd_duration,video_hdp_duration,video_full_hd_duration`,
-      `/beta/insight/usage/by_time?start_ts=${startTs}&end_ts=${endTs}&appid=${APP_ID}&metric=total_duration`,
+      // Insight API (개별 metric 순회 시도 - 가장 가능성 높음)
+      `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=audio_duration`,
+      `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=video_hd_duration`,
+      `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=duration`,
       `/v2/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
     ];
 
