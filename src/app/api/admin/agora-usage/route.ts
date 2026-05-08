@@ -123,18 +123,42 @@ export async function GET() {
             let totalMinutes = 0;
             let dataSample = null;
 
-            if (data.data && Array.isArray(data.data)) {
-              if (data.data.length > 0) dataSample = data.data[0];
-              
-              data.data.forEach((item: any) => {
-                // 숫자로 된 모든 필드를 찾아서 합산 (video_hd, audio, video_2k, value 등 모두 대응)
+            // 응답의 실제 최상위 키 확인
+            const topLevelKeys = Object.keys(data);
+            // data.data 또는 data.usage 또는 다른 배열 필드 찾기
+            let dataArray: any[] = [];
+            if (Array.isArray(data.data)) dataArray = data.data;
+            else if (Array.isArray(data.usage)) dataArray = data.usage;
+            else if (Array.isArray(data.items)) dataArray = data.items;
+            else if (Array.isArray(data.result)) dataArray = data.result;
+
+            if (dataArray.length > 0) {
+              dataSample = dataArray[0];
+              dataArray.forEach((item: any) => {
                 for (const key in item) {
                   const val = item[key];
-                  if (typeof val === 'number') {
+                  if (typeof val === 'number' && key !== 'ts') {
                     totalMinutes += val;
                   } else if (typeof val === 'string' && !isNaN(Number(val)) && key !== 'date' && key !== 'ts') {
                     totalMinutes += Number(val);
                   }
+                }
+              });
+            }
+
+            // 0이면 전체 raw 응답을 노출 (디버깅용)
+            if (totalMinutes === 0) {
+              return NextResponse.json({
+                totalMinutes: 0,
+                limit: 10000,
+                percentage: '0.0',
+                debug: { 
+                  workingPath: path.split('?')[0], 
+                  workingDomain: domain,
+                  dataCount: dataArray.length,
+                  topLevelKeys,         // ← 이 키들을 확인하면 구조를 알 수 있음
+                  rawResponse: data,    // ← 전체 응답 raw dump
+                  sample: dataSample
                 }
               });
             }
@@ -146,7 +170,7 @@ export async function GET() {
               debug: { 
                 workingPath: path.split('?')[0], 
                 workingDomain: domain,
-                dataCount: data.data?.length || 0,
+                dataCount: dataArray.length,
                 sample: dataSample
               }
             });
