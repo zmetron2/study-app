@@ -118,14 +118,22 @@ export async function GET() {
             let totalMinutes = 0;
             if (data.data && Array.isArray(data.data)) {
               data.data.forEach((item: any) => {
-                totalMinutes += (item.video_hd || 0) + (item.video_hdp || 0) + (item.video_full_hd || 0) + (item.audio || 0);
+                // 기존 Usage API 구조 합산
+                const legacySum = (item.video_hd || 0) + (item.video_hdp || 0) + (item.video_full_hd || 0) + (item.audio || 0);
+                totalMinutes += legacySum;
+                
+                // Analytics API 구조 (value 필드) 합산
+                if (item.value !== undefined) {
+                  totalMinutes += Number(item.value);
+                }
               });
             }
 
             return NextResponse.json({
               totalMinutes: Math.round(totalMinutes),
               limit: 10000,
-              percentage: Math.min(((totalMinutes / 10000) * 100), 100).toFixed(1)
+              percentage: Math.min(((totalMinutes / 10000) * 100), 100).toFixed(1),
+              debug: { workingPath: path.split('?')[0], workingDomain: domain } // 성공 경로 확인용
             });
           }
 
