@@ -30,8 +30,14 @@ export async function GET() {
       }, { status: 500 });
     }
 
-    // Agora Basic Auth 생성
-    const credentials = btoa(`${CUSTOMER_ID}:${CUSTOMER_SECRET}`);
+    // Agora Basic Auth 생성 (Buffer를 사용하여 비-ASCII 문자 대응 및 안정성 확보)
+    let credentials = '';
+    try {
+      credentials = Buffer.from(`${CUSTOMER_ID}:${CUSTOMER_SECRET}`).toString('base64');
+    } catch (e: any) {
+      console.error('Encoding error:', e.message);
+      return NextResponse.json({ error: 'Credential encoding failed', details: e.message }, { status: 500 });
+    }
     
     // 현재 날짜 기준 이번 달 시작일과 종료일 계산 (YYYY-MM-DD)
     const now = new Date();
@@ -40,14 +46,18 @@ export async function GET() {
 
     // 진단 단계: 프로젝트 목록 조회 시도 (권한 및 App ID 존재 여부 확인)
     let projectsData: any = null;
+    let diagError: string | null = null;
     try {
       const projectsRes = await fetch('https://api.agora.io/v1/projects', {
         headers: { 'Authorization': `Basic ${credentials}` }
       });
       if (projectsRes.ok) {
         projectsData = await projectsRes.json();
+      } else {
+        diagError = `Diagnostic failed with status ${projectsRes.status}`;
       }
-    } catch (e) {
+    } catch (e: any) {
+      diagError = e.message;
       console.error('Diagnostic API call failed:', e);
     }
 
@@ -98,8 +108,9 @@ export async function GET() {
     }
 
     // 진단 결과 분석
-    const safeMask = (str: string) => {
-      if (!str || str.length < 8) return '***';
+    const safeMask = (str: string | undefined) => {
+      if (!str) return 'Missing';
+      if (str.length < 8) return 'Short Value';
       return str.substring(0, 4) + '...' + str.substring(str.length - 4);
     };
 
@@ -117,6 +128,7 @@ export async function GET() {
         appId: safeMask(APP_ID),
         appIdExistsInAccount: appIdExists,
         availableProjectsInAccount: availableProjectCount,
+        diagnosticError: diagError,
         lastErrorStatus: lastError?.status,
         lastErrorDetails: typeof lastError?.details === 'string' ? lastError.details : JSON.stringify(lastError?.details),
         tip: appIdExists === false 
@@ -126,10 +138,10 @@ export async function GET() {
     }, { status: 500 });
 
   } catch (error: any) {
-    console.error('Agora Usage API Exception:', error.message);
+    console.error('Global API Exception:', error?.message || error);
     return NextResponse.json({ 
       error: 'Internal Server Error',
-      message: error.message
+      message: error?.message || 'Unknown error occurred'
     }, { status: 500 });
   }
 }
