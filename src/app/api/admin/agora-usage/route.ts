@@ -32,13 +32,16 @@ export async function GET() {
     // Agora Basic Auth 생성
     const credentials = btoa(`${CUSTOMER_ID}:${CUSTOMER_SECRET}`);
     
-    // 현재 날짜 기준 이번 달 시작일과 종료일 계산 (YYYYMMDD)
+    // 현재 날짜 기준 이번 달 시작일과 종료일 계산 (YYYY-MM-DD)
     const now = new Date();
-    const startDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0].replace(/-/g, '');
-    const endDay = now.toISOString().split('T')[0].replace(/-/g, '');
+    // UTC 기준으로 계산하여 일관성 유지
+    const startDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString().split('T')[0];
+    const endDay = now.toISOString().split('T')[0];
 
     const url = `https://api.agora.io/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`;
     
+    console.log('Fetching Agora usage from:', url);
+
     const response = await fetch(url, {
       headers: {
         'Authorization': `Basic ${credentials}`,
@@ -48,8 +51,13 @@ export async function GET() {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Agora API Error Status:', response.status, errorText);
-      throw new Error(`Agora API responded with ${response.status}: ${errorText}`);
+      console.error('Agora API Error:', response.status, errorText);
+      // 구체적인 에러 메시지를 포함하여 반환
+      return NextResponse.json({ 
+        error: 'Failed to fetch from Agora',
+        status: response.status,
+        details: errorText
+      }, { status: response.status });
     }
 
     const data: any = await response.json();
