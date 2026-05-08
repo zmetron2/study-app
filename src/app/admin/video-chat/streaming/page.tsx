@@ -30,6 +30,7 @@ export default function StreamingHostPage() {
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const localVideoRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const sessionIdRef = useRef<string | null>(null); // D1 사용량 트래킹용
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [activeSettingsTab, setActiveSettingsTab] = useState('devices');
@@ -222,6 +223,15 @@ export default function StreamingHostPage() {
 
       await clientRef.current.publish([audioTrack, videoTrack]);
       setIsLive(true);
+
+      // D1 사용량 기록: 스트리밍 시작
+      const newSessionId = `streaming-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      sessionIdRef.current = newSessionId;
+      fetch('/api/agora/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start', sessionId: newSessionId, channel: CHANNEL }),
+      }).catch(() => {});
     } catch (error) {
       console.error('Streaming start error:', error);
       alert('방송 송출을 시작할 수 없습니다.');
@@ -229,6 +239,15 @@ export default function StreamingHostPage() {
   };
 
   const stopStream = async () => {
+    // D1 사용량 기록: 스트리밍 종료
+    if (sessionIdRef.current) {
+      fetch('/api/agora/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'end', sessionId: sessionIdRef.current }),
+      }).catch(() => {});
+      sessionIdRef.current = null;
+    }
     localAudioTrack?.close();
     localVideoTrack?.close();
     setLocalAudioTrack(null);

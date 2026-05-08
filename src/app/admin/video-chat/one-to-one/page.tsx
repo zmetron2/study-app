@@ -29,6 +29,7 @@ export default function OneToOneVideoChat() {
 
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const localVideoRef = useRef<HTMLDivElement>(null);
+  const sessionIdRef = useRef<string | null>(null); // D1 사용량 트래킹용
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [activeSettingsTab, setActiveSettingsTab] = useState('devices');
@@ -219,6 +220,15 @@ export default function OneToOneVideoChat() {
 
       await clientRef.current.publish([audioTrack, videoTrack]);
       setJoined(true);
+
+      // D1 사용량 기록: 세션 시작
+      const newSessionId = `1to1-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      sessionIdRef.current = newSessionId;
+      fetch('/api/agora/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start', sessionId: newSessionId, channel: CHANNEL }),
+      }).catch(() => {}); // 실패해도 통화에 영향 없음
     } catch (error) {
       console.error('Agora join error:', error);
       alert('화상채팅 연결 중 오류가 발생했습니다.');
@@ -226,6 +236,15 @@ export default function OneToOneVideoChat() {
   };
 
   const handleLeave = async () => {
+    // D1 사용량 기록: 세션 종료
+    if (sessionIdRef.current) {
+      fetch('/api/agora/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'end', sessionId: sessionIdRef.current }),
+      }).catch(() => {});
+      sessionIdRef.current = null;
+    }
     localAudioTrack?.close();
     localVideoTrack?.close();
     setLocalAudioTrack(null);
