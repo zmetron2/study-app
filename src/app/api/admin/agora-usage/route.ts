@@ -44,30 +44,35 @@ export async function GET() {
     const startDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString().split('T')[0];
     const endDay = now.toISOString().split('T')[0];
 
-    // 진단 단계: 프로젝트 목록 조회 시도 (권한 및 App ID 존재 여부 확인)
+    // 진단 단계: 프로젝트 목록 조회 시도
     let projectsData: any = null;
     let diagError: string | null = null;
-    try {
-      const projectsRes = await fetch('https://api.agora.io/v1/projects', {
-        headers: { 'Authorization': `Basic ${credentials}` }
-      });
-      if (projectsRes.ok) {
-        projectsData = await projectsRes.json();
-      } else {
-        diagError = `Diagnostic failed with status ${projectsRes.status}`;
+    const diagPaths = ['/v1/projects', '/v1.0/projects', '/v1/apps'];
+    
+    for (const dPath of diagPaths) {
+      try {
+        const projectsRes = await fetch(`https://api.agora.io${dPath}`, {
+          headers: { 'Authorization': `Basic ${credentials}` }
+        });
+        if (projectsRes.ok) {
+          projectsData = await projectsRes.json();
+          break; // 성공하면 중단
+        } else {
+          diagError = `Diagnostic (${dPath}) failed with status ${projectsRes.status}`;
+        }
+      } catch (e: any) {
+        diagError = e.message;
       }
-    } catch (e: any) {
-      diagError = e.message;
-      console.error('Diagnostic API call failed:', e);
     }
 
     // 기본 도메인과 대체 도메인 시도
     const domains = ['api.agora.io', 'api.sd-rtn.com'];
     let lastError: any = null;
 
-    // 시도할 경로 목록
+    // 시도할 경로 목록 (v1.0 포함)
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
+      `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
     ];
 
@@ -123,17 +128,16 @@ export async function GET() {
       : 0;
 
     return NextResponse.json({ 
-      error: 'Agora API 호출 실패',
+      error: 'Agora API 호출 실패 (404: 경로 불일치)',
       debug: {
         appId: safeMask(APP_ID),
+        customerId: safeMask(CUSTOMER_ID),
         appIdExistsInAccount: appIdExists,
         availableProjectsInAccount: availableProjectCount,
         diagnosticError: diagError,
         lastErrorStatus: lastError?.status,
         lastErrorDetails: typeof lastError?.details === 'string' ? lastError.details : JSON.stringify(lastError?.details),
-        tip: appIdExists === false 
-          ? '현재 App ID가 해당 Customer ID 계정에 존재하지 않습니다. App ID를 다시 확인해 주세요.'
-          : 'Agora 콘솔에서 "Project Management API" 권한이 활성화되어 있는지 확인해 주세요.'
+        tip: 'Agora 콘솔 [RESTful API] 페이지에서 해당 Secret의 [View Details]를 클릭하여 "Project Management" 권한이 활성화되어 있는지 확인해 주세요. 404 에러는 대부분 이 권한이 없거나 도메인이 일치하지 않을 때 발생합니다.'
       }
     }, { status: 500 });
 
