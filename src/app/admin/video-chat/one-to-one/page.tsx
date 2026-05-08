@@ -1,5 +1,8 @@
 'use client';
 
+export const runtime = 'edge';
+
+
 import React, { useEffect, useRef, useState } from 'react';
 import type { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { Camera, CameraOff, Mic, MicOff, PhoneOff, Settings, Users, ShieldCheck, Plus, Monitor, LayoutGrid, Sparkles, Wifi, Clock, User } from 'lucide-react';
@@ -23,7 +26,7 @@ export default function OneToOneVideoChat() {
   const [remoteUsers, setRemoteUsers] = useState<any[]>([]);
   const [micOn, setMicOn] = useState(true);
   const [cameraOn, setCameraOn] = useState(true);
-  
+
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const localVideoRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +83,7 @@ export default function OneToOneVideoChat() {
 
   useEffect(() => {
     if (!APP_ID || !isAuthorized) return;
-    
+
     const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
     clientRef.current = client;
 
@@ -123,7 +126,7 @@ export default function OneToOneVideoChat() {
         setCameras(cams);
         setMics(microphones);
         setSpeakers(playbacks);
-        
+
         if (localVideoTrack && !selectedCameraId) setSelectedCameraId(localVideoTrack.getTrackLabel());
         if (localAudioTrack && !selectedMicId) setSelectedMicId(localAudioTrack.getTrackLabel());
       } catch (err) {
@@ -164,11 +167,11 @@ export default function OneToOneVideoChat() {
   // 영상 품질 변경
   const changeVideoQuality = async (quality: 'auto' | 'low' | 'high') => {
     if (!localVideoTrack) return;
-    
+
     let config: any = '720p_1'; // default high
     if (quality === 'low') config = '240p_1';
     if (quality === 'auto') config = { width: { max: 1280, min: 640 }, height: { max: 720, min: 360 }, frameRate: { max: 30, min: 15 } };
-    
+
     await localVideoTrack.setEncoderConfiguration(config);
     setVideoQuality(quality);
   };
@@ -203,13 +206,13 @@ export default function OneToOneVideoChat() {
 
     try {
       await clientRef.current.join(APP_ID, CHANNEL, TOKEN, null);
-      
+
       const audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
       const videoTrack = await AgoraRTC.createCameraVideoTrack();
-      
+
       setLocalAudioTrack(audioTrack);
       setLocalVideoTrack(videoTrack);
-      
+
       if (localVideoRef.current) {
         videoTrack.play(localVideoRef.current);
       }
@@ -263,7 +266,7 @@ export default function OneToOneVideoChat() {
           <div className="bg-black/40 border border-white/5 p-4 rounded-[4px] text-left font-mono text-xs text-indigo-300">
             NEXT_PUBLIC_AGORA_APP_ID=여기에_앱_아이디_입력
           </div>
-          <button 
+          <button
             onClick={() => window.history.back()}
             className="w-full py-4 bg-white/10 hover:bg-white/20 text-white rounded-[4px] text-sm font-black transition-all"
           >
@@ -290,19 +293,19 @@ export default function OneToOneVideoChat() {
               1:1 화상 채팅 입장을 위해<br />관리자 비밀번호를 입력해주세요.
             </p>
           </div>
-          
+
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div className="relative group">
-              <input 
-                type="password" 
-                placeholder="••••" 
+              <input
+                type="password"
+                placeholder="••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 p-5 rounded-[4px] text-center text-2xl font-black text-white tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all placeholder:tracking-normal placeholder:text-slate-600"
                 autoFocus
               />
             </div>
-            <button 
+            <button
               type="submit"
               className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[4px] text-sm font-black uppercase tracking-widest shadow-xl shadow-indigo-600/30 transition-all active:scale-95 flex items-center justify-center gap-3 group"
             >
@@ -310,8 +313,8 @@ export default function OneToOneVideoChat() {
               <Plus size={18} className="group-hover:rotate-90 transition-transform" />
             </button>
           </form>
-          
-          <button 
+
+          <button
             onClick={() => window.history.back()}
             className="w-full py-4 text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors"
           >
@@ -339,7 +342,7 @@ export default function OneToOneVideoChat() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={() => setIsSettingsOpen(true)}
             className="p-2.5 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-[4px] transition-all"
           >
@@ -351,13 +354,13 @@ export default function OneToOneVideoChat() {
       {/* Main Video Area */}
       <main className="flex-1 relative p-6 max-w-7xl mx-auto w-full z-10 min-h-[700px] flex flex-col">
         <div className="flex-1 bg-slate-900 rounded-[4px] border border-white/5 overflow-hidden shadow-2xl relative">
-          
+
           {/* 1. Main View (Full Container) */}
           <div className="w-full h-full relative group">
             {layoutMode === 'remote-large' ? (
               // 상대방 크게 모드: 원격 사용자가 메인
               remoteUsers.length > 0 ? (
-                <div 
+                <div
                   className="w-full h-full"
                   ref={(el) => {
                     if (el && remoteUsers[0]?.videoTrack) {
@@ -376,13 +379,13 @@ export default function OneToOneVideoChat() {
             ) : (
               // 나를 크게 모드: 내 카메라가 메인
               <>
-                <div 
-                  ref={localVideoRef} 
+                <div
+                  ref={localVideoRef}
                   className={`w-full h-full object-cover transition-all duration-300 ${isMirrorMode ? 'scaleX(-1)' : ''}`}
-                  style={{ 
+                  style={{
                     transform: isMirrorMode ? 'scaleX(-1)' : 'none',
-                    filter: `brightness(${brightness + (beautyLevel / 5)}%) saturate(${colorCorrection}%) contrast(${100 + (skinSmoothing / 10)}%) blur(${skinSmoothing / 25}px)` 
-                  }} 
+                    filter: `brightness(${brightness + (beautyLevel / 5)}%) saturate(${colorCorrection}%) contrast(${100 + (skinSmoothing / 10)}%) blur(${skinSmoothing / 25}px)`
+                  }}
                 />
                 {!cameraOn && (
                   <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90 backdrop-blur-sm">
@@ -410,13 +413,13 @@ export default function OneToOneVideoChat() {
             {layoutMode === 'remote-large' ? (
               // 상대방 크게 모드: 내가 작게 (PIP)
               <>
-                <div 
-                  ref={localVideoRef} 
+                <div
+                  ref={localVideoRef}
                   className={`w-full h-full object-cover ${isMirrorMode ? 'scaleX(-1)' : ''}`}
-                  style={{ 
+                  style={{
                     transform: isMirrorMode ? 'scaleX(-1)' : 'none',
-                    filter: `brightness(${brightness + (beautyLevel / 5)}%) saturate(${colorCorrection}%) contrast(${100 + (skinSmoothing / 10)}%) blur(${skinSmoothing / 25}px)` 
-                  }} 
+                    filter: `brightness(${brightness + (beautyLevel / 5)}%) saturate(${colorCorrection}%) contrast(${100 + (skinSmoothing / 10)}%) blur(${skinSmoothing / 25}px)`
+                  }}
                 />
                 {!cameraOn && (
                   <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
@@ -427,7 +430,7 @@ export default function OneToOneVideoChat() {
             ) : (
               // 나를 크게 모드: 상대방이 작게 (PIP)
               remoteUsers.length > 0 ? (
-                <div 
+                <div
                   className="w-full h-full"
                   ref={(el) => {
                     if (el && remoteUsers[0]?.videoTrack) {
@@ -452,29 +455,29 @@ export default function OneToOneVideoChat() {
 
           {/* 3. Session Controls (Floating) */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 px-8 py-5 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full z-30 shadow-2xl">
-            <button 
-              onClick={toggleMic} 
+            <button
+              onClick={toggleMic}
               className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${micOn ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'}`}
             >
               {micOn ? <Mic size={24} /> : <MicOff size={24} />}
             </button>
-            <button 
-              onClick={toggleCamera} 
+            <button
+              onClick={toggleCamera}
               className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${cameraOn ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'}`}
             >
               {cameraOn ? <Camera size={24} /> : <CameraOff size={24} />}
             </button>
             <div className="w-px h-8 bg-white/10 mx-2" />
             {joined ? (
-              <button 
-                onClick={handleLeave} 
+              <button
+                onClick={handleLeave}
                 className="w-14 h-14 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center shadow-xl active:scale-95 transition-all"
               >
                 <PhoneOff size={24} />
               </button>
             ) : (
-              <button 
-                onClick={handleJoin} 
+              <button
+                onClick={handleJoin}
                 className="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center justify-center shadow-xl active:scale-95 transition-all"
               >
                 <Plus size={28} />
@@ -520,7 +523,7 @@ export default function OneToOneVideoChat() {
                     <div className="grid grid-cols-1 gap-6">
                       <div className="space-y-3">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Camera Source</label>
-                        <select 
+                        <select
                           value={selectedCameraId}
                           onChange={(e) => changeCamera(e.target.value)}
                           className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-[4px] text-sm font-bold dark:text-white outline-none focus:border-indigo-500"
@@ -530,7 +533,7 @@ export default function OneToOneVideoChat() {
                       </div>
                       <div className="space-y-3">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Microphone Source</label>
-                        <select 
+                        <select
                           value={selectedMicId}
                           onChange={(e) => changeMic(e.target.value)}
                           className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-[4px] text-sm font-bold dark:text-white outline-none focus:border-indigo-500"
@@ -562,8 +565,8 @@ export default function OneToOneVideoChat() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">화질 및 보정</h3>
                     <div className="grid grid-cols-3 gap-4">
                       {(['auto', 'low', 'high'] as const).map((q) => (
-                        <button 
-                          key={q} 
+                        <button
+                          key={q}
                           onClick={() => changeVideoQuality(q)}
                           className={`py-4 rounded-[4px] text-sm font-black border-2 transition-all ${videoQuality === q ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600 text-rose-600' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 text-slate-400 hover:border-slate-300 dark:hover:border-white/20'}`}
                         >
@@ -572,15 +575,15 @@ export default function OneToOneVideoChat() {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-8">
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Brightness (밝기)</label>
                         <span className="text-xs font-bold text-rose-500">{brightness}%</span>
                       </div>
-                      <input 
-                        type="range" min="50" max="150" value={brightness} 
+                      <input
+                        type="range" min="50" max="150" value={brightness}
                         onChange={(e) => setBrightness(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -590,8 +593,8 @@ export default function OneToOneVideoChat() {
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Saturation (색감)</label>
                         <span className="text-xs font-bold text-rose-500">{colorCorrection}%</span>
                       </div>
-                      <input 
-                        type="range" min="50" max="150" value={colorCorrection} 
+                      <input
+                        type="range" min="50" max="150" value={colorCorrection}
                         onChange={(e) => setColorCorrection(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -604,7 +607,7 @@ export default function OneToOneVideoChat() {
                         <p className="text-sm font-black text-slate-900 dark:text-white">미러 모드</p>
                         <p className="text-[10px] text-slate-400">송출 화면 좌우 반전</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setIsMirrorMode(!isMirrorMode)}
                         className={`w-12 h-6 ${isMirrorMode ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                       >
@@ -616,7 +619,7 @@ export default function OneToOneVideoChat() {
                         <p className="text-sm font-black text-slate-900 dark:text-white">전체화면</p>
                         <p className="text-[10px] text-slate-400">비디오 피드만 보기</p>
                       </div>
-                      <button 
+                      <button
                         onClick={toggleFullScreen}
                         className={`w-12 h-6 ${isFullScreen ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                       >
@@ -641,14 +644,14 @@ export default function OneToOneVideoChat() {
                             <p className="text-[10px] text-slate-400">상담 시작 시 마이크 상태</p>
                           </div>
                         </div>
-                        <button 
+                        <button
                           onClick={() => setMicDefaultOn(!micDefaultOn)}
                           className={`px-4 py-2 rounded-[4px] text-[10px] font-black transition-all ${micDefaultOn ? 'bg-rose-600 text-white' : 'bg-slate-200 dark:bg-white/10 text-slate-500'}`}
                         >
                           {micDefaultOn ? 'ALWAYS ON' : 'ALWAYS OFF'}
                         </button>
                       </div>
-                      
+
                       <div className="flex items-center justify-between p-6 bg-slate-50 dark:bg-white/5 rounded-[4px] border border-slate-100 dark:border-white/5">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-[4px] flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600">
@@ -659,7 +662,7 @@ export default function OneToOneVideoChat() {
                             <p className="text-[10px] text-slate-400">배경 소음을 억제하고 목소리를 강조</p>
                           </div>
                         </div>
-                        <button 
+                        <button
                           onClick={() => setIsNoiseReduction(!isNoiseReduction)}
                           className={`w-12 h-6 ${isNoiseReduction ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                         >
@@ -668,14 +671,14 @@ export default function OneToOneVideoChat() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="flex justify-between items-center px-2">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Input Gain (입력 볼륨)</span>
                       <span className="text-sm font-black text-rose-600">{outputVolume}%</span>
                     </div>
-                    <input 
-                      type="range" min="0" max="200" value={outputVolume} 
+                    <input
+                      type="range" min="0" max="200" value={outputVolume}
                       onChange={(e) => changeAudioVolume(Number(e.target.value))}
                       className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                     />
@@ -687,7 +690,7 @@ export default function OneToOneVideoChat() {
                 <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500 text-left">
                   <h3 className="text-xl font-black text-slate-900 dark:text-white">상담 레이아웃</h3>
                   <div className="grid grid-cols-2 gap-6">
-                    <div 
+                    <div
                       onClick={() => setLayoutMode('remote-large')}
                       className={`p-8 rounded-[4px] border-2 flex flex-col items-center gap-6 cursor-pointer transition-all ${layoutMode === 'remote-large' ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 hover:border-slate-300'}`}
                     >
@@ -698,7 +701,7 @@ export default function OneToOneVideoChat() {
                       <span className={`text-sm font-black ${layoutMode === 'remote-large' ? 'text-rose-600' : 'text-slate-500'}`}>상대방 크게</span>
                     </div>
 
-                    <div 
+                    <div
                       onClick={() => setLayoutMode('local-large')}
                       className={`p-8 rounded-[4px] border-2 flex flex-col items-center gap-6 cursor-pointer transition-all ${layoutMode === 'local-large' ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 hover:border-slate-300'}`}
                     >
@@ -717,27 +720,27 @@ export default function OneToOneVideoChat() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">가상 배경</h3>
                     <div className="grid grid-cols-4 gap-4">
                       {['none', 'blur', 'office', 'studio'].map((bg) => (
-                        <div 
-                          key={bg} 
+                        <div
+                          key={bg}
                           onClick={() => setSelectedBg(bg)}
                           className={`aspect-square rounded-[4px] border-2 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${selectedBg === bg ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600' : 'bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/5 hover:border-slate-300'}`}
                         >
-                          <Sparkles size={20} className={selectedBg === bg ? 'text-rose-600' : 'text-slate-300'}/>
+                          <Sparkles size={20} className={selectedBg === bg ? 'text-rose-600' : 'text-slate-300'} />
                           <span className={`text-[10px] font-black uppercase ${selectedBg === bg ? 'text-rose-600' : 'text-slate-400'}`}>{bg}</span>
                         </div>
                       ))}
                     </div>
                     <p className="text-[10px] text-slate-400 italic">* 배경 블러 및 이미지 합성 기능은 Edge AI 엔진을 통해 처리됩니다.</p>
                   </div>
-                  
+
                   <div className="space-y-8">
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">피부 보정 (Skin Smoothing)</label>
                         <span className="text-xs font-bold text-rose-500">{skinSmoothing}%</span>
                       </div>
-                      <input 
-                        type="range" min="0" max="100" value={skinSmoothing} 
+                      <input
+                        type="range" min="0" max="100" value={skinSmoothing}
                         onChange={(e) => setSkinSmoothing(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -747,8 +750,8 @@ export default function OneToOneVideoChat() {
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">얼굴 윤곽 및 밝기 (Beauty Level)</label>
                         <span className="text-xs font-bold text-rose-500">{beautyLevel}%</span>
                       </div>
-                      <input 
-                        type="range" min="0" max="100" value={beautyLevel} 
+                      <input
+                        type="range" min="0" max="100" value={beautyLevel}
                         onChange={(e) => setBeautyLevel(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -761,7 +764,7 @@ export default function OneToOneVideoChat() {
                   <div className={`p-8 rounded-[4px] border flex items-center justify-between transition-all ${networkQuality.uplink <= 2 ? 'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-100 dark:border-emerald-500/10' : 'bg-amber-50 dark:bg-amber-500/5 border-amber-100 dark:border-amber-500/10'}`}>
                     <div className="flex items-center gap-6">
                       <div className={`w-14 h-14 bg-white dark:bg-slate-800 rounded-[4px] flex items-center justify-center shadow-sm ${networkQuality.uplink <= 2 ? 'text-emerald-500' : 'text-amber-500'}`}>
-                        <Wifi size={28}/>
+                        <Wifi size={28} />
                       </div>
                       <div>
                         <h4 className="text-lg font-black text-slate-900 dark:text-white">
@@ -782,7 +785,7 @@ export default function OneToOneVideoChat() {
                       <p className="text-sm font-black text-slate-900 dark:text-white">자동 화질 조절</p>
                       <p className="text-[10px] text-slate-400">네트워크 상황에 따라 최적의 화질을 실시간으로 유지합니다.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setAutoQualityAdjustment(!autoQualityAdjustment)}
                       className={`w-12 h-6 ${autoQualityAdjustment ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                     >
@@ -809,7 +812,7 @@ export default function OneToOneVideoChat() {
                       <p className="text-sm font-black text-slate-900 dark:text-white">상담 기록 자동 저장</p>
                       <p className="text-[10px] text-slate-400">상담 종료 후 로그파일을 관리 서버로 전송합니다.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setIsAutoSave(!isAutoSave)}
                       className={`w-12 h-6 ${isAutoSave ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                     >
@@ -820,8 +823,8 @@ export default function OneToOneVideoChat() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">상담 제한 시간</h3>
                     <div className="grid grid-cols-4 gap-4">
                       {['30분', '60분', '90분', '무제한'].map((time) => (
-                        <button 
-                          key={time} 
+                        <button
+                          key={time}
                           onClick={() => setSessionLimit(time)}
                           className={`py-4 rounded-[4px] text-[11px] font-black border-2 transition-all ${sessionLimit === time ? 'bg-rose-600 text-white border-rose-600 shadow-lg' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 text-slate-400 hover:border-slate-300'}`}
                         >
@@ -837,16 +840,16 @@ export default function OneToOneVideoChat() {
                   <h3 className="text-xl font-black text-slate-900 dark:text-white">편의 기능 설정</h3>
                   <div className="space-y-4">
                     {[
-                      {id: 'entranceNotif', l:'상대방 입장 알림', d:'신규 참여자 발생 시 알림음 재생', a:isEntranceNotif, fn: () => setIsEntranceNotif(!isEntranceNotif)},
-                      {id: 'autoSwitch', l:'자동 스트림 전환', d:'네트워크 불안정 시 대체 서버 연결', a:isAutoSwitch, fn: () => setIsAutoSwitch(!isAutoSwitch)},
-                      {id: 'startCameraOff', l:'상담 시작 시 카메라 OFF', d:'보안을 위해 수동 켜기 후 시작', a:isStartCameraOff, fn: () => setIsStartCameraOff(!isStartCameraOff)}
+                      { id: 'entranceNotif', l: '상대방 입장 알림', d: '신규 참여자 발생 시 알림음 재생', a: isEntranceNotif, fn: () => setIsEntranceNotif(!isEntranceNotif) },
+                      { id: 'autoSwitch', l: '자동 스트림 전환', d: '네트워크 불안정 시 대체 서버 연결', a: isAutoSwitch, fn: () => setIsAutoSwitch(!isAutoSwitch) },
+                      { id: 'startCameraOff', l: '상담 시작 시 카메라 OFF', d: '보안을 위해 수동 켜기 후 시작', a: isStartCameraOff, fn: () => setIsStartCameraOff(!isStartCameraOff) }
                     ].map((item) => (
                       <div key={item.id} className="flex items-center justify-between p-6 bg-slate-50 dark:bg-white/5 rounded-[4px] border border-slate-100 dark:border-white/5">
                         <div>
                           <p className="text-sm font-black text-slate-900 dark:text-white">{item.l}</p>
                           <p className="text-[10px] text-slate-400">{item.d}</p>
                         </div>
-                        <button 
+                        <button
                           onClick={item.fn}
                           className={`w-12 h-6 ${item.a ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                         >

@@ -1,5 +1,8 @@
 'use client';
 
+export const runtime = 'edge';
+
+
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio } from 'lucide-react';
 

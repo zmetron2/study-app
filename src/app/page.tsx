@@ -130,11 +130,11 @@ export default function HomePage() {
             
             <div className="flex flex-wrap justify-between items-start gap-4 relative py-2">
               <Link href="/curriculum" className="flex flex-col items-center text-center gap-3 flex-1 min-w-[90px] group cursor-pointer">
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-500 shadow-inner group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-inner group-hover:scale-110 transition-transform">
                   <MessageSquare size={24} />
                 </div>
                 <div>
-                  <div className="font-bold text-[13px] text-indigo-600 dark:text-indigo-400 mb-0.5">입문</div>
+                  <div className="font-bold text-[13px] text-emerald-600 dark:text-emerald-400 mb-0.5">입문</div>
                   <div className="text-[12px] opacity-60 leading-tight">AI 바이브 잡기<br/>프롬프트 & 마인드셋</div>
                 </div>
               </Link>
@@ -144,11 +144,11 @@ export default function HomePage() {
               </div>
 
               <Link href="/curriculum/basic" className="flex flex-col items-center text-center gap-3 flex-1 min-w-[90px] group cursor-pointer">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500 shadow-inner group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-sky-50 dark:bg-sky-500/10 flex items-center justify-center text-sky-500 shadow-inner group-hover:scale-110 transition-transform">
                   <Database size={24} />
                 </div>
                 <div>
-                  <div className="font-bold text-[13px] text-blue-600 dark:text-blue-400 mb-0.5">기초</div>
+                  <div className="font-bold text-[13px] text-sky-600 dark:text-sky-400 mb-0.5">기초</div>
                   <div className="text-[12px] opacity-60 leading-tight">시스템 구조 이해<br/>도메인 & DNS 설정</div>
                 </div>
               </Link>
@@ -158,11 +158,11 @@ export default function HomePage() {
               </div>
 
               <Link href="/curriculum/practice" className="flex flex-col items-center text-center gap-3 flex-1 min-w-[90px] group cursor-pointer">
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-inner group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-500 shadow-inner group-hover:scale-110 transition-transform">
                   <Rocket size={24} />
                 </div>
                 <div>
-                  <div className="font-bold text-[13px] text-emerald-600 dark:text-emerald-400 mb-0.5">실전</div>
+                  <div className="font-bold text-[13px] text-indigo-600 dark:text-indigo-400 mb-0.5">실전</div>
                   <div className="text-[12px] opacity-60 leading-tight">프로젝트 빌딩<br/>SaaS & 자동화 실습</div>
                 </div>
               </Link>

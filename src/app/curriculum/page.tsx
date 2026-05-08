@@ -1,5 +1,8 @@
 'use client';
 
+export const runtime = 'edge';
+
+
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, Zap, CheckCircle2, 
@@ -80,7 +83,7 @@ export default function CurriculumPage() {
         
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
           <div className="space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
               <Zap size={14} className="animate-pulse" /> Step 01. Mindset
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 입문</h1>
@@ -105,14 +108,14 @@ export default function CurriculumPage() {
           </div>
           
           {/* Compact Learning Outcomes Card */}
-          <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-5 w-full max-w-md shadow-2xl shadow-indigo-900/10 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 w-20 h-20 bg-indigo-500/5 rounded-full blur-xl" />
+          <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-5 w-full max-w-md shadow-2xl shadow-emerald-900/10 relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-20 h-20 bg-emerald-500/5 rounded-full blur-xl" />
             
             <div className="flex items-center justify-between mb-4 relative z-10">
               <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> 습득 역량
+                <Sparkles className="w-3.5 h-3.5 text-emerald-500" /> 습득 역량
               </h3>
-              <div className="bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 text-[12px] font-black px-2 py-0.5 rounded-full border border-indigo-500/20">
+              <div className="bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-2 py-0.5 rounded-full border border-emerald-500/20">
                 LEVEL 1
               </div>
             </div>
@@ -125,8 +128,8 @@ export default function CurriculumPage() {
               </div>
               
               <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5">
-                <div className="flex items-center justify-between bg-indigo-600/5 dark:bg-indigo-500/10 rounded-xl px-3 py-2 border border-indigo-500/10">
-                  <span className="text-[12px] font-bold text-indigo-600/70 dark:text-indigo-400/70 uppercase">Goal</span>
+                <div className="flex items-center justify-between bg-emerald-600/5 dark:bg-emerald-500/10 rounded-xl px-3 py-2 border border-emerald-500/10">
+                  <span className="text-[12px] font-bold text-emerald-600/70 dark:text-emerald-400/70 uppercase">Goal</span>
                   <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">AI로 원하는 결과 만들기</span>
                 </div>
               </div>
@@ -271,7 +274,7 @@ export default function CurriculumPage() {
               {/* Core Topics (Common Core) */}
               <div id="core" className="scroll-mt-32 space-y-6 text-left">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                     <Edit3 size={24} />
                   </div>
                   <h3 className="text-xl font-black text-slate-800 dark:text-white">핵심 주제 (Common Core)</h3>
@@ -518,7 +521,7 @@ export default function CurriculumPage() {
 function OutcomeItem({ icon, label, desc }: { icon: React.ReactNode, label: string, desc: string }) {
   return (
     <div className="flex items-center gap-3 py-1 px-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all group/item">
-      <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0 group-hover/item:scale-110 transition-transform">
+      <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover/item:scale-110 transition-transform">
         {icon}
       </div>
       <div className="space-y-0">
@@ -544,10 +547,10 @@ function RoadmapItem({ label, rounds, href, active = false }: { label: string, r
   return (
     <Link href={href} className="block shrink-0">
       <div className={`flex flex-col items-center gap-0.5 px-6 py-2 rounded-xl transition-all cursor-pointer ${
-        active ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 scale-105' : 'hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400'
+        active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 scale-105' : 'hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400'
       }`}>
         <span className={`text-xs font-black ${active ? 'text-white' : 'text-slate-400'}`}>{label}</span>
-        <span className={`text-[12px] whitespace-nowrap ${active ? 'text-indigo-200' : 'text-slate-400'}`}>{rounds}</span>
+        <span className={`text-[12px] whitespace-nowrap ${active ? 'text-emerald-200' : 'text-slate-400'}`}>{rounds}</span>
       </div>
     </Link>
   );

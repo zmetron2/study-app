@@ -1,5 +1,8 @@
 'use client';
 
+export const runtime = 'edge';
+
+
 import React, { useEffect, useRef, useState } from 'react';
 import type { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { Camera, CameraOff, Mic, MicOff, Radio, Settings, Power, Users, Clock, Share2, Monitor, LayoutGrid, Sparkles, Wifi, User } from 'lucide-react';
@@ -23,7 +26,7 @@ export default function StreamingHostPage() {
   const [micOn, setMicOn] = useState(true);
   const [cameraOn, setCameraOn] = useState(true);
   const [streamTime, setStreamTime] = useState(0);
-  
+
   const clientRef = useRef<IAgoraRTCClient | null>(null);
   const localVideoRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -78,7 +81,7 @@ export default function StreamingHostPage() {
 
   useEffect(() => {
     if (!APP_ID) return;
-    
+
     // 스트리밍 모드 설정
     const client = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
     clientRef.current = client;
@@ -122,7 +125,7 @@ export default function StreamingHostPage() {
         setCameras(cams);
         setMics(microphones);
         setSpeakers(playbacks);
-        
+
         if (localVideoTrack && !selectedCameraId) setSelectedCameraId(localVideoTrack.getTrackLabel());
         if (localAudioTrack && !selectedMicId) setSelectedMicId(localAudioTrack.getTrackLabel());
       } catch (err) {
@@ -163,11 +166,11 @@ export default function StreamingHostPage() {
   // 영상 품질 변경
   const changeVideoQuality = async (quality: 'auto' | 'low' | 'high') => {
     if (!localVideoTrack) return;
-    
+
     let config: any = '720p_1'; // default high
     if (quality === 'low') config = '240p_1';
     if (quality === 'auto') config = { width: { max: 1280, min: 640 }, height: { max: 720, min: 360 }, frameRate: { max: 30, min: 15 } };
-    
+
     await localVideoTrack.setEncoderConfiguration(config);
     setVideoQuality(quality);
   };
@@ -204,15 +207,15 @@ export default function StreamingHostPage() {
       // 호스트 역할로 참여
       await clientRef.current.setClientRole('host');
       await clientRef.current.join(APP_ID, CHANNEL, TOKEN, null);
-      
+
       const audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
       const videoTrack = await AgoraRTC.createCameraVideoTrack({
         encoderConfig: '720p_1', // HD 화질 송출
       });
-      
+
       setLocalAudioTrack(audioTrack);
       setLocalVideoTrack(videoTrack);
-      
+
       if (localVideoRef.current) {
         videoTrack.play(localVideoRef.current);
       }
@@ -292,19 +295,19 @@ export default function StreamingHostPage() {
               라이브 방송 송출 세션 시작을 위해<br />관리자 비밀번호를 입력해주세요.
             </p>
           </div>
-          
+
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div className="relative group">
-              <input 
-                type="password" 
-                placeholder="••••" 
+              <input
+                type="password"
+                placeholder="••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 p-5 rounded-[4px] text-center text-2xl font-black text-white tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all placeholder:tracking-normal placeholder:text-slate-600"
                 autoFocus
               />
             </div>
-            <button 
+            <button
               type="submit"
               className="w-full py-5 bg-rose-600 hover:bg-rose-700 text-white rounded-[4px] text-sm font-black uppercase tracking-widest shadow-xl shadow-rose-600/30 transition-all active:scale-95 flex items-center justify-center gap-3 group"
             >
@@ -312,8 +315,8 @@ export default function StreamingHostPage() {
               <Radio size={18} className="group-hover:scale-125 transition-transform" />
             </button>
           </form>
-          
-          <button 
+
+          <button
             onClick={() => window.history.back()}
             className="w-full py-4 text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors"
           >
@@ -351,7 +354,7 @@ export default function StreamingHostPage() {
           <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-black rounded-[4px] transition-all flex items-center gap-2">
             <Share2 size={14} /> 링크 공유
           </button>
-          <button 
+          <button
             onClick={() => setIsSettingsOpen(true)}
             className="p-2.5 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-[4px] transition-all"
           >
@@ -365,15 +368,15 @@ export default function StreamingHostPage() {
         {/* Main Feed */}
         <div className="lg:col-span-3 flex flex-col gap-6">
           <div id="streaming-container" className="flex-1 bg-black rounded-[4px] border border-white/5 overflow-hidden shadow-2xl relative">
-            <div 
-              ref={localVideoRef} 
+            <div
+              ref={localVideoRef}
               className="w-full h-full object-cover transition-all duration-300"
-              style={{ 
+              style={{
                 transform: isMirrorMode ? 'scaleX(-1)' : 'none',
-                filter: `brightness(${brightness + (beautyLevel / 5)}%) saturate(${colorCorrection}%) contrast(${100 + (skinSmoothing / 10)}%) blur(${skinSmoothing / 25}px)` 
-              }} 
+                filter: `brightness(${brightness + (beautyLevel / 5)}%) saturate(${colorCorrection}%) contrast(${100 + (skinSmoothing / 10)}%) blur(${skinSmoothing / 25}px)`
+              }}
             />
-            
+
             {!cameraOn && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 text-slate-500 space-y-4">
                 <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center">
@@ -387,7 +390,7 @@ export default function StreamingHostPage() {
               <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                 <div className="text-center space-y-6">
                   <p className="text-white/60 font-medium">모든 준비가 완료되었습니다.</p>
-                  <button 
+                  <button
                     onClick={startStream}
                     className="px-10 py-5 bg-rose-600 hover:bg-rose-700 text-white rounded-[4px] text-xl font-black shadow-2xl shadow-rose-600/40 transition-all active:scale-95"
                   >
@@ -413,13 +416,13 @@ export default function StreamingHostPage() {
           {/* Control Bar */}
           <div className="h-24 bg-slate-900/80 backdrop-blur-3xl border border-white/5 rounded-[4px] flex items-center justify-between px-10 shadow-2xl">
             <div className="flex items-center gap-4">
-              <button 
+              <button
                 onClick={toggleMic}
                 className={`w-14 h-14 rounded-[4px] flex items-center justify-center transition-all ${micOn ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'}`}
               >
                 {micOn ? <Mic size={24} /> : <MicOff size={24} />}
               </button>
-              <button 
+              <button
                 onClick={toggleCamera}
                 className={`w-14 h-14 rounded-[4px] flex items-center justify-center transition-all ${cameraOn ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'}`}
               >
@@ -429,7 +432,7 @@ export default function StreamingHostPage() {
 
             <div className="flex items-center gap-4">
               {isLive ? (
-                <button 
+                <button
                   onClick={stopStream}
                   className="px-8 py-4 bg-rose-500 hover:bg-rose-600 text-white rounded-[4px] font-black text-sm flex items-center gap-3 transition-all shadow-lg shadow-rose-500/20"
                 >
@@ -513,7 +516,7 @@ export default function StreamingHostPage() {
                     <div className="grid grid-cols-1 gap-6">
                       <div className="space-y-3 text-left">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Camera Source</label>
-                        <select 
+                        <select
                           value={selectedCameraId}
                           onChange={(e) => changeCamera(e.target.value)}
                           className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-[4px] text-sm font-bold dark:text-white outline-none focus:border-rose-500"
@@ -523,7 +526,7 @@ export default function StreamingHostPage() {
                       </div>
                       <div className="space-y-3 text-left">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Microphone Source</label>
-                        <select 
+                        <select
                           value={selectedMicId}
                           onChange={(e) => changeMic(e.target.value)}
                           className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-[4px] text-sm font-bold dark:text-white outline-none focus:border-rose-500"
@@ -555,8 +558,8 @@ export default function StreamingHostPage() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">송출 화질 및 보정</h3>
                     <div className="grid grid-cols-3 gap-4">
                       {(['auto', 'low', 'high'] as const).map((q) => (
-                        <button 
-                          key={q} 
+                        <button
+                          key={q}
                           onClick={() => changeVideoQuality(q)}
                           className={`py-4 rounded-[4px] text-sm font-black border-2 transition-all ${videoQuality === q ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600 text-rose-600' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 text-slate-400 hover:border-slate-300 dark:hover:border-white/20'}`}
                         >
@@ -565,15 +568,15 @@ export default function StreamingHostPage() {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-8">
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Brightness (밝기)</label>
                         <span className="text-xs font-bold text-rose-500">{brightness}%</span>
                       </div>
-                      <input 
-                        type="range" min="50" max="150" value={brightness} 
+                      <input
+                        type="range" min="50" max="150" value={brightness}
                         onChange={(e) => setBrightness(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -583,8 +586,8 @@ export default function StreamingHostPage() {
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Saturation (색감)</label>
                         <span className="text-xs font-bold text-rose-500">{colorCorrection}%</span>
                       </div>
-                      <input 
-                        type="range" min="50" max="150" value={colorCorrection} 
+                      <input
+                        type="range" min="50" max="150" value={colorCorrection}
                         onChange={(e) => setColorCorrection(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -597,7 +600,7 @@ export default function StreamingHostPage() {
                         <p className="text-sm font-black text-slate-900 dark:text-white">미러 모드</p>
                         <p className="text-[10px] text-slate-400">송출 화면 좌우 반전</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setIsMirrorMode(!isMirrorMode)}
                         className={`w-12 h-6 ${isMirrorMode ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                       >
@@ -609,7 +612,7 @@ export default function StreamingHostPage() {
                         <p className="text-sm font-black text-slate-900 dark:text-white">전체화면</p>
                         <p className="text-[10px] text-slate-400">방송 화면만 크게 보기</p>
                       </div>
-                      <button 
+                      <button
                         onClick={toggleFullScreen}
                         className={`w-12 h-6 ${isFullScreen ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                       >
@@ -634,14 +637,14 @@ export default function StreamingHostPage() {
                             <p className="text-[10px] text-slate-400">방송 시작 시 마이크 상태</p>
                           </div>
                         </div>
-                        <button 
+                        <button
                           onClick={() => setMicDefaultOn(!micDefaultOn)}
                           className={`px-4 py-2 rounded-[4px] text-[10px] font-black transition-all ${micDefaultOn ? 'bg-rose-600 text-white' : 'bg-slate-200 dark:bg-white/10 text-slate-500'}`}
                         >
                           {micDefaultOn ? 'ALWAYS ON' : 'ALWAYS OFF'}
                         </button>
                       </div>
-                      
+
                       <div className="flex items-center justify-between p-6 bg-slate-50 dark:bg-white/5 rounded-[4px] border border-slate-100 dark:border-white/5">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-[4px] flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600">
@@ -652,7 +655,7 @@ export default function StreamingHostPage() {
                             <p className="text-[10px] text-slate-400">배경 소음을 억제하고 목소리를 강조</p>
                           </div>
                         </div>
-                        <button 
+                        <button
                           onClick={() => setIsNoiseReduction(!isNoiseReduction)}
                           className={`w-12 h-6 ${isNoiseReduction ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                         >
@@ -661,14 +664,14 @@ export default function StreamingHostPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="flex justify-between items-center px-2">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Input Gain (입력 볼륨)</span>
                       <span className="text-sm font-black text-rose-600">{outputVolume}%</span>
                     </div>
-                    <input 
-                      type="range" min="0" max="200" value={outputVolume} 
+                    <input
+                      type="range" min="0" max="200" value={outputVolume}
                       onChange={(e) => changeAudioVolume(Number(e.target.value))}
                       className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                     />
@@ -679,7 +682,7 @@ export default function StreamingHostPage() {
               {activeSettingsTab === 'layout' && (
                 <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-500 text-left">
                   <h3 className="text-xl font-black dark:text-white">방송 레이아웃</h3>
-                  <div className="grid grid-cols-2 gap-6">{[{id:'t', l:'메인 크게', i:Monitor}, {id:'m', l:'채팅창 중심', i:User}].map((l) => (<div key={l.id} className={`p-8 rounded-[4px] border-2 flex flex-col items-center gap-6 cursor-pointer ${l.id==='t'?'bg-rose-50 dark:bg-rose-500/10 border-rose-600':'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 opacity-50'}`}><div className="w-32 h-20 bg-white dark:bg-slate-800 rounded-[4px] border border-slate-200 dark:border-white/10 relative overflow-hidden"><div className={`absolute border ${l.id==='t'?'inset-0 bg-rose-600/20 border-rose-600/30':'bottom-2 right-2 w-10 h-6 bg-rose-600/20 border-rose-600/30 rounded-[4px]'}`} /></div><span className="text-sm font-black dark:text-white">{l.l}</span></div>))}</div>
+                  <div className="grid grid-cols-2 gap-6">{[{ id: 't', l: '메인 크게', i: Monitor }, { id: 'm', l: '채팅창 중심', i: User }].map((l) => (<div key={l.id} className={`p-8 rounded-[4px] border-2 flex flex-col items-center gap-6 cursor-pointer ${l.id === 't' ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 opacity-50'}`}><div className="w-32 h-20 bg-white dark:bg-slate-800 rounded-[4px] border border-slate-200 dark:border-white/10 relative overflow-hidden"><div className={`absolute border ${l.id === 't' ? 'inset-0 bg-rose-600/20 border-rose-600/30' : 'bottom-2 right-2 w-10 h-6 bg-rose-600/20 border-rose-600/30 rounded-[4px]'}`} /></div><span className="text-sm font-black dark:text-white">{l.l}</span></div>))}</div>
                 </div>
               )}
               {activeSettingsTab === 'effects' && (
@@ -688,27 +691,27 @@ export default function StreamingHostPage() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">가상 배경</h3>
                     <div className="grid grid-cols-4 gap-4">
                       {['none', 'blur', 'office', 'studio'].map((bg) => (
-                        <div 
-                          key={bg} 
+                        <div
+                          key={bg}
                           onClick={() => setSelectedBg(bg)}
                           className={`aspect-square rounded-[4px] border-2 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${selectedBg === bg ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-600' : 'bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/5 hover:border-slate-300'}`}
                         >
-                          <Sparkles size={20} className={selectedBg === bg ? 'text-rose-600' : 'text-slate-300'}/>
+                          <Sparkles size={20} className={selectedBg === bg ? 'text-rose-600' : 'text-slate-300'} />
                           <span className={`text-[10px] font-black uppercase ${selectedBg === bg ? 'text-rose-600' : 'text-slate-400'}`}>{bg}</span>
                         </div>
                       ))}
                     </div>
                     <p className="text-[10px] text-slate-400 italic font-medium">* 가상 배경 기능은 Agora Virtual Background 확장을 통해 처리됩니다.</p>
                   </div>
-                  
+
                   <div className="space-y-8">
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">피부 매끄럽게 (Skin Smoothing)</label>
                         <span className="text-xs font-bold text-rose-500">{skinSmoothing}%</span>
                       </div>
-                      <input 
-                        type="range" min="0" max="100" value={skinSmoothing} 
+                      <input
+                        type="range" min="0" max="100" value={skinSmoothing}
                         onChange={(e) => setSkinSmoothing(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -718,8 +721,8 @@ export default function StreamingHostPage() {
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">얼굴 윤곽 및 밝기 (Beauty Level)</label>
                         <span className="text-xs font-bold text-rose-500">{beautyLevel}%</span>
                       </div>
-                      <input 
-                        type="range" min="0" max="100" value={beautyLevel} 
+                      <input
+                        type="range" min="0" max="100" value={beautyLevel}
                         onChange={(e) => setBeautyLevel(Number(e.target.value))}
                         className="w-full h-1.5 bg-slate-100 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-rose-600"
                       />
@@ -732,7 +735,7 @@ export default function StreamingHostPage() {
                   <div className={`p-8 rounded-[4px] border flex items-center justify-between transition-all ${networkQuality.uplink <= 2 ? 'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-100 dark:border-emerald-500/10' : 'bg-amber-50 dark:bg-amber-500/5 border-amber-100 dark:border-amber-500/10'}`}>
                     <div className="flex items-center gap-6">
                       <div className={`w-14 h-14 bg-white dark:bg-slate-800 rounded-[4px] flex items-center justify-center shadow-sm ${networkQuality.uplink <= 2 ? 'text-emerald-500' : 'text-amber-500'}`}>
-                        <Wifi size={28}/>
+                        <Wifi size={28} />
                       </div>
                       <div>
                         <h4 className="text-lg font-black text-slate-900 dark:text-white">
@@ -753,7 +756,7 @@ export default function StreamingHostPage() {
                       <p className="text-sm font-black text-slate-900 dark:text-white">자동 비트레이트 조절</p>
                       <p className="text-[10px] text-slate-400">네트워크 상황에 따라 최적의 비트레이트를 실시간으로 유지합니다.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setAutoQualityAdjustment(!autoQualityAdjustment)}
                       className={`w-12 h-6 ${autoQualityAdjustment ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                     >
@@ -780,7 +783,7 @@ export default function StreamingHostPage() {
                       <p className="text-sm font-black text-slate-900 dark:text-white">다시보기 자동 생성</p>
                       <p className="text-[10px] text-slate-400">방송 종료 후 자동으로 영상을 인코딩하여 저장합니다.</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setIsAutoRecording(!isAutoRecording)}
                       className={`w-12 h-6 ${isAutoRecording ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                     >
@@ -791,8 +794,8 @@ export default function StreamingHostPage() {
                     <h3 className="text-xl font-black text-slate-900 dark:text-white">방송 예약 시간</h3>
                     <div className="grid grid-cols-4 gap-4">
                       {['60분', '120분', '180분', '무제한'].map((time) => (
-                        <button 
-                          key={time} 
+                        <button
+                          key={time}
                           onClick={() => setStreamLimit(time)}
                           className={`py-4 rounded-[4px] text-[11px] font-black border-2 transition-all ${streamLimit === time ? 'bg-rose-600 text-white border-rose-600 shadow-lg' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-white/5 text-slate-400 hover:border-slate-300'}`}
                         >
@@ -808,16 +811,16 @@ export default function StreamingHostPage() {
                   <h3 className="text-xl font-black text-slate-900 dark:text-white">방송 편의 설정</h3>
                   <div className="space-y-4">
                     {[
-                      {id: 'entrance', l:'시청자 입장 알림', d:'신규 시청자 유입 시 알림 표시', a:entranceAlert, fn: () => setEntranceAlert(!entranceAlert)},
-                      {id: 'chat', l:'채팅창 욕설 필터', d:'부적절한 단어를 자동으로 가립니다', a:chatFilter, fn: () => setChatFilter(!chatFilter)},
-                      {id: 'camera', l:'방송 중 카메라 OFF 금지', d:'호스트의 실수를 방지합니다', a:preventCameraOff, fn: () => setPreventCameraOff(!preventCameraOff)}
+                      { id: 'entrance', l: '시청자 입장 알림', d: '신규 시청자 유입 시 알림 표시', a: entranceAlert, fn: () => setEntranceAlert(!entranceAlert) },
+                      { id: 'chat', l: '채팅창 욕설 필터', d: '부적절한 단어를 자동으로 가립니다', a: chatFilter, fn: () => setChatFilter(!chatFilter) },
+                      { id: 'camera', l: '방송 중 카메라 OFF 금지', d: '호스트의 실수를 방지합니다', a: preventCameraOff, fn: () => setPreventCameraOff(!preventCameraOff) }
                     ].map((item) => (
                       <div key={item.id} className="flex items-center justify-between p-6 bg-slate-50 dark:bg-white/5 rounded-[4px] border border-slate-100 dark:border-white/5">
                         <div>
                           <p className="text-sm font-black text-slate-900 dark:text-white">{item.l}</p>
                           <p className="text-[10px] text-slate-400">{item.d}</p>
                         </div>
-                        <button 
+                        <button
                           onClick={item.fn}
                           className={`w-12 h-6 ${item.a ? 'bg-rose-600' : 'bg-slate-200 dark:bg-white/10'} rounded-full flex items-center px-1 transition-all`}
                         >

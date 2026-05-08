@@ -439,24 +439,28 @@ export default function PracticePage() {
               step="입문 단계" 
               title="AI 구조 이해" 
               count={projects.filter(p => p.level === '입문').length.toString()} 
+              color="emerald"
             />
             <StepArrow />
             <StepItem 
               step="기초 단계" 
               title="흐름 설계" 
               count={projects.filter(p => p.level === '초급').length.toString()} 
+              color="sky"
             />
             <StepArrow />
             <StepItem 
               step="실전 단계" 
               title="연결 구현" 
               count={projects.filter(p => p.level === '중급').length.toString()} 
+              color="indigo"
             />
             <StepArrow />
             <StepItem 
               step="심화 단계" 
               title="서비스 확장" 
               count={projects.filter(p => p.level === '고급').length.toString()} 
+              color="purple"
             />
           </div>
           
@@ -584,10 +588,10 @@ function ProjectCard({ project, onEdit, onDelete, onHide, onRefresh }: { project
     }
   })();
   const levelColors: Record<string, string> = {
-    '입문': 'text-green-500 bg-green-50 dark:bg-green-500/10 dark:text-green-400',
-    '초급': 'text-orange-500 bg-orange-50 dark:bg-orange-500/10 dark:text-orange-400',
+    '입문': 'text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400',
+    '초급': 'text-sky-500 bg-sky-50 dark:bg-sky-500/10 dark:text-sky-400',
     '중급': 'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 dark:text-indigo-400',
-    '고급': 'text-red-500 bg-red-50 dark:bg-red-500/10 dark:text-red-400'
+    '고급': 'text-purple-500 bg-purple-50 dark:bg-purple-500/10 dark:text-purple-400'
   };
 
   return (
@@ -832,19 +836,28 @@ function ProjectAdminModal({ isOpen, onClose, project, onSuccess }: { isOpen: bo
   );
 }
 
-function StepItem({ step, title, count, active = false }: { step: string, title: string, count: string, active?: boolean }) {
+function StepItem({ step, title, count, active = false, color = 'indigo' }: { step: string, title: string, count: string, active?: boolean, color?: string }) {
+  const colorMap: Record<string, { bg: string, border: string, text: string, darkBg: string, darkBorder: string, hoverBorder: string, darkHoverBorder: string, badgeBg: string, activeBg: string }> = {
+    'emerald': { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-600', darkBg: 'dark:bg-emerald-500/10', darkBorder: 'dark:border-emerald-500/30', hoverBorder: 'hover:border-emerald-200', darkHoverBorder: 'dark:hover:border-emerald-500/30', badgeBg: 'bg-emerald-600', activeBg: 'bg-emerald-50' },
+    'sky': { bg: 'bg-sky-50', border: 'border-sky-200', text: 'text-sky-600', darkBg: 'dark:bg-sky-500/10', darkBorder: 'dark:border-sky-500/30', hoverBorder: 'hover:border-sky-200', darkHoverBorder: 'dark:hover:border-sky-500/30', badgeBg: 'bg-sky-600', activeBg: 'bg-sky-50' },
+    'indigo': { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-600', darkBg: 'dark:bg-indigo-500/10', darkBorder: 'dark:border-indigo-500/30', hoverBorder: 'hover:border-indigo-200', darkHoverBorder: 'dark:hover:border-indigo-500/30', badgeBg: 'bg-indigo-600', activeBg: 'bg-indigo-50' },
+    'purple': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-600', darkBg: 'dark:bg-purple-500/10', darkBorder: 'dark:border-purple-500/30', hoverBorder: 'hover:border-purple-200', darkHoverBorder: 'dark:hover:border-purple-500/30', badgeBg: 'bg-purple-600', activeBg: 'bg-purple-50' },
+  };
+
+  const c = colorMap[color] || colorMap['indigo'];
+
   return (
     <div className={`flex-1 min-w-[140px] p-5 rounded-xl border text-center transition-all duration-300 cursor-pointer group/step ${
       active 
-        ? 'bg-indigo-50 border-indigo-200 shadow-sm dark:bg-indigo-500/10 dark:border-indigo-500/30' 
-        : 'bg-white border-slate-100 dark:bg-slate-900 dark:border-white/5 hover:border-indigo-200 hover:shadow-md dark:hover:border-indigo-500/30'
+        ? `${c.activeBg} ${c.border} shadow-sm ${c.darkBg} ${c.darkBorder}` 
+        : `bg-white border-slate-100 dark:bg-slate-900 dark:border-white/5 ${c.hoverBorder} hover:shadow-md ${c.darkHoverBorder}`
     }`}>
-      <p className={`text-[12px] font-black mb-1 transition-colors ${active ? 'text-indigo-600' : 'text-slate-400 group-hover/step:text-indigo-500'}`}>{step}</p>
+      <p className={`text-[12px] font-black mb-1 transition-colors ${active ? c.text : `text-slate-400 group-hover/step:${c.text.replace('text-', 'text-')}`}`}>{step}</p>
       <h5 className="text-sm font-black text-slate-800 dark:text-white mb-3">{title}</h5>
       <span className={`text-[12px] px-3 py-1 rounded-full font-bold transition-all ${
         active 
-          ? 'bg-indigo-600 text-white' 
-          : 'bg-slate-50 text-slate-400 dark:bg-white/5 group-hover/step:bg-indigo-600 group-hover/step:text-white'
+          ? `${c.badgeBg} text-white` 
+          : `bg-slate-50 text-slate-400 dark:bg-white/5 group-hover/step:${c.badgeBg} group-hover/step:text-white`
       }`}>추천 실습 {count}개</span>
     </div>
   );
