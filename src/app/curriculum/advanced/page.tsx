@@ -94,7 +94,7 @@ export default function AdvancedCurriculumPage() {
             <div className="flex gap-3 pt-2">
               <Link 
                 href="/contact"
-                className="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-indigo-600/20"
+                className="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-purple-600/20"
               >
                 <PlayCircle className="w-5 h-5" /> 학습 문의하기
               </Link>

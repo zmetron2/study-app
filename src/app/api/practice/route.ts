@@ -3,6 +3,23 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+interface PracticeProject {
+  id: string;
+  title: string;
+  description: string;
+  level: string;
+  category: string;
+  tags: string;
+  curriculum_link: string;
+  views?: string;
+  completion_rate: number;
+  icon_name: string;
+  is_hidden: number;
+  content: string;
+  created_at?: string;
+}
+
+
 // GET: 리스트 조회
 export async function GET(request: NextRequest) {
   try {
@@ -10,7 +27,7 @@ export async function GET(request: NextRequest) {
     try {
       context = getRequestContext();
     } catch (e) {
-      if (process.env.NODE_ENV !== 'development') throw e;
+      console.error("getRequestContext failed:", e);
     }
     const env = context?.env;
 
@@ -84,7 +101,11 @@ export async function GET(request: NextRequest) {
     ).all();
     return Response.json({ success: true, projects: results });
   } catch (error) {
-    return Response.json({ error: (error as Error).message }, { status: 500 });
+    console.error("D1 GET Error:", error);
+    return Response.json({ 
+      error: (error as Error).message,
+      stack: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined
+    }, { status: 500 });
   }
 }
 
@@ -95,13 +116,13 @@ export async function POST(request: NextRequest) {
     try {
       context = getRequestContext();
     } catch (e) {
-      if (process.env.NODE_ENV !== 'development') throw e;
+      console.error("getRequestContext failed:", e);
     }
     const env = context?.env;
     
-    let data;
+    let data: Partial<PracticeProject>;
     try {
-      data = await request.json() as any;
+      data = await request.json();
     } catch (e) {
       return Response.json({ error: "잘못된 JSON 형식입니다." }, { status: 400 });
     }
@@ -144,13 +165,13 @@ export async function PUT(request: NextRequest) {
     try {
       context = getRequestContext();
     } catch (e) {
-      if (process.env.NODE_ENV !== 'development') throw e;
+      console.error("getRequestContext failed:", e);
     }
     const env = context?.env;
     
-    let data;
+    let data: Partial<PracticeProject>;
     try {
-      data = await request.json() as any;
+      data = await request.json();
     } catch (e) {
       return Response.json({ error: "잘못된 JSON 형식입니다." }, { status: 400 });
     }
@@ -185,7 +206,10 @@ export async function PUT(request: NextRequest) {
     return Response.json({ success: true });
   } catch (error) {
     console.error("D1 PUT Error:", error);
-    return Response.json({ error: (error as Error).message || "서버 내부 오류" }, { status: 500 });
+    return Response.json({ 
+      error: (error as Error).message || "서버 내부 오류",
+      stack: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined
+    }, { status: 500 });
   }
 }
 
@@ -196,7 +220,7 @@ export async function DELETE(request: NextRequest) {
     try {
       context = getRequestContext();
     } catch (e) {
-      if (process.env.NODE_ENV !== 'development') throw e;
+      console.error("getRequestContext failed:", e);
     }
     const env = context?.env;
     

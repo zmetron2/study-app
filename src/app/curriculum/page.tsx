@@ -78,7 +78,7 @@ export default function CurriculumPage() {
       {/* --- Header Area --- */}
       <header className="relative bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-white py-16 transition-colors border-b border-slate-200 dark:border-white/5 text-left overflow-hidden">
         {/* Background Decoration */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/10 dark:to-purple-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 dark:from-emerald-500/10 dark:to-teal-500/10" />
         <div className="absolute inset-0 backdrop-blur-[2px]" />
         
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
@@ -94,7 +94,7 @@ export default function CurriculumPage() {
             <div className="flex gap-3 pt-2">
               <Link 
                 href="/contact"
-                className="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-indigo-600/20"
+                className="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-emerald-600/20"
               >
                 <PlayCircle className="w-5 h-5" /> 학습 문의하기
               </Link>
@@ -164,10 +164,10 @@ export default function CurriculumPage() {
             <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm transition-colors text-left">
               <div className="p-5 border-b border-border bg-slate-50/50 dark:bg-slate-800/50 flex flex-col gap-1 transition-colors">
                 <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
-                  <span className="bg-primary text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">1</span> 
+                  <span className="bg-emerald-600 text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">1</span> 
                   입문 단계
                 </h3>
-                <p className="text-[12px] text-primary font-bold">"AI를 제대로 쓰기 시작하는 단계"</p>
+                <p className="text-[12px] text-emerald-600 font-bold">"AI를 제대로 쓰기 시작하는 단계"</p>
               </div>
               <div className="divide-y divide-border">
                 <SidebarItem 
@@ -219,7 +219,7 @@ export default function CurriculumPage() {
               <div className="space-y-5">
                 {/* Track A */}
                 <div className="space-y-2">
-                  <p className="text-[12px] font-black text-indigo-500 uppercase tracking-widest">트랙 A 선택 시</p>
+                  <p className="text-[12px] font-black text-emerald-500 uppercase tracking-widest">트랙 A 선택 시</p>
                   <ul className="space-y-1.5">
                     <BenefitItem text="내가 만든 첫 웹페이지 완성" />
                     <BenefitItem text="UI 요청하는 감각 습득" />
@@ -230,7 +230,7 @@ export default function CurriculumPage() {
                 
                 {/* Track B */}
                 <div className="space-y-2">
-                  <p className="text-[12px] font-black text-teal-500 uppercase tracking-widest">트랙 B 선택 시</p>
+                  <p className="text-[12px] font-black text-emerald-500 uppercase tracking-widest">트랙 B 선택 시</p>
                   <ul className="space-y-1.5">
                     <BenefitItem text="콘텐츠 자동 생성 구조 이해" />
                     <BenefitItem text="AI 활용 루틴 구축" />
@@ -241,7 +241,7 @@ export default function CurriculumPage() {
 
                 {/* Track C */}
                 <div className="space-y-2">
-                  <p className="text-[12px] font-black text-orange-500 uppercase tracking-widest">트랙 C 선택 시</p>
+                  <p className="text-[12px] font-black text-emerald-500 uppercase tracking-widest">트랙 C 선택 시</p>
                   <ul className="space-y-1.5">
                     <BenefitItem text="반복 작업 자동화 경험" />
                     <BenefitItem text="실무 생산성 향상" />
@@ -258,10 +258,10 @@ export default function CurriculumPage() {
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 pb-8 border-b border-border text-left">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="bg-primary/10 text-primary text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Mindset & Communication</span>
+                    <span className="bg-emerald-500/10 text-emerald-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Mindset & Communication</span>
                   </div>
                   <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">1. 입문: AI 바이브 잡기</h2>
-                  <p className="text-primary font-bold text-lg leading-relaxed max-w-2xl">
+                  <p className="text-emerald-600 font-bold text-lg leading-relaxed max-w-2xl">
                     "AI를 제대로 쓰기 시작하는 단계"
                   </p>
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
@@ -289,10 +289,10 @@ export default function CurriculumPage() {
                     { title: "실패 vs 성공 요청 분석", desc: "왜 AI가 엉뚱한 대답을 하는지 케이스 스터디" },
                     { title: "일반 vs 특수 요청 구분", desc: "상황에 맞는 최적의 소통 방식(One-shot, Few-shot 등) 선택" },
                   ].map((item, idx) => (
-                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-primary/30 transition-all flex items-start gap-4 group">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-emerald-500/30 transition-all flex items-start gap-4 group">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
                       <div>
-                        <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1 group-hover:text-primary transition-colors">{item.title}</h4>
+                        <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1 group-hover:text-emerald-600 transition-colors">{item.title}</h4>
                         <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
@@ -312,11 +312,11 @@ export default function CurriculumPage() {
                 
                 <div className="space-y-12">
                   {/* Track A */}
-                  <div id="track-a" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-indigo-100 dark:border-indigo-500/20 p-8 space-y-6 hover:border-primary transition-all group shadow-sm">
+                  <div id="track-a" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-100 dark:border-emerald-500/20 p-8 space-y-6 hover:border-emerald-500 transition-all group shadow-sm">
                     <div className="flex justify-between items-center">
-                      <div className="inline-flex bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track A</div>
+                      <div className="inline-flex bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track A</div>
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
-                        <Clock size={14} className="text-indigo-400" /> 예상 60분
+                        <Clock size={14} className="text-emerald-400" /> 예상 60분
                       </div>
                     </div>
                     <div>
@@ -335,18 +335,18 @@ export default function CurriculumPage() {
                     </div>
                     <button 
                       onClick={handleStartPractice}
-                      className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-primary transition-all shadow-xl shadow-slate-900/10 hover:shadow-primary/25"
+                      className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 hover:shadow-emerald-600/25"
                     >
                       웹 트랙 실습 시작하기
                     </button>
                   </div>
 
                   {/* Track B */}
-                  <div id="track-b" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-teal-100 dark:border-teal-500/20 p-8 space-y-6 hover:border-primary transition-all group shadow-sm">
+                  <div id="track-b" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-100 dark:border-emerald-500/20 p-8 space-y-6 hover:border-emerald-500 transition-all group shadow-sm">
                     <div className="flex justify-between items-center">
-                      <div className="inline-flex bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track B</div>
+                      <div className="inline-flex bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track B</div>
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
-                        <Clock size={14} className="text-teal-400" /> 예상 40분
+                        <Clock size={14} className="text-emerald-400" /> 예상 40분
                       </div>
                     </div>
                     <div>
@@ -365,18 +365,18 @@ export default function CurriculumPage() {
                     </div>
                     <button 
                       onClick={handleStartPractice}
-                      className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-primary transition-all shadow-xl shadow-slate-900/10 hover:shadow-primary/25"
+                      className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 hover:shadow-emerald-600/25"
                     >
                       콘텐츠 트랙 실습 시작하기
                     </button>
                   </div>
 
                   {/* Track C */}
-                  <div id="track-c" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-orange-100 dark:border-orange-500/20 p-8 space-y-6 hover:border-primary transition-all group shadow-sm text-left">
+                  <div id="track-c" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-100 dark:border-emerald-500/20 p-8 space-y-6 hover:border-emerald-500 transition-all group shadow-sm text-left">
                     <div className="flex justify-between items-center">
-                      <div className="inline-flex bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track C</div>
+                      <div className="inline-flex bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track C</div>
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
-                        <Clock size={14} className="text-orange-400" /> 예상 50분
+                        <Clock size={14} className="text-emerald-400" /> 예상 50분
                       </div>
                     </div>
                     <div>
@@ -395,7 +395,7 @@ export default function CurriculumPage() {
                     </div>
                     <button 
                       onClick={handleStartPractice}
-                      className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-primary transition-all shadow-xl shadow-slate-900/10 hover:shadow-primary/25"
+                      className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 hover:shadow-emerald-600/25"
                     >
                       자동화 트랙 실습 시작하기
                     </button>
@@ -406,7 +406,7 @@ export default function CurriculumPage() {
               {/* Next Step Placeholder */}
               <div className="pt-8 border-t border-border flex justify-end">
                 <Link href="/curriculum/basic">
-                  <button className="bg-primary text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-500 transition-all hover:scale-105 shadow-lg shadow-primary/20">
+                  <button className="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-500 transition-all hover:scale-105 shadow-lg shadow-emerald-600/20">
                     2. 기초 단계: 시스템 사고 <ChevronRight className="w-4 h-4" />
                   </button>
                 </Link>
@@ -423,7 +423,7 @@ export default function CurriculumPage() {
           <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
             <div className="p-8 space-y-6">
               <div className="flex justify-between items-center">
-                <div className="bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">Download Guide</div>
+                <div className="bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">Download Guide</div>
                 <button onClick={() => setIsGuideOpen(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
                   <X className="w-6 h-6" />
                 </button>
@@ -458,7 +458,7 @@ export default function CurriculumPage() {
               <div className="pt-4">
                 <button 
                   onClick={() => setIsGuideOpen(false)}
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl font-black transition-all hover:-translate-y-1"
+                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-2xl font-black transition-all hover:-translate-y-1"
                 >
                   확인했습니다
                 </button>
@@ -480,8 +480,8 @@ export default function CurriculumPage() {
                 </button>
               </div>
               
-              <div className="w-20 h-20 bg-indigo-600/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Box className="w-10 h-10 text-indigo-600" />
+              <div className="w-20 h-20 bg-emerald-600/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Box className="w-10 h-10 text-emerald-600" />
               </div>
               
               <div className="space-y-2">
@@ -492,12 +492,12 @@ export default function CurriculumPage() {
               <div className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-2xl p-6 text-left space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-slate-600 dark:text-slate-300">입문 단계 실습 패키지.zip</span>
-                  <button className="text-indigo-600 font-black text-sm hover:underline">다운로드</button>
+                  <button className="text-emerald-600 font-black text-sm hover:underline">다운로드</button>
                 </div>
                 <div className="h-[1px] bg-slate-100 dark:bg-white/5" />
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-slate-600 dark:text-slate-300">프롬프트 템플릿 모음.pdf</span>
-                  <button className="text-indigo-600 font-black text-sm hover:underline">다운로드</button>
+                  <button className="text-emerald-600 font-black text-sm hover:underline">다운로드</button>
                 </div>
               </div>
 
@@ -566,19 +566,19 @@ function SidebarItem({ title, active = false, onClick, isSubItem = false }: { ti
       onClick={onClick}
       className={`p-4 flex items-center justify-between cursor-pointer transition-all ${
         active 
-          ? 'bg-primary/10 border-r-4 border-primary' 
+          ? 'bg-emerald-500/10 border-r-4 border-emerald-500' 
           : 'hover:bg-slate-50 dark:hover:bg-white/5'
       } ${isSubItem ? 'pl-9 py-2.5' : ''}`}
     >
       <span className={`font-bold transition-colors ${
         isSubItem ? 'text-[12px]' : 'text-xs'
       } ${
-        active ? 'text-primary' : 'text-slate-600 dark:text-slate-400'
+        active ? 'text-emerald-600' : 'text-slate-600 dark:text-slate-400'
       }`}>
         {title}
       </span>
-      {active && !isSubItem && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
-      {active && isSubItem && <div className="w-1 h-1 rounded-full bg-primary/60" />}
+      {active && !isSubItem && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+      {active && isSubItem && <div className="w-1 h-1 rounded-full bg-emerald-500/60" />}
     </div>
   );
 }
@@ -586,7 +586,7 @@ function SidebarItem({ title, active = false, onClick, isSubItem = false }: { ti
 function GuideStep({ number, title, desc }: { number: string, title: string, desc: string }) {
   return (
     <div className="flex gap-4 text-left">
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-black">
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-black">
         {number}
       </div>
       <div className="space-y-1">
