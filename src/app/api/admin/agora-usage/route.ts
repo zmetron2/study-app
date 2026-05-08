@@ -85,18 +85,22 @@ export async function GET() {
     // 성공한 도메인이 있으면 그것부터 시도, 없으면 전체 도메인 시도
     const retryDomains = successDomain ? [successDomain, ...domains.filter(d => d !== successDomain)] : domains;
 
-    // 시도할 경로 목록 (v1.0, /dev, appid/app_id, v2, Analytics Beta 대응)
-    const startTs = Math.floor(new Date(startDay).getTime() / 1000);
-    const endTs = Math.floor(new Date(endDay).getTime() / 1000) + 86400; // 종료일 포함을 위해 24시간 추가
+    // 현재 날짜 기준 최근 30일 데이터 조회 (데이터 누락 방지)
+    const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+    const startDayRange = thirtyDaysAgo.toISOString().split('T')[0];
+    const endDayRange = now.toISOString().split('T')[0];
+    
+    // 타임스탬프 (Analytics API용)
+    const startTs = Math.floor(thirtyDaysAgo.getTime() / 1000);
+    const endTs = Math.floor(now.getTime() / 1000) + 86400;
 
     const paths = [
-      `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      // Insight API (개별 metric 순회 시도 - 가장 가능성 높음)
+      `/v1/usage/minutes?start_date=${startDayRange}&end_date=${endDayRange}&appid=${APP_ID}`,
+      `/v1/projects/${APP_ID}/usage?start_date=${startDayRange}&end_date=${endDayRange}`, // 프로젝트 기반 경로 추가
       `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=audio_duration`,
       `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=video_hd_duration`,
       `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=duration`,
-      `/v2/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
+      `/v1.0/usage/minutes?start_date=${startDayRange}&end_date=${endDayRange}&appid=${APP_ID}`
     ];
 
     const commonHeaders = {
@@ -171,8 +175,12 @@ export async function GET() {
       ? projectsData.projects.length 
       : 0;
 
+    const projectSample = Array.isArray(projectsData?.projects) && projectsData.projects.length > 0
+      ? { name: projectsData.projects[0].name, id: projectsData.projects[0].id }
+      : null;
+
     return NextResponse.json({ 
-      error: 'Agora API 호출 실패 (404: 경로 불일치)',
+      error: 'Agora API 호출 실패 (데이터 없음)',
       debug: {
         successDomain,
         appId: safeMask(APP_ID),
@@ -180,9 +188,10 @@ export async function GET() {
         credentialsLength: credentials.length,
         appIdExistsInAccount: appIdExists,
         availableProjectsInAccount: availableProjectCount,
+        projectSample, // 프로젝트 메타데이터 확인용
         diagnosticError: diagError,
         lastError: lastError,
-        tip: '1. Agora 콘솔 [RESTful API] > [View Details]에서 "Project Management" 권한 확인. 2. 해당 프로젝트에 "Project Certificate"가 활성화되어 있는지 확인. 3. [White List]에 IP가 등록되어 있다면 제거 후 시도.'
+        tip: '인증은 성공했으나 데이터를 찾지 못했습니다. App ID가 실사용 중인 프로젝트와 일치하는지 확인해 주세요.'
       }
     }, { status: 500 });
 
