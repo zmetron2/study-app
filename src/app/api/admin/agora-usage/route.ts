@@ -44,35 +44,49 @@ export async function GET() {
     const startDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString().split('T')[0];
     const endDay = now.toISOString().split('T')[0];
 
-    // 진단 단계: 프로젝트 목록 조회 시도
+    // 진단 단계: 프로젝트 목록 조회 시도 (경로 다양화)
     let projectsData: any = null;
     let diagError: string | null = null;
-    const diagPaths = ['/v1/projects', '/v1.0/projects', '/v1/apps'];
+    const diagPaths = [
+      '/v1/projects', 
+      '/v1.0/projects', 
+      '/dev/v1/projects', // 일부 계정용
+      '/v1/apps'
+    ];
     
-    for (const dPath of diagPaths) {
-      try {
-        const projectsRes = await fetch(`https://api.agora.io${dPath}`, {
-          headers: { 'Authorization': `Basic ${credentials}` }
-        });
-        if (projectsRes.ok) {
-          projectsData = await projectsRes.json();
-          break; // 성공하면 중단
-        } else {
-          diagError = `Diagnostic (${dPath}) failed with status ${projectsRes.status}`;
+    // 기본 도메인과 대체 도메인 시도
+    const domains = [
+      'api.agora.io', 
+      'api.sd-rtn.com', 
+      'api-us-west-1.agora.io', // 미국 리전
+      'api-eu-central-1.agora.io' // 유럽 리전
+    ];
+
+    diagLoop: for (const domain of domains) {
+      for (const dPath of diagPaths) {
+        try {
+          const projectsRes = await fetch(`https://${domain}${dPath}`, {
+            headers: { 'Authorization': `Basic ${credentials}` }
+          });
+          if (projectsRes.ok) {
+            projectsData = await projectsRes.json();
+            break diagLoop; // 성공하면 전체 도메인/경로 루프 중단
+          } else {
+            diagError = `Diagnostic (${domain}${dPath}) failed with status ${projectsRes.status}`;
+          }
+        } catch (e: any) {
+          diagError = e.message;
         }
-      } catch (e: any) {
-        diagError = e.message;
       }
     }
 
-    // 기본 도메인과 대체 도메인 시도
-    const domains = ['api.agora.io', 'api.sd-rtn.com'];
     let lastError: any = null;
 
-    // 시도할 경로 목록 (v1.0, appid/app_id 변동성 대응)
+    // 시도할 경로 목록 (v1.0, /dev, appid/app_id 변동성 대응)
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
+      `/dev/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&app_id=${APP_ID}`,
       `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
     ];
