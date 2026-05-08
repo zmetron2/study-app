@@ -90,16 +90,17 @@ export async function GET() {
     const startDayRange = thirtyDaysAgo.toISOString().split('T')[0];
     const endDayRange = now.toISOString().split('T')[0];
     
-    // 타임스탬프 (Analytics API용)
+    // 타임스탬프 (Analytics API용) - 공식 문서 기준 camelCase
     const startTs = Math.floor(thirtyDaysAgo.getTime() / 1000);
     const endTs = Math.floor(now.getTime() / 1000) + 86400;
 
     const paths = [
+      // ✅ 공식 문서 기준 camelCase 파라미터: startTs, endTs, metric=totalDuration
+      `/beta/insight/usage/by_time?appid=${APP_ID}&startTs=${startTs}&endTs=${endTs}&metric=totalDuration`,
+      `/beta/insight/usage/by_time?appid=${APP_ID}&startTs=${startTs}&endTs=${endTs}&metric=totalAudioDuration`,
+      `/beta/insight/usage/by_time?appid=${APP_ID}&startTs=${startTs}&endTs=${endTs}&metric=totalVideoDuration`,
+      // 구버전 fallback
       `/v1/usage/minutes?start_date=${startDayRange}&end_date=${endDayRange}&appid=${APP_ID}`,
-      `/v1/projects/${APP_ID}/usage?start_date=${startDayRange}&end_date=${endDayRange}`, // 프로젝트 기반 경로 추가
-      `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=audio_duration`,
-      `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=video_hd_duration`,
-      `/beta/insight/usage/by_time?appid=${APP_ID}&start_ts=${startTs}&end_ts=${endTs}&metric=duration`,
       `/v1.0/usage/minutes?start_date=${startDayRange}&end_date=${endDayRange}&appid=${APP_ID}`
     ];
 
