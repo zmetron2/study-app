@@ -98,18 +98,27 @@ export async function GET() {
     }
 
     // 진단 결과 분석
-    const maskedAppId = APP_ID.substring(0, 4) + '...' + APP_ID.substring(APP_ID.length - 4);
-    const appIdExists = projectsData?.projects?.some((p: any) => p.vendor_key === APP_ID);
-    const availableProjectCount = projectsData?.projects?.length || 0;
+    const safeMask = (str: string) => {
+      if (!str || str.length < 8) return '***';
+      return str.substring(0, 4) + '...' + str.substring(str.length - 4);
+    };
+
+    const appIdExists = Array.isArray(projectsData?.projects) 
+      ? projectsData.projects.some((p: any) => p.vendor_key === APP_ID) 
+      : null;
+    
+    const availableProjectCount = Array.isArray(projectsData?.projects) 
+      ? projectsData.projects.length 
+      : 0;
 
     return NextResponse.json({ 
       error: 'Agora API 호출 실패',
       debug: {
-        appId: maskedAppId,
+        appId: safeMask(APP_ID),
         appIdExistsInAccount: appIdExists,
         availableProjectsInAccount: availableProjectCount,
         lastErrorStatus: lastError?.status,
-        lastErrorDetails: lastError?.details,
+        lastErrorDetails: typeof lastError?.details === 'string' ? lastError.details : JSON.stringify(lastError?.details),
         tip: appIdExists === false 
           ? '현재 App ID가 해당 Customer ID 계정에 존재하지 않습니다. App ID를 다시 확인해 주세요.'
           : 'Agora 콘솔에서 "Project Management API" 권한이 활성화되어 있는지 확인해 주세요.'
