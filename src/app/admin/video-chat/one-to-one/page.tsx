@@ -228,7 +228,7 @@ export default function OneToOneVideoChat() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'start', sessionId: newSessionId, channel: CHANNEL }),
-      }).catch(() => {}); // 실패해도 통화에 영향 없음
+      }).then(r => r.json()).then(d => console.log('[Agora Session] start:', d)).catch(e => console.error('[Agora Session] start error:', e));
     } catch (error) {
       console.error('Agora join error:', error);
       alert('화상채팅 연결 중 오류가 발생했습니다.');
@@ -242,7 +242,7 @@ export default function OneToOneVideoChat() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'end', sessionId: sessionIdRef.current }),
-      }).catch(() => {});
+      }).then(r => r.json()).then(d => console.log('[Agora Session] end:', d)).catch(e => console.error('[Agora Session] end error:', e));
       sessionIdRef.current = null;
     }
     localAudioTrack?.close();
