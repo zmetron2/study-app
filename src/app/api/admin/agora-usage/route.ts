@@ -1,29 +1,45 @@
 import { NextResponse } from 'next/server';
+import { getRequestContext } from '@cloudflare/next-on-pages';
 
 export const runtime = 'edge';
 
 export async function GET() {
-  const CUSTOMER_ID = process.env.AGORA_CUSTOMER_ID;
-  const CUSTOMER_SECRET = process.env.AGORA_CUSTOMER_SECRET;
-  const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID;
-
-  if (!CUSTOMER_ID || !CUSTOMER_SECRET || !APP_ID) {
-    return NextResponse.json({ error: 'Agora credentials not configured' }, { status: 500 });
-  }
+  let CUSTOMER_ID: string | undefined;
+  let CUSTOMER_SECRET: string | undefined;
+  let APP_ID: string | undefined;
 
   try {
+    const context = getRequestContext();
+    const env = context?.env;
+
+    // Cloudflare env bindings 우선, 없으면 process.env (로컬 개발용)
+    CUSTOMER_ID = env?.AGORA_CUSTOMER_ID || process.env.AGORA_CUSTOMER_ID;
+    CUSTOMER_SECRET = env?.AGORA_CUSTOMER_SECRET || process.env.AGORA_CUSTOMER_SECRET;
+    APP_ID = env?.NEXT_PUBLIC_AGORA_APP_ID || process.env.NEXT_PUBLIC_AGORA_APP_ID;
+
+    if (!CUSTOMER_ID || !CUSTOMER_SECRET || !APP_ID) {
+      console.error('Missing Agora credentials:', { 
+        hasId: !!CUSTOMER_ID, 
+        hasSecret: !!CUSTOMER_SECRET, 
+        hasAppId: !!APP_ID 
+      });
+      return NextResponse.json({ 
+        error: 'Agora credentials not configured',
+        details: { hasId: !!CUSTOMER_ID, hasSecret: !!CUSTOMER_SECRET, hasAppId: !!APP_ID }
+      }, { status: 500 });
+    }
+
     // Agora Basic Auth 생성
     const credentials = btoa(`${CUSTOMER_ID}:${CUSTOMER_SECRET}`);
     
-    // 현재 날짜 기준 이번 달 시작일과 종료일 계산 (YYYY-MM-DD)
+    // 현재 날짜 기준 이번 달 시작일과 종료일 계산 (YYYYMMDD)
     const now = new Date();
     const startDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0].replace(/-/g, '');
     const endDay = now.toISOString().split('T')[0].replace(/-/g, '');
 
-    // Agora Usage API 호출 (분 단위 사용량 조회)
-    // Note: 실제 API 경로는 Agora 프로젝트 설정 및 리전에 따라 다를 수 있습니다. 
-    // 여기서는 표준 통계 인터페이스를 사용합니다.
-    const response = await fetch(`https://api.agora.io/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`, {
+    const url = `https://api.agora.io/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`;
+    
+    const response = await fetch(url, {
       headers: {
         'Authorization': `Basic ${credentials}`,
         'Content-Type': 'application/json'
@@ -31,17 +47,19 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch from Agora');
+      const errorText = await response.text();
+      console.error('Agora API Error Status:', response.status, errorText);
+      throw new Error(`Agora API responded with ${response.status}: ${errorText}`);
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
     
     // 사용된 총 분량 계산 (비디오 + 오디오 합산)
-    // Agora API 응답 구조에 따라 데이터 파싱 로직이 달라질 수 있습니다.
     let totalMinutes = 0;
     if (data.data && Array.isArray(data.data)) {
       data.data.forEach((item: any) => {
-        totalMinutes += (item.video_hd || 0) + (item.video_hdp || 0) + (item.audio || 0);
+        // 비디오(HD, HDP, Full HD 등) 및 오디오 합산
+        totalMinutes += (item.video_hd || 0) + (item.video_hdp || 0) + (item.video_full_hd || 0) + (item.audio || 0);
       });
     }
 
@@ -51,8 +69,11 @@ export async function GET() {
       percentage: Math.min(((totalMinutes / 10000) * 100), 100).toFixed(1)
     });
 
-  } catch (error) {
-    console.error('Agora Usage API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Agora Usage API Exception:', error.message);
+    return NextResponse.json({ 
+      error: 'Internal Server Error',
+      message: error.message
+    }, { status: 500 });
   }
 }
