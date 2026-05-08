@@ -42,52 +42,70 @@ export async function GET() {
     const domains = ['api.agora.io', 'api.sd-rtn.com'];
     let lastError: any = null;
 
+    // 시도할 경로 목록
+    const paths = [
+      `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
+      // 일부 리전이나 설정에 따라 다를 수 있는 경로 추가 시도
+      `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
+    ];
+
     for (const domain of domains) {
-      const url = `https://${domain}/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`;
-      console.log(`Fetching Agora usage from ${domain}...`);
+      for (const path of paths) {
+        const url = `https://${domain}${path}`;
+        console.log(`Trying Agora API: ${url}`);
 
-      try {
-        const response = await fetch(url, {
-          headers: {
-            'Authorization': `Basic ${credentials}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        try {
+          const response = await fetch(url, {
+            headers: {
+              'Authorization': `Basic ${credentials}`,
+              'Content-Type': 'application/json'
+            }
+          });
 
-        if (response.ok) {
-          const data: any = await response.json();
-          let totalMinutes = 0;
-          if (data.data && Array.isArray(data.data)) {
-            data.data.forEach((item: any) => {
-              totalMinutes += (item.video_hd || 0) + (item.video_hdp || 0) + (item.video_full_hd || 0) + (item.audio || 0);
+          if (response.ok) {
+            const data: any = await response.json();
+            let totalMinutes = 0;
+            if (data.data && Array.isArray(data.data)) {
+              data.data.forEach((item: any) => {
+                totalMinutes += (item.video_hd || 0) + (item.video_hdp || 0) + (item.video_full_hd || 0) + (item.audio || 0);
+              });
+            }
+
+            return NextResponse.json({
+              totalMinutes: Math.round(totalMinutes),
+              limit: 10000,
+              percentage: Math.min(((totalMinutes / 10000) * 100), 100).toFixed(1)
             });
           }
 
-          return NextResponse.json({
-            totalMinutes: Math.round(totalMinutes),
-            limit: 10000,
-            percentage: Math.min(((totalMinutes / 10000) * 100), 100).toFixed(1)
-          });
+          const errorText = await response.text();
+          console.error(`Agora API Error (${domain}${path.split('?')[0]}):`, response.status, errorText);
+          lastError = { domain, status: response.status, details: errorText };
+          
+          // 인증 에러면 즉시 중단 (경로 문제가 아님)
+          if (response.status === 401 || response.status === 403) break;
+
+        } catch (e: any) {
+          console.error(`Fetch error (${domain}):`, e.message);
+          lastError = { domain, status: 500, details: e.message };
         }
-
-        const errorText = await response.text();
-        console.error(`Agora API Error from ${domain}:`, response.status, errorText);
-        lastError = { status: response.status, details: errorText };
-        
-        // 404가 아니면 다음 도메인 시도하지 않고 중단 (인증 에러 등)
-        if (response.status !== 404) break;
-
-      } catch (e: any) {
-        console.error(`Fetch error from ${domain}:`, e.message);
-        lastError = { status: 500, details: e.message };
       }
     }
 
+    // 마스킹된 App ID 준비
+    const maskedAppId = APP_ID.substring(0, 4) + '...' + APP_ID.substring(APP_ID.length - 4);
+
     return NextResponse.json({ 
-      error: 'Failed to fetch from Agora after trying all domains',
+      error: 'Agora API 호출 실패 (모든 경로 시도 완료)',
       status: lastError?.status,
-      details: lastError?.details
-    }, { status: lastError?.status || 500 });
+      details: lastError?.details,
+      debug: {
+        appId: maskedAppId,
+        checkedDomains: domains,
+        checkedPaths: paths.map(p => p.split('?')[0]),
+        tip: 'Agora 콘솔에서 "Project Management API"가 활성화되어 있는지 확인해 주세요.'
+      }
+    }, { status: 500 }); // 브라우저가 404로 오해하지 않도록 500으로 반환
 
   } catch (error: any) {
     console.error('Agora Usage API Exception:', error.message);
