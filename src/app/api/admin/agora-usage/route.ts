@@ -38,6 +38,19 @@ export async function GET() {
     const startDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString().split('T')[0];
     const endDay = now.toISOString().split('T')[0];
 
+    // 진단 단계: 프로젝트 목록 조회 시도 (권한 및 App ID 존재 여부 확인)
+    let projectsData: any = null;
+    try {
+      const projectsRes = await fetch('https://api.agora.io/v1/projects', {
+        headers: { 'Authorization': `Basic ${credentials}` }
+      });
+      if (projectsRes.ok) {
+        projectsData = await projectsRes.json();
+      }
+    } catch (e) {
+      console.error('Diagnostic API call failed:', e);
+    }
+
     // 기본 도메인과 대체 도메인 시도
     const domains = ['api.agora.io', 'api.sd-rtn.com'];
     let lastError: any = null;
@@ -45,15 +58,12 @@ export async function GET() {
     // 시도할 경로 목록
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      // 일부 리전이나 설정에 따라 다를 수 있는 경로 추가 시도
       `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
     ];
 
     for (const domain of domains) {
       for (const path of paths) {
         const url = `https://${domain}${path}`;
-        console.log(`Trying Agora API: ${url}`);
-
         try {
           const response = await fetch(url, {
             headers: {
@@ -79,33 +89,32 @@ export async function GET() {
           }
 
           const errorText = await response.text();
-          console.error(`Agora API Error (${domain}${path.split('?')[0]}):`, response.status, errorText);
           lastError = { domain, status: response.status, details: errorText };
-          
-          // 인증 에러면 즉시 중단 (경로 문제가 아님)
           if (response.status === 401 || response.status === 403) break;
-
         } catch (e: any) {
-          console.error(`Fetch error (${domain}):`, e.message);
           lastError = { domain, status: 500, details: e.message };
         }
       }
     }
 
-    // 마스킹된 App ID 준비
+    // 진단 결과 분석
     const maskedAppId = APP_ID.substring(0, 4) + '...' + APP_ID.substring(APP_ID.length - 4);
+    const appIdExists = projectsData?.projects?.some((p: any) => p.vendor_key === APP_ID);
+    const availableProjectCount = projectsData?.projects?.length || 0;
 
     return NextResponse.json({ 
-      error: 'Agora API 호출 실패 (모든 경로 시도 완료)',
-      status: lastError?.status,
-      details: lastError?.details,
+      error: 'Agora API 호출 실패',
       debug: {
         appId: maskedAppId,
-        checkedDomains: domains,
-        checkedPaths: paths.map(p => p.split('?')[0]),
-        tip: 'Agora 콘솔에서 "Project Management API"가 활성화되어 있는지 확인해 주세요.'
+        appIdExistsInAccount: appIdExists,
+        availableProjectsInAccount: availableProjectCount,
+        lastErrorStatus: lastError?.status,
+        lastErrorDetails: lastError?.details,
+        tip: appIdExists === false 
+          ? '현재 App ID가 해당 Customer ID 계정에 존재하지 않습니다. App ID를 다시 확인해 주세요.'
+          : 'Agora 콘솔에서 "Project Management API" 권한이 활성화되어 있는지 확인해 주세요.'
       }
-    }, { status: 500 }); // 브라우저가 404로 오해하지 않도록 500으로 반환
+    }, { status: 500 });
 
   } catch (error: any) {
     console.error('Agora Usage API Exception:', error.message);
