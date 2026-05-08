@@ -47,19 +47,19 @@ export async function GET() {
     // 진단 단계: 프로젝트 목록 조회 시도 (경로 다양화)
     let projectsData: any = null;
     let diagError: string | null = null;
+    let successDomain: string | null = null;
     const diagPaths = [
       '/v1/projects', 
       '/v1.0/projects', 
-      '/dev/v1/projects', // 일부 계정용
+      '/dev/v1/projects',
       '/v1/apps'
     ];
     
-    // 기본 도메인과 대체 도메인 시도
     const domains = [
       'api.agora.io', 
       'api.sd-rtn.com', 
-      'api-us-west-1.agora.io', // 미국 리전
-      'api-eu-central-1.agora.io' // 유럽 리전
+      'api-us-west-1.agora.io',
+      'api-eu-central-1.agora.io'
     ];
 
     diagLoop: for (const domain of domains) {
@@ -70,7 +70,8 @@ export async function GET() {
           });
           if (projectsRes.ok) {
             projectsData = await projectsRes.json();
-            break diagLoop; // 성공하면 전체 도메인/경로 루프 중단
+            successDomain = domain;
+            break diagLoop;
           } else {
             diagError = `Diagnostic (${domain}${dPath}) failed with status ${projectsRes.status}`;
           }
@@ -81,6 +82,8 @@ export async function GET() {
     }
 
     let lastError: any = null;
+    // 성공한 도메인이 있으면 그것부터 시도, 없으면 전체 도메인 시도
+    const retryDomains = successDomain ? [successDomain, ...domains.filter(d => d !== successDomain)] : domains;
 
     // 시도할 경로 목록 (v1.0, /dev, appid/app_id 변동성 대응)
     const paths = [
@@ -97,7 +100,7 @@ export async function GET() {
       'Accept': 'application/json'
     };
 
-    for (const domain of domains) {
+    for (const domain of retryDomains) {
       for (const path of paths) {
         const url = `https://${domain}${path}`;
         try {
