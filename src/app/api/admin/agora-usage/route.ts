@@ -85,13 +85,18 @@ export async function GET() {
     // 성공한 도메인이 있으면 그것부터 시도, 없으면 전체 도메인 시도
     const retryDomains = successDomain ? [successDomain, ...domains.filter(d => d !== successDomain)] : domains;
 
-    // 시도할 경로 목록 (v1.0, /dev, appid/app_id 변동성 대응)
+    // 시도할 경로 목록 (v1.0, /dev, appid/app_id, v2, Analytics Beta 대응)
+    const startTs = Math.floor(new Date(startDay).getTime() / 1000);
+    const endTs = Math.floor(new Date(endDay).getTime() / 1000);
+
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/dev/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&app_id=${APP_ID}`,
-      `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
+      `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
+      `/v2/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
+      `/beta/insight/usage/by_time?start_ts=${startTs}&end_ts=${endTs}&appid=${APP_ID}&metric=total_duration`
     ];
 
     const commonHeaders = {
@@ -151,6 +156,7 @@ export async function GET() {
     return NextResponse.json({ 
       error: 'Agora API 호출 실패 (404: 경로 불일치)',
       debug: {
+        successDomain,
         appId: safeMask(APP_ID),
         customerId: safeMask(CUSTOMER_ID),
         credentialsLength: credentials.length,
