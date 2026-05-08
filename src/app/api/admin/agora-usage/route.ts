@@ -92,11 +92,11 @@ export async function GET() {
     const paths = [
       `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
       `/v1.0/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      `/dev/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      `/v1/usage/minutes?start_date=${startDay}&end_date=${endDay}&app_id=${APP_ID}`,
       `/v1/stats/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      `/v2/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`,
-      `/beta/insight/usage/by_time?start_ts=${startTs}&end_ts=${endTs}&appid=${APP_ID}&metric=total_duration`
+      // Insight API (더 다양한 metric 시도)
+      `/beta/insight/usage/by_time?start_ts=${startTs}&end_ts=${endTs}&appId=${APP_ID}&metric=audio_duration,video_hd_duration,video_hdp_duration,video_full_hd_duration`,
+      `/beta/insight/usage/by_time?start_ts=${startTs}&end_ts=${endTs}&appid=${APP_ID}&metric=total_duration`,
+      `/v2/usage/minutes?start_date=${startDay}&end_date=${endDay}&appid=${APP_ID}`
     ];
 
     const commonHeaders = {
