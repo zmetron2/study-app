@@ -257,6 +257,9 @@ export default function OneToOneVideoChat() {
     try {
       await clientRef.current.join(APP_ID, CHANNEL, TOKEN, null);
 
+      // 이미 방에 있는 유저들을 상태에 추가 (Agora SDK는 기존 유저에 대해 user-joined를 발생시키지 않을 수 있음)
+      setRemoteUsers(clientRef.current.remoteUsers);
+
       const audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
       const videoTrack = await AgoraRTC.createCameraVideoTrack();
 
@@ -444,7 +447,7 @@ export default function OneToOneVideoChat() {
         <div className="flex-1 bg-slate-900 rounded-[4px] border border-white/5 overflow-hidden shadow-2xl relative">
 
           {/* 1. Main View (Full Container) */}
-          <div className="w-full h-full relative group">
+          <div className="absolute inset-0 group">
             {layoutMode === 'remote-large' ? (
               // 상대방 크게 모드: 원격 사용자가 메인
               remoteUsers.length > 0 ? (
@@ -452,9 +455,15 @@ export default function OneToOneVideoChat() {
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-4">
                   <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
-                    <Users size={40} />
+                    {joined ? <Users size={40} /> : <Video size={40} />}
                   </div>
-                  <p className="font-black">상대방의 입장을 기다리고 있습니다...</p>
+                  <p className="font-black text-center">
+                    {joined ? (
+                      <>상대방의 입장을 기다리고 있습니다...</>
+                    ) : (
+                      <>하단의 <span className="text-indigo-400">화상채팅 시작</span> 버튼을 눌러 접속하세요.</>
+                    )}
+                  </p>
                 </div>
               )
             ) : (
