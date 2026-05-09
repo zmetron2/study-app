@@ -5,7 +5,7 @@ export const runtime = 'edge';
 
 import React, { useEffect, useRef, useState } from 'react';
 import type { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { Camera, CameraOff, Mic, MicOff, PhoneOff, Settings, Users, ShieldCheck, Plus, Monitor, LayoutGrid, Sparkles, Wifi, Clock, User } from 'lucide-react';
+import { Camera, CameraOff, Mic, MicOff, PhoneOff, Settings, Users, ShieldCheck, Video, Monitor, LayoutGrid, Sparkles, Wifi, Clock, User } from 'lucide-react';
 
 // Agora SDK는 클라이언트 사이드에서만 로드되어야 합니다.
 let AgoraRTC: any;
@@ -16,6 +16,24 @@ if (typeof window !== 'undefined') {
 const APP_ID = process.env.NEXT_PUBLIC_AGORA_APP_ID || '';
 const CHANNEL = 'vibe-consulting';
 const TOKEN = null; // 테스트용 (App ID 보안 설정이 'Testing'일 때 가능)
+
+// 원격 비디오 렌더링을 위한 전용 컴포넌트 (React 렌더링 라이프사이클 이슈 해결)
+const RemoteVideoPlayer = ({ user }: { user: IAgoraRTCRemoteUser }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (user.videoTrack && containerRef.current) {
+      user.videoTrack.play(containerRef.current);
+    }
+    return () => {
+      if (user.videoTrack) {
+        user.videoTrack.stop();
+      }
+    };
+  }, [user.videoTrack]);
+
+  return <div ref={containerRef} className="w-full h-full" />;
+};
 
 export default function OneToOneVideoChat() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -250,6 +268,9 @@ export default function OneToOneVideoChat() {
     setLocalAudioTrack(null);
     setLocalVideoTrack(null);
     setRemoteUsers([]);
+    // 화상 종료 시 마이크, 카메라 상태 초기화
+    setMicOn(true);
+    setCameraOn(true);
     if (clientRef.current) {
       await clientRef.current.leave();
     }
@@ -329,7 +350,7 @@ export default function OneToOneVideoChat() {
               className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[4px] text-sm font-black uppercase tracking-widest shadow-xl shadow-indigo-600/30 transition-all active:scale-95 flex items-center justify-center gap-3 group"
             >
               Verify & Enter
-              <Plus size={18} className="group-hover:rotate-90 transition-transform" />
+              <Video size={18} className="group-hover:scale-110 transition-transform" />
             </button>
           </form>
 
@@ -379,14 +400,7 @@ export default function OneToOneVideoChat() {
             {layoutMode === 'remote-large' ? (
               // 상대방 크게 모드: 원격 사용자가 메인
               remoteUsers.length > 0 ? (
-                <div
-                  className="w-full h-full"
-                  ref={(el) => {
-                    if (el && remoteUsers[0]?.videoTrack) {
-                      remoteUsers[0].videoTrack.play(el);
-                    }
-                  }}
-                />
+                <RemoteVideoPlayer user={remoteUsers[0]} />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-4">
                   <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
@@ -449,14 +463,7 @@ export default function OneToOneVideoChat() {
             ) : (
               // 나를 크게 모드: 상대방이 작게 (PIP)
               remoteUsers.length > 0 ? (
-                <div
-                  className="w-full h-full"
-                  ref={(el) => {
-                    if (el && remoteUsers[0]?.videoTrack) {
-                      remoteUsers[0].videoTrack.play(el);
-                    }
-                  }}
-                />
+                <RemoteVideoPlayer user={remoteUsers[0]} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-slate-800">
                   <Users size={24} className="text-slate-600" />
@@ -473,33 +480,36 @@ export default function OneToOneVideoChat() {
           </div>
 
           {/* 3. Session Controls (Floating) */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 px-8 py-5 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full z-30 shadow-2xl">
-            <button
-              onClick={toggleMic}
-              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${micOn ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'}`}
-            >
-              {micOn ? <Mic size={24} /> : <MicOff size={24} />}
-            </button>
-            <button
-              onClick={toggleCamera}
-              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${cameraOn ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'}`}
-            >
-              {cameraOn ? <Camera size={24} /> : <CameraOff size={24} />}
-            </button>
-            <div className="w-px h-8 bg-white/10 mx-2" />
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
             {joined ? (
-              <button
-                onClick={handleLeave}
-                className="w-14 h-14 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center shadow-xl active:scale-95 transition-all"
-              >
-                <PhoneOff size={24} />
-              </button>
+              <>
+                <button
+                  onClick={toggleMic}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-md ${micOn ? 'bg-slate-800/80 text-white hover:bg-slate-700/80 backdrop-blur-md' : 'bg-rose-500 text-white'}`}
+                >
+                  {micOn ? <Mic size={20} /> : <MicOff size={20} />}
+                </button>
+                <button
+                  onClick={toggleCamera}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-md ${cameraOn ? 'bg-slate-800/80 text-white hover:bg-slate-700/80 backdrop-blur-md' : 'bg-rose-500 text-white'}`}
+                >
+                  {cameraOn ? <Camera size={20} /> : <CameraOff size={20} />}
+                </button>
+                <div className="w-px h-6 bg-white/20 mx-1" />
+                <button
+                  onClick={handleLeave}
+                  className="w-12 h-12 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition-all"
+                >
+                  <PhoneOff size={20} />
+                </button>
+              </>
             ) : (
               <button
                 onClick={handleJoin}
-                className="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center justify-center shadow-xl active:scale-95 transition-all"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center gap-2 shadow-lg shadow-indigo-600/30 active:scale-95 transition-all font-black text-sm"
               >
-                <Plus size={28} />
+                <Video size={18} />
+                화상채팅 시작
               </button>
             )}
           </div>
