@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     const twelveHoursAgo = Math.floor(Date.now() / 1000) - (12 * 60 * 60);
 
     let query = `
-      SELECT ip_address, start_ts
+      SELECT ip_address, start_ts, uid
       FROM agora_sessions
       WHERE end_ts IS NULL AND start_ts > ?
     `;
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
 
     query += ` ORDER BY start_ts DESC LIMIT 50`;
 
-    const { results } = await db.prepare(query).bind(...params).all<{ ip_address: string; start_ts: number }>();
+    const { results } = await db.prepare(query).bind(...params).all<{ ip_address: string; start_ts: number; uid: string | null }>();
 
     return NextResponse.json({ ok: true, users: results });
   } catch (err: unknown) {

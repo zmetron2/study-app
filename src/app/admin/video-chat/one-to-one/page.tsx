@@ -104,7 +104,8 @@ export default function OneToOneVideoChat() {
   const [isStartCameraOff, setIsStartCameraOff] = useState(false);
 
   // 접속자 IP 트래킹
-  const [activeSessions, setActiveSessions] = useState<{ ip_address: string; start_ts: number }[]>([]);
+  const [activeSessions, setActiveSessions] = useState<{ ip_address: string; start_ts: number; uid: string | null }[]>([]);
+  const [selectedTargetUid, setSelectedTargetUid] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAuthorized) return;
@@ -287,7 +288,7 @@ export default function OneToOneVideoChat() {
     }
 
     try {
-      await clientRef.current.join(APP_ID, CHANNEL, TOKEN, null);
+      const uid = await clientRef.current.join(APP_ID, CHANNEL, TOKEN, null);
 
       // 이미 방에 있는 유저들을 상태에 추가 (Agora SDK는 기존 유저에 대해 user-joined를 발생시키지 않을 수 있음)
       setRemoteUsers(clientRef.current.remoteUsers);
@@ -333,7 +334,7 @@ export default function OneToOneVideoChat() {
       fetch('/api/agora/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'start', sessionId: newSessionId, channel: CHANNEL }),
+        body: JSON.stringify({ action: 'start', sessionId: newSessionId, channel: CHANNEL, uid: uid.toString() }),
       }).then(r => r.json()).then(d => console.log('[Agora Session] start:', d)).catch(e => console.error('[Agora Session] start error:', e));
     } catch (error) {
       console.error('Agora join error:', error);
@@ -484,9 +485,14 @@ export default function OneToOneVideoChat() {
             <div className="flex items-center gap-2">
               {activeSessions.length > 0 ? (
                 activeSessions.map((session, idx) => (
-                  <span key={idx} className="text-xs font-mono text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded">
+                  <button
+                    key={idx}
+                    onClick={() => session.uid && setSelectedTargetUid(session.uid)}
+                    className={`text-xs font-mono px-1.5 py-0.5 rounded transition-all cursor-pointer ${selectedTargetUid === session.uid ? 'bg-indigo-500 text-white' : 'text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/30'}`}
+                    title="클릭하여 해당 사용자 화면 고정"
+                  >
                     {session.ip_address}
-                  </span>
+                  </button>
                 ))
               ) : (
                 <span className="text-xs text-slate-500 italic">접속자 없음</span>
@@ -510,10 +516,14 @@ export default function OneToOneVideoChat() {
 
           {/* 1. Main View (Full Container) */}
           <div className="absolute inset-0 group">
-            {layoutMode === 'remote-large' ? (
-              // 상대방 크게 모드: 원격 사용자가 메인
-              remoteUsers.length > 0 ? (
-                <RemoteVideoPlayer user={remoteUsers[0]} />
+            {layoutMode === 'remote-large' ? (() => {
+              // 선택된 타겟 유저 혹은 첫번째 유저
+              const targetUser = selectedTargetUid 
+                ? remoteUsers.find(u => u.uid.toString() === selectedTargetUid)
+                : remoteUsers[0];
+
+              return targetUser ? (
+                <RemoteVideoPlayer user={targetUser} />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-4">
                   <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center animate-pulse">
@@ -527,8 +537,8 @@ export default function OneToOneVideoChat() {
                     )}
                   </p>
                 </div>
-              )
-            ) : (
+              );
+            })() : (
               // 나를 크게 모드: 내 카메라가 메인
               <>
                 <div
@@ -579,16 +589,20 @@ export default function OneToOneVideoChat() {
                   </div>
                 )}
               </>
-            ) : (
+            ) : (() => {
               // 나를 크게 모드: 상대방이 작게 (PIP)
-              remoteUsers.length > 0 ? (
-                <RemoteVideoPlayer user={remoteUsers[0]} />
+              const targetUser = selectedTargetUid 
+                ? remoteUsers.find(u => u.uid.toString() === selectedTargetUid)
+                : remoteUsers[0];
+
+              return targetUser ? (
+                <RemoteVideoPlayer user={targetUser} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-slate-800">
                   <Users size={24} className="text-slate-600" />
                 </div>
-              )
-            )}
+              );
+            })()}
 
             {/* PIP Overlay Label */}
             <div className="absolute bottom-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded-[2px] border border-white/10">
