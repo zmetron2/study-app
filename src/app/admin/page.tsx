@@ -429,8 +429,14 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="pt-2 flex items-center gap-2 text-[9px] font-bold text-slate-400 italic leading-tight">
-                  <Clock size={10} /> 실시간 Agora 사용량이 동기화되었습니다.
+                <div className="pt-2 flex items-start gap-2 text-[10px] font-medium text-slate-400 leading-relaxed">
+                  <Clock size={12} className="shrink-0 mt-0.5" /> 
+                  <div>
+                    본 수치는 자체 기록 시스템 기반으로, 실제 Agora 청구량과 약간의 오차가 발생할 수 있습니다. <br />
+                    <a href="https://console.agora.io/usage?feature=rtc-standard-minutes" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:text-indigo-400 underline underline-offset-2 transition-colors inline-block mt-1">
+                      Agora 콘솔에서 공식 사용량 확인 →
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
