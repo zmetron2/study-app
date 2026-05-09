@@ -85,7 +85,12 @@ export default function AdminDashboard() {
       const response = await fetch('/api/agora/active-users?channel=vibe-consulting');
       if (response.ok) {
         const data = await response.json();
-        if (data.ok) setActiveSessions(data.users);
+        if (data.ok) {
+          const uniqueIps = Array.from(new Set(data.users.map((u: any) => u.ip_address))).map(ip => {
+            return data.users.find((u: any) => u.ip_address === ip);
+          });
+          setActiveSessions(uniqueIps as any);
+        }
       }
     } catch (error) {
       console.error('Failed to fetch active users:', error);

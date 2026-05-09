@@ -101,7 +101,13 @@ export default function OneToOneVideoChat() {
         const response = await fetch('/api/agora/active-users?channel=' + CHANNEL);
         if (response.ok) {
           const data = await response.json();
-          if (data.ok) setActiveSessions(data.users);
+          if (data.ok) {
+            // 중복 IP 제거
+            const uniqueIps = Array.from(new Set(data.users.map((u: any) => u.ip_address))).map(ip => {
+              return data.users.find((u: any) => u.ip_address === ip);
+            });
+            setActiveSessions(uniqueIps as any);
+          }
         }
       } catch (error) {
         console.error('Failed to fetch active users:', error);
@@ -110,7 +116,20 @@ export default function OneToOneVideoChat() {
 
     fetchActiveUsers();
     const interval = setInterval(fetchActiveUsers, 5000);
-    return () => clearInterval(interval);
+
+    // 브라우저 탭을 닫거나 새로고침 시 세션 강제 종료
+    const handleBeforeUnload = () => {
+      if (sessionIdRef.current) {
+        const blob = new Blob([JSON.stringify({ action: 'end', sessionId: sessionIdRef.current })], { type: 'application/json' });
+        navigator.sendBeacon('/api/agora/session', blob);
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [isAuthorized]);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -295,6 +314,14 @@ export default function OneToOneVideoChat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'end', sessionId: sessionIdRef.current }),
       }).then(r => r.json()).then(d => console.log('[Agora Session] end:', d)).catch(e => console.error('[Agora Session] end error:', e));
+      
+      // 즉각적인 UI 반영 (자신의 세션을 목록에서 제거)
+      fetch('/api/agora/active-users?channel=' + CHANNEL).then(r => r.json()).then(d => {
+         if (d.ok) {
+            const uniqueIps = Array.from(new Set(d.users.map((u: any) => u.ip_address))).map(ip => d.users.find((u: any) => u.ip_address === ip));
+            setActiveSessions(uniqueIps as any);
+         }
+      });
       sessionIdRef.current = null;
     }
     localAudioTrack?.close();
