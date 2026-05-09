@@ -39,11 +39,14 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'channel이 필요합니다.' }, { status: 400 });
       }
 
+      // 클라이언트 IP 추출 (Cloudflare headers)
+      const ipAddress = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'Unknown IP';
+
       // 기존 세션이 있으면 무시 (중복 start 방지)
       await db.prepare(
-        `INSERT OR IGNORE INTO agora_sessions (session_id, channel, uid, start_ts)
-         VALUES (?, ?, ?, ?)`
-      ).bind(sessionId, channel, uid || null, nowTs).run();
+        `INSERT OR IGNORE INTO agora_sessions (session_id, channel, uid, start_ts, ip_address)
+         VALUES (?, ?, ?, ?, ?)`
+      ).bind(sessionId, channel, uid || null, nowTs, ipAddress).run();
 
       return NextResponse.json({ ok: true, action: 'start', sessionId, startTs: nowTs });
     }

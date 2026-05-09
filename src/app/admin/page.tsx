@@ -53,6 +53,8 @@ export default function AdminDashboard() {
     memo: ''
   });
 
+  const [activeSessions, setActiveSessions] = useState<{ ip_address: string; start_ts: number }[]>([]);
+
   useEffect(() => {
     // URL 파라미터로 탭 자동 선택
     const params = new URLSearchParams(window.location.search);
@@ -69,8 +71,26 @@ export default function AdminDashboard() {
       fetchStudents();
     } else if (activeTab === 'video-chat') {
       fetchUsageData();
+      fetchActiveUsers();
+      
+      const interval = setInterval(() => {
+        fetchActiveUsers();
+      }, 5000); // 5초마다 현재 접속자 목록 갱신
+      return () => clearInterval(interval);
     }
   }, [activeTab]);
+
+  const fetchActiveUsers = async () => {
+    try {
+      const response = await fetch('/api/agora/active-users?channel=vibe-consulting');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.ok) setActiveSessions(data.users);
+      }
+    } catch (error) {
+      console.error('Failed to fetch active users:', error);
+    }
+  };
 
   const fetchUsageData = async () => {
     try {
@@ -358,7 +378,15 @@ export default function AdminDashboard() {
                     <Monitor size={32} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight mb-2">1:1 화상 채팅</h3>
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">1:1 화상 채팅</h3>
+                      {activeSessions.length > 0 && (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-500/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="text-[10px] font-black">{activeSessions.length}명 접속중</span>
+                        </div>
+                      )}
+                    </div>
                     <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                       학생과 실시간으로 마주보며<br />
                       심층적인 학습 상담을 진행합니다.

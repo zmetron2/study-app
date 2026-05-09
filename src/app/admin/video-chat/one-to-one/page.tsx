@@ -90,6 +90,29 @@ export default function OneToOneVideoChat() {
   const [isAutoSwitch, setIsAutoSwitch] = useState(false);
   const [isStartCameraOff, setIsStartCameraOff] = useState(false);
 
+  // 접속자 IP 트래킹
+  const [activeSessions, setActiveSessions] = useState<{ ip_address: string; start_ts: number }[]>([]);
+
+  useEffect(() => {
+    if (!isAuthorized) return;
+    
+    const fetchActiveUsers = async () => {
+      try {
+        const response = await fetch('/api/agora/active-users?channel=' + CHANNEL);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.ok) setActiveSessions(data.users);
+        }
+      } catch (error) {
+        console.error('Failed to fetch active users:', error);
+      }
+    };
+
+    fetchActiveUsers();
+    const interval = setInterval(fetchActiveUsers, 5000);
+    return () => clearInterval(interval);
+  }, [isAuthorized]);
+
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === '7777') {
@@ -384,8 +407,25 @@ export default function OneToOneVideoChat() {
           <div>
             <h1 className="text-sm font-black text-white leading-none mb-1">1:1 학습 상담 채널</h1>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{joined ? 'Live Session' : 'Ready to Join'}</span>
+              <span className={`w-1.5 h-1.5 rounded-full ${joined ? 'bg-emerald-500 animate-pulse' : 'bg-slate-500'}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest ${joined ? 'text-emerald-500' : 'text-slate-400'}`}>
+                {joined ? 'Live Session' : 'Ready to Join'}
+              </span>
+            </div>
+          </div>
+          {/* 접속자 정보 (IP 목록) */}
+          <div className="ml-6 px-4 py-2 bg-slate-800/50 rounded-lg border border-white/5 flex flex-col justify-center">
+            <div className="text-[10px] font-bold text-slate-400 mb-0.5">현재 접속자 ({activeSessions.length}명)</div>
+            <div className="flex items-center gap-2">
+              {activeSessions.length > 0 ? (
+                activeSessions.map((session, idx) => (
+                  <span key={idx} className="text-xs font-mono text-indigo-300 bg-indigo-500/10 px-1.5 py-0.5 rounded">
+                    {session.ip_address}
+                  </span>
+                ))
+              ) : (
+                <span className="text-xs text-slate-500 italic">접속자 없음</span>
+              )}
             </div>
           </div>
         </div>
