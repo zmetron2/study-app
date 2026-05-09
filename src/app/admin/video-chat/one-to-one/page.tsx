@@ -106,17 +106,25 @@ export default function OneToOneVideoChat() {
     const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
     clientRef.current = client;
 
+    client.on('user-joined', (user: IAgoraRTCRemoteUser) => {
+      setRemoteUsers(prev => [...prev.filter(u => u.uid !== user.uid), user]);
+    });
+
     client.on('user-published', async (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
       await client.subscribe(user, mediaType);
-      if (mediaType === 'video') {
-        setRemoteUsers(prev => [...prev.filter(u => u.uid !== user.uid), user]);
-      }
+      // 구독 후 상태 업데이트 (비디오 트랙 등이 갱신되었으므로 리렌더링 유도)
+      setRemoteUsers(prev => [...prev.filter(u => u.uid !== user.uid), user]);
       if (mediaType === 'audio') {
         user.audioTrack?.play();
       }
     });
 
-    client.on('user-unpublished', (user: IAgoraRTCRemoteUser) => {
+    client.on('user-unpublished', (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
+      // 트랙 해제 시에도 리렌더링만 유도 (목록에서 제거하지 않음)
+      setRemoteUsers(prev => [...prev.filter(u => u.uid !== user.uid), user]);
+    });
+
+    client.on('user-left', (user: IAgoraRTCRemoteUser) => {
       setRemoteUsers(prev => prev.filter(u => u.uid !== user.uid));
     });
 
