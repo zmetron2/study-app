@@ -32,7 +32,20 @@ const RemoteVideoPlayer = ({ user }: { user: IAgoraRTCRemoteUser }) => {
     };
   }, [user.videoTrack]);
 
-  return <div ref={containerRef} className="w-full h-full" />;
+  return (
+    <div className="w-full h-full relative bg-slate-900 flex items-center justify-center">
+      {!user.videoTrack ? (
+        <div className="flex flex-col items-center gap-4 text-slate-500">
+          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center">
+            <CameraOff size={48} />
+          </div>
+          <p className="font-bold text-sm">상대방이 카메라를 껐습니다</p>
+        </div>
+      ) : (
+        <div ref={containerRef} className="w-full h-full object-cover" />
+      )}
+    </div>
+  );
 };
 
 export default function OneToOneVideoChat() {
@@ -279,17 +292,39 @@ export default function OneToOneVideoChat() {
       // 이미 방에 있는 유저들을 상태에 추가 (Agora SDK는 기존 유저에 대해 user-joined를 발생시키지 않을 수 있음)
       setRemoteUsers(clientRef.current.remoteUsers);
 
-      const audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-      const videoTrack = await AgoraRTC.createCameraVideoTrack();
+      let audioTrack: IMicrophoneAudioTrack | null = null;
+      let videoTrack: ICameraVideoTrack | null = null;
 
-      setLocalAudioTrack(audioTrack);
-      setLocalVideoTrack(videoTrack);
+      try {
+        audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+      } catch (err) {
+        console.warn('마이크 접근 실패:', err);
+        setMicOn(false);
+      }
 
-      if (localVideoRef.current) {
+      try {
+        videoTrack = await AgoraRTC.createCameraVideoTrack();
+      } catch (err) {
+        console.warn('카메라 접근 실패:', err);
+        setCameraOn(false);
+      }
+
+      if (audioTrack) setLocalAudioTrack(audioTrack);
+      if (videoTrack) setLocalVideoTrack(videoTrack);
+
+      if (videoTrack && localVideoRef.current) {
         videoTrack.play(localVideoRef.current);
       }
 
-      await clientRef.current.publish([audioTrack, videoTrack]);
+      const tracksToPublish = [];
+      if (audioTrack) tracksToPublish.push(audioTrack);
+      if (videoTrack) tracksToPublish.push(videoTrack);
+
+      if (tracksToPublish.length > 0) {
+        await clientRef.current.publish(tracksToPublish);
+      } else {
+        alert('사용 가능한 카메라나 마이크가 없습니다. 관전 모드로 접속합니다.');
+      }
       setJoined(true);
 
       // D1 사용량 기록: 세션 시작
@@ -340,14 +375,14 @@ export default function OneToOneVideoChat() {
 
   const toggleMic = async () => {
     if (localAudioTrack) {
-      await localAudioTrack.setEnabled(!micOn);
+      await localAudioTrack.setMuted(micOn);
       setMicOn(!micOn);
     }
   };
 
   const toggleCamera = async () => {
     if (localVideoTrack) {
-      await localVideoTrack.setEnabled(!cameraOn);
+      await localVideoTrack.setMuted(cameraOn);
       setCameraOn(!cameraOn);
     }
   };
