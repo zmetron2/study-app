@@ -4,16 +4,34 @@ export const runtime = 'edge';
 
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio } from 'lucide-react';
+import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio, ChevronDown, ChevronUp, Tag } from 'lucide-react';
 
 interface Inquiry {
   id: number;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
+  title: string | null;
+  category: string | null;
   message: string;
   status: string;
+  completed_at: string | null;
   created_at: string;
+}
+
+// 간단한 마크다운 → HTML 렌더러 (bold, italic, code, heading, list)
+function renderMarkdown(text: string): string {
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^### (.+)$/gm, '<h3 class="text-sm font-black mt-3 mb-1 text-slate-800 dark:text-white">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 class="text-base font-black mt-4 mb-1 text-slate-800 dark:text-white">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 class="text-lg font-black mt-4 mb-1 text-slate-800 dark:text-white">$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-black text-slate-900 dark:text-white">$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em class="italic text-slate-600 dark:text-slate-300">$1</em>')
+    .replace(/`(.+?)`/g, '<code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-xs font-mono text-indigo-600 dark:text-indigo-400">$1</code>')
+    .replace(/^- (.+)$/gm, '<li class="ml-4 list-disc text-slate-600 dark:text-slate-300">$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-4 list-decimal text-slate-600 dark:text-slate-300">$2</li>')
+    .replace(/\n/g, '<br />');
 }
 
 interface Student {
@@ -40,6 +58,7 @@ export default function AdminDashboard() {
   const [students, setStudents] = useState<Student[]>([]);
   const [usageData, setUsageData] = useState({ totalMinutes: 0, limit: 10000, percentage: '0.0' });
   const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -244,51 +263,176 @@ export default function AdminDashboard() {
 
         {activeTab === 'inquiries' && (
           <div className="bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 overflow-hidden animate-in fade-in duration-300">
+            {/* 헤더 */}
             <div className="p-6 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/30">
-              <h2 className="text-lg font-black text-slate-800 dark:text-white">최근 접수된 문의</h2>
-              <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-black">총 {inquiries.length}건</span>
+              <h2 className="text-lg font-black text-slate-800 dark:text-white">접수된 문의 목록</h2>
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full text-xs font-black">
+                  대기 {inquiries.filter(i => i.status === 'pending').length}건
+                </span>
+                <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-black">
+                  전체 {inquiries.length}건
+                </span>
+              </div>
             </div>
-            
+
+            {/* 목록 테이블 헤더 */}
+            {!loading && inquiries.length > 0 && (
+              <div className="grid grid-cols-[1fr_auto_auto_auto] gap-0 px-6 py-3 bg-slate-50/50 dark:bg-slate-800/20 border-b border-slate-100 dark:border-white/5">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">제목 / 문의자</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center px-4">카테고리</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center px-4">상태</span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center px-2">관리</span>
+              </div>
+            )}
+
             {loading ? (
               <div className="p-12 text-center text-slate-400 font-medium">데이터를 불러오는 중입니다...</div>
             ) : inquiries.length === 0 ? (
               <div className="p-12 text-center text-slate-400 font-medium">아직 접수된 문의가 없습니다.</div>
             ) : (
               <div className="divide-y divide-slate-100 dark:divide-white/5">
-                {inquiries.map((inq) => (
-                  <div key={inq.id} className="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <div className="flex flex-col lg:flex-row gap-6 justify-between">
-                      <div className="space-y-4 flex-1">
-                        <div className="flex items-center gap-3">
-                          <span className="font-black text-slate-900 dark:text-white">{inq.name}</span>
-                          <span className="text-xs font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{new Date(inq.created_at).toLocaleDateString()}</span>
-                          <span className={`text-xs font-black px-2 py-0.5 rounded-full ${inq.status === 'pending' ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}`}>
+                {inquiries.map((inq) => {
+                  const isExpanded = expandedId === inq.id;
+                  const createdDate = new Date(inq.created_at);
+                  const completedDate = inq.completed_at ? new Date(inq.completed_at) : null;
+                  const elapsedMs = completedDate ? completedDate.getTime() - createdDate.getTime() : null;
+                  const elapsedStr = elapsedMs !== null ? (() => {
+                    const h = Math.floor(elapsedMs / 3600000);
+                    const m = Math.floor((elapsedMs % 3600000) / 60000);
+                    if (h >= 24) return `${Math.floor(h/24)}일 ${h%24}시간 소요`;
+                    if (h > 0) return `${h}시간 ${m}분 소요`;
+                    return `${m}분 소요`;
+                  })() : null;
+
+                  return (
+                    <div key={inq.id}>
+                      {/* 목록 행 */}
+                      <button
+                        onClick={() => setExpandedId(isExpanded ? null : inq.id)}
+                        className="w-full grid grid-cols-[1fr_auto_auto_auto] gap-0 px-6 py-4 items-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                      >
+                        {/* 제목 + 문의자 */}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${inq.status === 'pending' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
+                          <div className="min-w-0">
+                            <p className="text-sm font-black text-slate-800 dark:text-white truncate">
+                              {inq.title || inq.message.slice(0, 40) + (inq.message.length > 40 ? '...' : '')}
+                            </p>
+                            <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                              {inq.name}
+                              {inq.email ? ` · ${inq.email}` : ''}
+                              {inq.phone ? ` · ${inq.phone}` : ''}
+                              <span className="ml-2 opacity-60">
+                                {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* 카테고리 */}
+                        <div className="px-4 flex justify-center">
+                          <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                            {inq.category || '일반문의'}
+                          </span>
+                        </div>
+
+                        {/* 상태 */}
+                        <div className="px-4 flex justify-center">
+                          <span className={`text-[10px] font-black px-2.5 py-1 rounded-full whitespace-nowrap ${
+                            inq.status === 'pending'
+                              ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                              : 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                          }`}>
                             {inq.status === 'pending' ? '답변대기' : '답변완료'}
                           </span>
                         </div>
-                        <div className="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-white/5 p-4 rounded-[4px] whitespace-pre-wrap">
-                          {inq.message}
+
+                        {/* 열기/닫기 화살표 */}
+                        <div className="px-2 flex justify-center text-slate-400">
+                          {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                         </div>
-                        <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
-                          <span>📧 {inq.email}</span>
-                          {inq.phone && <span>📱 {inq.phone}</span>}
+                      </button>
+
+                      {/* 펼쳐진 상세 내용 */}
+                      {isExpanded && (
+                        <div className="px-6 pb-6 animate-in fade-in slide-in-from-top-2 duration-200">
+                          <div className="border border-slate-100 dark:border-white/5 rounded-[4px] overflow-hidden">
+
+                            {/* 메타 정보 바 */}
+                            <div className="flex flex-wrap items-center gap-4 px-5 py-3 bg-slate-50/80 dark:bg-slate-800/40 border-b border-slate-100 dark:border-white/5">
+                              <div className="flex items-center gap-1.5">
+                                <Tag size={12} className="text-slate-400" />
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">카테고리</span>
+                                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-1">{inq.category || '일반문의'}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <MessageSquare size={12} className="text-slate-400" />
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">문의일시</span>
+                                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-1">
+                                  {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                </span>
+                              </div>
+                              {inq.email && (
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[10px] font-black text-slate-400">📧</span>
+                                  <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{inq.email}</span>
+                                </div>
+                              )}
+                              {inq.phone && (
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[10px] font-black text-slate-400">📱</span>
+                                  <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{inq.phone}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* 본문 (마크다운) */}
+                            <div
+                              className="p-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed prose-sm max-w-none"
+                              dangerouslySetInnerHTML={{ __html: renderMarkdown(inq.message) }}
+                            />
+
+                            {/* 완료 정보 */}
+                            {inq.status === 'completed' && completedDate && (
+                              <div className="px-5 py-3 bg-emerald-50 dark:bg-emerald-500/5 border-t border-emerald-100 dark:border-emerald-500/10 flex flex-wrap items-center gap-4">
+                                <div className="flex items-center gap-1.5">
+                                  <CheckCircle2 size={14} className="text-emerald-500" />
+                                  <span className="text-[11px] font-black text-emerald-600 dark:text-emerald-400">답변완료</span>
+                                </div>
+                                <span className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-400/70">
+                                  {completedDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                                {elapsedStr && (
+                                  <span className="text-[11px] font-bold text-emerald-600/50 dark:text-emerald-400/50">({elapsedStr})</span>
+                                )}
+                              </div>
+                            )}
+
+                            {/* 액션 버튼 */}
+                            <div className="px-5 py-3 border-t border-slate-100 dark:border-white/5 flex justify-end gap-2">
+                              {inq.status === 'pending' ? (
+                                <button
+                                  onClick={() => updateStatus(inq.id, 'completed')}
+                                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-[4px] transition-colors flex items-center gap-2"
+                                >
+                                  <CheckCircle2 size={14} /> 답변완료 처리
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => updateStatus(inq.id, 'pending')}
+                                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-black rounded-[4px] hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2"
+                                >
+                                  <Clock size={14} /> 대기 상태로 변경
+                                </button>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="flex lg:flex-col gap-2 shrink-0">
-                        {inq.status === 'pending' ? (
-                          <button onClick={() => updateStatus(inq.id, 'completed')} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-[4px] transition-colors flex items-center justify-center gap-2">
-                            <CheckCircle2 size={14} /> 답변완료 처리
-                          </button>
-                        ) : (
-                          <button onClick={() => updateStatus(inq.id, 'pending')} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-black rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
-                            <Clock size={14} /> 대기 상태로 변경
-                          </button>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
