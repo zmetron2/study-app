@@ -326,6 +326,71 @@ export default function ContactPage() {
                         </button>
                       ))}
                     </div>
+                    <div className="mt-4 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/10">
+                      <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                        <span className="text-indigo-600 dark:text-indigo-400 font-black mr-1">※</span> 
+                        <span className="font-bold">과외 및 그룹</span> 신청은 교육 인원이 모집된 상태에서 시작되므로 교육 시작일을 <span className="text-slate-900 dark:text-white underline decoration-indigo-500 underline-offset-4">상담을 통해 협의하여 결정</span>합니다.<br/>
+                        <span className="text-indigo-600 dark:text-indigo-400 font-black mr-1">※</span> 
+                        <span className="font-bold">일반 과정</span>은 모집 정원이 충족되었을 때 공식 교육 시작일이 확정됩니다.
+                      </p>
+                    </div>
+
+                    {/* Fees Table */}
+                    <div className="mt-10 space-y-4">
+                      <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">교육 비용 안내 (회차별/단위: 만원)</label>
+                      <div className="overflow-x-auto border border-slate-200 dark:border-white/10 rounded-3xl">
+                        <table className="w-full text-sm text-left border-collapse min-w-[500px]">
+                          <thead>
+                            <tr className="bg-slate-50 dark:bg-white/5 text-slate-400">
+                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">수강 형태</th>
+                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">입문</th>
+                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">기초</th>
+                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">실전</th>
+                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">심화</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                            <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
+                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">1:1 멘토링</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">29만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">39만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">59만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">79만</td>
+                            </tr>
+                            <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
+                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">그룹 신청</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">19만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">25만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">39만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">55만</td>
+                            </tr>
+                            <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
+                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">일반 과정</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">12만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">17만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">29만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">39만</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Package Pricing */}
+                    <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="p-5 bg-indigo-50/30 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-3xl shadow-sm">
+                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">일반 전체 패키지</p>
+                        <p className="text-xl font-black text-slate-900 dark:text-white">79<span className="text-sm font-bold ml-1 text-slate-400">만</span></p>
+                      </div>
+                      <div className="p-5 bg-indigo-50/30 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-3xl shadow-sm">
+                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">그룹 전체 패키지</p>
+                        <p className="text-xl font-black text-slate-900 dark:text-white">109<span className="text-sm font-bold ml-1 text-slate-400">만</span></p>
+                      </div>
+                      <div className="p-5 bg-indigo-50/30 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-3xl shadow-sm">
+                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">1:1 전체 패키지</p>
+                        <p className="text-xl font-black text-slate-900 dark:text-white">159<span className="text-sm font-bold ml-1 text-slate-400">만</span></p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Message */}
