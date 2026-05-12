@@ -324,7 +324,7 @@ export default function AdminDashboard() {
                             </p>
                             <p className="text-[11px] text-slate-400 font-medium mt-0.5">
                               {inq.name}
-                              {inq.email && inq.email !== 'no-email@provided.com' ? ` · ${inq.email}` : ''}
+                              {inq.email && inq.email !== 'no-email@provided.com' && inq.email !== '' ? ` · ${inq.email}` : ''}
                               {inq.phone ? ` · ${inq.phone}` : ''}
                               <span className="ml-2 opacity-60">
                                 {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}

@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Invalid data type' }, { status: 400 });
     }
 
-    const email = typeof body.email === 'string' ? body.email : null;
+    const email = typeof body.email === 'string' && body.email.trim() !== '' ? body.email : '';
     const phone = typeof body.phone === 'string' ? body.phone : null;
     const title = typeof body.title === 'string' ? body.title : null;
     const category = typeof body.category === 'string' ? body.category : '일반문의';
