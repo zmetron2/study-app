@@ -26,9 +26,14 @@ export default function ContactPage() {
     try {
       const payload = {
         name: formData.name,
-        email: responseType === 'email' ? formData.contact : 'no-email@provided.com',
+        title: formData.title,
+        category: formData.type,
+        // 이메일 답변 선택 시에만 email 필드 전송, 아니면 null
+        email: responseType === 'email' ? formData.contact : null,
+        // 문자/전화 선택 시에만 phone 필드 전송
         phone: responseType !== 'email' ? formData.contact : null,
-        message: `[${formData.type} - ${responseType}]\n제목: ${formData.title}\n\n${formData.message}`
+        // 답변 유형 정보를 본문 앞에 태그로 추가
+        message: `[답변: ${responseType === 'sms' ? '문자' : responseType === 'phone' ? '전화' : '이메일'}]\n\n${formData.message}`
       };
 
       const res = await fetch('/api/inquiries', {
@@ -231,9 +236,12 @@ export default function ContactPage() {
 }
 
 // --- Helper Components ---
-function TypeButton({ icon: Icon, label, active = false }: { icon: React.ElementType, label: string, active?: boolean }) {
+function TypeButton({ icon: Icon, label, active = false, onClick }: { icon: React.ElementType, label: string, active?: boolean, onClick: () => void }) {
   return (
-    <div className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-3 cursor-pointer transition-all ${active ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-500/5 text-indigo-600 dark:text-indigo-400 shadow-xl shadow-indigo-600/5' : 'border-slate-100 dark:border-white/5 hover:border-indigo-200 dark:hover:border-indigo-500/30'}`}>
+    <div
+      onClick={onClick}
+      className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-3 cursor-pointer transition-all ${active ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-500/5 text-indigo-600 dark:text-indigo-400 shadow-xl shadow-indigo-600/5' : 'border-slate-100 dark:border-white/5 hover:border-indigo-200 dark:hover:border-indigo-500/30'}`}
+    >
       <Icon className="w-5 h-5" />
       <span className="text-xs font-black tracking-tighter whitespace-nowrap">{label}</span>
     </div>

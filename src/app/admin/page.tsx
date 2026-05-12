@@ -4,7 +4,7 @@ export const runtime = 'edge';
 
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio, ChevronDown, ChevronUp, Tag } from 'lucide-react';
+import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Inquiry {
   id: number;
@@ -317,11 +317,14 @@ export default function AdminDashboard() {
                           <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${inq.status === 'pending' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
                           <div className="min-w-0">
                             <p className="text-sm font-black text-slate-800 dark:text-white truncate">
-                              {inq.title || inq.message.slice(0, 40) + (inq.message.length > 40 ? '...' : '')}
+                              {inq.category && (
+                                <span className="text-[10px] font-light text-slate-400 dark:text-slate-500 mr-1.5">[{inq.category}]</span>
+                              )}
+                              {inq.title || inq.message.replace(/^\[.*?\]\n\n/, '').slice(0, 40) + (inq.message.length > 40 ? '...' : '')}
                             </p>
                             <p className="text-[11px] text-slate-400 font-medium mt-0.5">
                               {inq.name}
-                              {inq.email ? ` · ${inq.email}` : ''}
+                              {inq.email && inq.email !== 'no-email@provided.com' ? ` · ${inq.email}` : ''}
                               {inq.phone ? ` · ${inq.phone}` : ''}
                               <span className="ml-2 opacity-60">
                                 {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
@@ -359,21 +362,27 @@ export default function AdminDashboard() {
                         <div className="px-6 pb-6 animate-in fade-in slide-in-from-top-2 duration-200">
                           <div className="border border-slate-100 dark:border-white/5 rounded-[4px] overflow-hidden">
 
-                            {/* 메타 정보 바 */}
+                            {/* 메타 정보 바 - 답변유형 + 문의일시 + 연락처만 표시 */}
                             <div className="flex flex-wrap items-center gap-4 px-5 py-3 bg-slate-50/80 dark:bg-slate-800/40 border-b border-slate-100 dark:border-white/5">
+                              {/* 답변유형: 본문 첫 줄에서 추출 */}
+                              {(() => {
+                                const match = inq.message.match(/^\[답변: (.+?)\]/);
+                                return match ? (
+                                  <div className="flex items-center gap-1.5">
+                                    <MessageSquare size={12} className="text-slate-400" />
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">답변유형</span>
+                                    <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 ml-1">{match[1]}</span>
+                                  </div>
+                                ) : null;
+                              })()}
                               <div className="flex items-center gap-1.5">
-                                <Tag size={12} className="text-slate-400" />
-                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">카테고리</span>
-                                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-1">{inq.category || '일반문의'}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <MessageSquare size={12} className="text-slate-400" />
+                                <Clock size={12} className="text-slate-400" />
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">문의일시</span>
                                 <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-1">
                                   {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                 </span>
                               </div>
-                              {inq.email && (
+                              {inq.email && inq.email !== 'no-email@provided.com' && (
                                 <div className="flex items-center gap-1.5">
                                   <span className="text-[10px] font-black text-slate-400">📧</span>
                                   <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{inq.email}</span>
