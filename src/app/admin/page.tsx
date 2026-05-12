@@ -4,7 +4,7 @@ export const runtime = 'edge';
 
 
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageSquare, Users, CheckCircle2, Clock, MoreHorizontal, Plus, X, Save, Video, Monitor, Radio, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 
 interface Inquiry {
   id: number;
@@ -247,6 +247,23 @@ export default function AdminDashboard() {
       fetchInquiries();
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const deleteStudent = async (id: number) => {
+    if (!confirm('정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+    try {
+      const res = await fetch(`/api/students?id=${id}`, {
+        method: 'DELETE'
+      });
+      const result = (await res.json()) as { success: boolean };
+      if (result.success) {
+        setIsModalOpen(false);
+        fetchStudents();
+      }
+    } catch (e) {
+      console.error(e);
+      alert('삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -509,11 +526,11 @@ export default function AdminDashboard() {
                 <table className="w-full text-left border-collapse min-w-[800px]">
                   <thead>
                     <tr className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-white/5">
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">교육생 정보</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">수강 코스</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">학습 진도율</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">상태</th>
-                      <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">관리</th>
+                      <th className="px-6 py-4 text-[12px] font-black text-slate-400 uppercase tracking-widest">교육생 정보</th>
+                      <th className="px-6 py-4 text-[12px] font-black text-slate-400 uppercase tracking-widest">수강 코스</th>
+                      <th className="px-6 py-4 text-[12px] font-black text-slate-400 uppercase tracking-widest">학습 진도율</th>
+                      <th className="px-6 py-4 text-[12px] font-black text-slate-400 uppercase tracking-widest">상태</th>
+                      <th className="px-6 py-4 text-[12px] font-black text-slate-400 uppercase tracking-widest text-right">관리</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-white/5">
@@ -522,8 +539,8 @@ export default function AdminDashboard() {
                         <td className="px-6 py-5">
                           <div className="flex flex-col">
                             <span className="font-black text-slate-900 dark:text-white">{student.name}</span>
-                            <span className="text-[11px] font-medium text-slate-400">{student.email}</span>
-                            <span className="text-[10px] text-slate-500 font-mono mt-0.5">{student.phone}</span>
+                            <span className="text-[12px] font-medium text-slate-400">{student.email}</span>
+                            <span className="text-[12px] text-slate-500 font-mono mt-0.5">{student.phone}</span>
                           </div>
                         </td>
                         <td className="px-6 py-5">
@@ -532,7 +549,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-5">
                           <div className="w-40">
                             <div className="flex justify-between items-center mb-1.5">
-                              <span className="text-[10px] font-black text-indigo-600 dark:text-indigo-400">{student.progress}%</span>
+                              <span className="text-[12px] font-black text-indigo-600 dark:text-indigo-400">{student.progress}%</span>
                             </div>
                             <div className="w-full h-1.5 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
                               <div 
@@ -543,7 +560,7 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                         <td className="px-6 py-5">
-                          <span className={`text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wider ${
+                          <span className={`text-[12px] font-black px-2 py-1 rounded-md uppercase tracking-wider ${
                             student.status === 'active' ? 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600' :
                             student.status === 'completed' ? 'bg-blue-100 dark:bg-blue-500/10 text-blue-600' :
                             'bg-slate-100 dark:bg-white/5 text-slate-500'
@@ -590,7 +607,7 @@ export default function AdminDashboard() {
                       {activeSessions.length > 0 && (
                         <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-500/20">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[10px] font-black">{activeSessions.length}명 접속중</span>
+                          <span className="text-[12px] font-black">{activeSessions.length}명 접속중</span>
                         </div>
                       )}
                     </div>
@@ -638,14 +655,14 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex-1">
                   <h4 className="text-sm font-black text-slate-800 dark:text-white mb-1">Agora Infrastructure Ready</h4>
-                  <p className="text-[11px] text-slate-500 font-medium">매월 10,000분 무료 통화가 제공되는 Agora SDK가 활성화되어 있습니다.</p>
+                  <p className="text-[12px] text-slate-500 font-medium">매월 10,000분 무료 통화가 제공되는 Agora SDK가 활성화되어 있습니다.</p>
                 </div>
               </div>
 
               <div className="p-8 bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 space-y-6">
                 <div className="flex justify-between items-center">
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Monthly Usage</h4>
-                  <span className={`text-[10px] font-black ${Number(usageData.percentage) > 80 ? 'text-rose-500' : 'text-indigo-600'}`}>
+                  <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Monthly Usage</h4>
+                  <span className={`text-[12px] font-black ${Number(usageData.percentage) > 80 ? 'text-rose-500' : 'text-indigo-600'}`}>
                     {usageData.percentage}% Used
                   </span>
                 </div>
@@ -664,7 +681,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="pt-2 flex items-start gap-2 text-[10px] font-medium text-slate-400 leading-relaxed">
+                <div className="pt-2 flex items-start gap-2 text-[12px] font-medium text-slate-400 leading-relaxed">
                   <Clock size={12} className="shrink-0 mt-0.5" /> 
                   <div>
                     본 수치는 자체 기록 시스템 기반으로, 실제 Agora 청구량과 약간의 오차가 발생할 수 있습니다. <br />
@@ -696,7 +713,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight">
                     {editingStudent ? '교육생 정보 수정' : '새 교육생 등록'}
                   </h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Student Management</p>
+                  <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Student Management</p>
                 </div>
               </div>
               <button 
@@ -711,29 +728,29 @@ export default function AdminDashboard() {
             <div className="p-5 space-y-4 overflow-y-auto custom-scrollbar">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">이름</label>
+                  <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">이름</label>
                   <input required value={modalData.name} onChange={e => setModalData({...modalData, name: e.target.value})} type="text" placeholder="성함 입력" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">전화번호</label>
+                  <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">전화번호</label>
                   <input required value={modalData.phone} onChange={e => setModalData({...modalData, phone: e.target.value})} type="tel" placeholder="010-0000-0000" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">이메일 주소</label>
+                  <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">이메일 주소</label>
                   <input required value={modalData.email} onChange={e => setModalData({...modalData, email: e.target.value})} type="email" placeholder="example@email.com" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1 text-indigo-500">교육생 비밀번호</label>
+                  <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1 text-indigo-500">교육생 비밀번호</label>
                   <input required value={modalData.password} onChange={e => setModalData({...modalData, password: e.target.value})} type="text" placeholder="로그인용 비번" className="w-full bg-slate-50 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">교육 코스</label>
+                  <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">교육 코스</label>
                   <select value={modalData.course} onChange={e => setModalData({...modalData, course: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
                     <option value="입문 정규과정">입문 정규과정</option>
                     <option value="기초 정규과정">기초 정규과정</option>
@@ -743,7 +760,7 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">수강 상태</label>
+                  <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">수강 상태</label>
                   <select value={modalData.status} onChange={e => setModalData({...modalData, status: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
                     <option value="active">수강중 (Active)</option>
                     <option value="completed">수료 (Completed)</option>
@@ -753,19 +770,29 @@ export default function AdminDashboard() {
               </div>
               
               <div className="space-y-1.5">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">관리자 메모</label>
+                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">관리자 메모</label>
                 <textarea value={modalData.memo} onChange={e => setModalData({...modalData, memo: e.target.value})} placeholder="교육생 참고사항..." rows={2} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold resize-none"></textarea>
               </div>
             </div>
             
             <div className="p-5 bg-slate-50 dark:bg-slate-800/30 flex gap-3 shrink-0">
-              <button 
-                type="button" 
-                onClick={() => setIsModalOpen(false)}
-                className="flex-1 py-2.5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 rounded-[4px] text-xs font-black hover:bg-slate-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98]"
-              >
-                취소
-              </button>
+              {editingStudent ? (
+                <button 
+                  type="button" 
+                  onClick={() => deleteStudent(editingStudent.id)}
+                  className="flex-1 py-2.5 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-[4px] text-xs font-black hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <Trash2 size={14} /> 삭제하기
+                </button>
+              ) : (
+                <button 
+                  type="button" 
+                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 py-2.5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 rounded-[4px] text-xs font-black hover:bg-slate-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98]"
+                >
+                  취소
+                </button>
+              )}
               <button 
                 type="submit"
                 className="flex-[2] py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[4px] text-xs font-black transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]"

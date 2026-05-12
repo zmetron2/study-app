@@ -108,3 +108,32 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ success: false, message: (error as Error).message }, { status: 500 });
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    let context;
+    try {
+      context = getRequestContext();
+    } catch (e) {
+      if (process.env.NODE_ENV !== 'development') throw e;
+    }
+    const env = context?.env;
+    const db = env?.DB;
+    if (!db) {
+      return NextResponse.json({ success: false, message: 'No DB binding' }, { status: 500 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'Missing id' }, { status: 400 });
+    }
+
+    await db.prepare('DELETE FROM vibe_students WHERE id = ?').bind(Number(id)).run();
+
+    return NextResponse.json({ success: true, message: 'Student deleted' });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: (error as Error).message }, { status: 500 });
+  }
+}
