@@ -178,7 +178,7 @@ export default function Navbar() {
                       >
                         <Video size={18} /> 화상채팅 관리
                       </button>
-                      <Link href="/profile/edit" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                      <Link href="/mypage" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                         <Settings size={18} /> 프로필 수정
                       </Link>
                       
