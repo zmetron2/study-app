@@ -45,11 +45,12 @@ export async function POST(request: NextRequest) {
       course: string;
       status?: string;
       memo?: string;
+      password?: string;
     };
 
     await db.prepare(
-      'INSERT INTO vibe_students (name, email, phone, course, status, memo) VALUES (?, ?, ?, ?, ?, ?)'
-    ).bind(body.name, body.email, body.phone, body.course, body.status || 'active', body.memo || null).run();
+      'INSERT INTO vibe_students (name, email, phone, course, status, memo, password) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).bind(body.name, body.email, body.phone, body.course, body.status || 'active', body.memo || null, body.password || null).run();
 
     return NextResponse.json({ success: true, message: 'Student added' });
   } catch (error) {
@@ -80,6 +81,7 @@ export async function PATCH(request: NextRequest) {
       progress?: number; 
       status?: string;
       memo?: string;
+      password?: string;
     };
 
     if (body.progress !== undefined) {
@@ -96,8 +98,8 @@ export async function PATCH(request: NextRequest) {
 
     // Full Update
     if (body.name) {
-        await db.prepare('UPDATE vibe_students SET name = ?, email = ?, phone = ?, course = ?, status = ?, memo = ? WHERE id = ?')
-          .bind(body.name, body.email, body.phone, body.course, body.status, body.memo, body.id)
+        await db.prepare('UPDATE vibe_students SET name = ?, email = ?, phone = ?, course = ?, status = ?, memo = ?, password = ? WHERE id = ?')
+          .bind(body.name, body.email, body.phone, body.course, body.status, body.memo, body.password, body.id)
           .run();
     }
 

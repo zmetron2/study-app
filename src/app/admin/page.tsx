@@ -45,6 +45,7 @@ interface Student {
   status: string;
   memo: string | null;
   joined_at: string;
+  password?: string | null;
 }
 
 interface AgoraUsage {
@@ -69,9 +70,10 @@ export default function AdminDashboard() {
     name: '',
     email: '',
     phone: '',
-    course: '프런트엔드 정규과정',
+    course: '입문 정규과정',
     status: 'active',
-    memo: ''
+    memo: '',
+    password: ''
   });
 
   const [activeSessions, setActiveSessions] = useState<{ ip_address: string; start_ts: number }[]>([]);
@@ -180,7 +182,8 @@ export default function AdminDashboard() {
         phone: student.phone,
         course: student.course,
         status: student.status,
-        memo: student.memo || ''
+        memo: student.memo || '',
+        password: student.password || ''
       });
     } else {
       setEditingStudent(null);
@@ -188,9 +191,10 @@ export default function AdminDashboard() {
         name: '',
         email: '',
         phone: '',
-        course: '프런트엔드 정규과정',
+        course: '입문 정규과정',
         status: 'active',
-        memo: ''
+        memo: '',
+        password: ''
       });
     }
     setIsModalOpen(true);
@@ -677,63 +681,70 @@ export default function AdminDashboard() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-2 sm:p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setIsModalOpen(false)}></div>
           <form 
             onSubmit={handleModalSubmit}
-            className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300"
+            className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] w-full max-w-lg shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]"
           >
-            <div className="p-8 border-b border-slate-100 dark:border-white/5 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-indigo-600 rounded-[4px] flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
-                  <Users size={24} />
+            <div className="p-5 border-b border-slate-100 dark:border-white/5 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-indigo-600 rounded-[4px] flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
+                  <Users size={20} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight">
                     {editingStudent ? '교육생 정보 수정' : '새 교육생 등록'}
                   </h3>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Student Management</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Student Management</p>
                 </div>
               </div>
               <button 
                 type="button" 
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-400"
+                className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-400"
               >
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
             
-            <div className="p-8 space-y-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">이름</label>
-                  <input required value={modalData.name} onChange={e => setModalData({...modalData, name: e.target.value})} type="text" placeholder="성함 입력" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+            <div className="p-5 space-y-4 overflow-y-auto custom-scrollbar">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">이름</label>
+                  <input required value={modalData.name} onChange={e => setModalData({...modalData, name: e.target.value})} type="text" placeholder="성함 입력" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">전화번호</label>
-                  <input required value={modalData.phone} onChange={e => setModalData({...modalData, phone: e.target.value})} type="tel" placeholder="010-0000-0000" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">전화번호</label>
+                  <input required value={modalData.phone} onChange={e => setModalData({...modalData, phone: e.target.value})} type="tel" placeholder="010-0000-0000" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">이메일 주소</label>
-                <input required value={modalData.email} onChange={e => setModalData({...modalData, email: e.target.value})} type="email" placeholder="example@email.com" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">이메일 주소</label>
+                  <input required value={modalData.email} onChange={e => setModalData({...modalData, email: e.target.value})} type="email" placeholder="example@email.com" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1 text-indigo-500">교육생 비밀번호</label>
+                  <input required value={modalData.password} onChange={e => setModalData({...modalData, password: e.target.value})} type="text" placeholder="로그인용 비번" className="w-full bg-slate-50 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">교육 코스</label>
-                  <select value={modalData.course} onChange={e => setModalData({...modalData, course: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
-                    <option value="프런트엔드 정규과정">프런트엔드 정규과정</option>
-                    <option value="웹 디자인 마스터">웹 디자인 마스터</option>
-                    <option value="UI/UX 입문">UI/UX 입문</option>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">교육 코스</label>
+                  <select value={modalData.course} onChange={e => setModalData({...modalData, course: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
+                    <option value="입문 정규과정">입문 정규과정</option>
+                    <option value="기초 정규과정">기초 정규과정</option>
+                    <option value="실전 정규과정">실전 정규과정</option>
+                    <option value="심화 정규과정">심화 정규과정</option>
                     <option value="기타">기타</option>
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">수강 상태</label>
-                  <select value={modalData.status} onChange={e => setModalData({...modalData, status: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">수강 상태</label>
+                  <select value={modalData.status} onChange={e => setModalData({...modalData, status: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
                     <option value="active">수강중 (Active)</option>
                     <option value="completed">수료 (Completed)</option>
                     <option value="paused">일시정지 (Paused)</option>
@@ -741,25 +752,25 @@ export default function AdminDashboard() {
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">관리자 메모</label>
-                <textarea value={modalData.memo} onChange={e => setModalData({...modalData, memo: e.target.value})} placeholder="교육생에 대한 참고사항을 입력해 주세요." rows={3} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold resize-none"></textarea>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest px-1">관리자 메모</label>
+                <textarea value={modalData.memo} onChange={e => setModalData({...modalData, memo: e.target.value})} placeholder="교육생 참고사항..." rows={2} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold resize-none"></textarea>
               </div>
             </div>
             
-            <div className="p-8 bg-slate-50 dark:bg-slate-800/30 flex gap-4">
+            <div className="p-5 bg-slate-50 dark:bg-slate-800/30 flex gap-3 shrink-0">
               <button 
                 type="button" 
                 onClick={() => setIsModalOpen(false)}
-                className="flex-1 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 rounded-[4px] text-sm font-black hover:bg-slate-50 dark:hover:bg-slate-700 transition-all active:scale-95"
+                className="flex-1 py-2.5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 rounded-[4px] text-xs font-black hover:bg-slate-100 dark:hover:bg-slate-700 transition-all active:scale-[0.98]"
               >
                 취소
               </button>
               <button 
                 type="submit"
-                className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-sm font-black flex items-center justify-center gap-3 transition-all shadow-xl shadow-indigo-600/20 active:scale-95"
+                className="flex-[2] py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[4px] text-xs font-black transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]"
               >
-                <Save size={18} /> {editingStudent ? '수정사항 저장' : '교육생 등록 완료'}
+                {editingStudent ? '수정사항 저장' : '교육생 등록 완료'}
               </button>
             </div>
           </form>
