@@ -6,7 +6,7 @@ import {
   BookOpen, 
   Users, ShieldCheck,
   Mail, MessageSquare, Send,
-  CheckCircle2, Clock, Phone, Smartphone, Check, HelpCircle, ChevronDown, MapPin, Search
+  CheckCircle2, Clock, Phone, Smartphone, Check, HelpCircle, ChevronDown, MapPin, X
 } from 'lucide-react';
 
 interface Curriculum {
@@ -35,9 +35,22 @@ const FAQ_DATA: FAQItem[] = [
   { category: '결제/계정', question: '비밀번호를 잊어버렸어요.', answer: '로그인 페이지의 비밀번호 찾기 기능을 이용하시거나, 등록된 이메일로 문의해 주시면 재설정을 도와드립니다.' }
 ];
 
+const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
+const STUDY_TYPES = ['과외', '그룹', '일반'];
+
 export default function ContactPage() {
   const [activeTab, setActiveTab] = useState<'apply' | 'inquiry' | 'faq'>('apply');
   
+  // Application Form State
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [applyData, setApplyData] = useState({
+    name: '',
+    contact: '',
+    days: [] as string[],
+    studyTypes: [] as string[],
+    message: ''
+  });
+
   // Inquiry Form State
   const [responseType, setResponseType] = useState<'sms' | 'phone' | 'email'>('sms');
   const [isAgreed, setIsAgreed] = useState(false);
@@ -56,6 +69,10 @@ export default function ContactPage() {
     if (activeTab === 'apply') {
       fetchCurriculums();
     }
+    // 탭 변경 시 신청 모드 초기화
+    if (activeTab !== 'apply') {
+      setSelectedCourse(null);
+    }
   }, [activeTab]);
 
   const fetchCurriculums = async () => {
@@ -73,7 +90,7 @@ export default function ContactPage() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleInquirySubmit = async () => {
     if (!formData.name || !formData.title || !formData.contact || !formData.message) {
       alert('모든 필수 항목을 입력해주세요.');
       return;
@@ -101,8 +118,6 @@ export default function ContactPage() {
         setShowSuccessModal(true);
         setFormData({ type: '교육 문의', name: '', title: '', contact: '', message: '' });
         setIsAgreed(false);
-      } else {
-        alert('접수 중 오류가 발생했습니다: ' + data.message);
       }
     } catch (e) {
       alert('접수 중 오류가 발생했습니다.');
@@ -111,15 +126,54 @@ export default function ContactPage() {
     }
   };
 
-  const handleApplyNow = (courseTitle: string) => {
-    setFormData({
-      ...formData,
-      type: '교육 문의',
-      title: `[교육신청] ${courseTitle}`,
-      message: `${courseTitle} 교육 과정을 신청하고 싶습니다. 상담 요청드립니다.`
-    });
-    setActiveTab('inquiry');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleApplySubmit = async () => {
+    if (!applyData.name || !applyData.contact || applyData.days.length === 0 || applyData.studyTypes.length === 0) {
+      alert('모든 필수 항목을 선택/입력해주세요.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        name: applyData.name,
+        title: `[교육신청] ${selectedCourse}`,
+        category: '교육 문의',
+        phone: applyData.contact,
+        message: `[수강 신청 상세]\n- 과정명: ${selectedCourse}\n- 가능요일: ${applyData.days.join(', ')}\n- 수강형태: ${applyData.studyTypes.join(', ')}\n\n[추가 문의]\n${applyData.message || '없음'}`
+      };
+
+      const res = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        setShowSuccessModal(true);
+        setApplyData({ name: '', contact: '', days: [], studyTypes: [], message: '' });
+        setSelectedCourse(null);
+        setIsAgreed(false);
+      }
+    } catch (e) {
+      alert('접수 중 오류가 발생했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const toggleDay = (day: string) => {
+    setApplyData(prev => ({
+      ...prev,
+      days: prev.days.includes(day) ? prev.days.filter(d => d !== day) : [...prev.days, day]
+    }));
+  };
+
+  const toggleType = (type: string) => {
+    setApplyData(prev => ({
+      ...prev,
+      studyTypes: prev.studyTypes.includes(type) ? prev.studyTypes.filter(t => t !== type) : [...prev.studyTypes, type]
+    }));
   };
 
   return (
@@ -140,7 +194,6 @@ export default function ContactPage() {
             신청부터 상세 문의까지 한곳에서 도와드립니다.
           </p>
 
-          {/* Custom Tabs */}
           <div className="flex justify-center mt-12">
             <div className="inline-flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5">
               <TabButton active={activeTab === 'apply'} onClick={() => setActiveTab('apply')} icon={BookOpen} label="교육신청" />
@@ -156,53 +209,151 @@ export default function ContactPage() {
         
         {/* 1. Education Apply Tab */}
         {activeTab === 'apply' && (
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center space-y-4">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">모집 중인 교육 과정</h2>
-              <p className="text-slate-500 font-medium">현업 전문가와 함께하는 실전 코딩 커리큘럼입니다.</p>
-            </div>
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {!selectedCourse ? (
+              <div className="space-y-12">
+                <div className="text-center space-y-4">
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">모집 중인 교육 과정</h2>
+                  <p className="text-slate-500 font-medium">현업 전문가와 함께하는 실전 코딩 커리큘럼입니다.</p>
+                </div>
 
-            {curriculumLoading ? (
-              <div className="flex justify-center py-20">
-                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            ) : curriculums.length === 0 ? (
-              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-white/10 p-20 text-center">
-                <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-400 font-medium">현재 모집 중인 과정이 없습니다. 별도 문의를 남겨주세요.</p>
+                {curriculumLoading ? (
+                  <div className="flex justify-center py-20">
+                    <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : curriculums.length === 0 ? (
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-white/10 p-20 text-center">
+                    <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-400 font-medium">현재 모집 중인 과정이 없습니다. 별도 문의를 남겨주세요.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {curriculums.map((curr) => (
+                      <div key={curr.id} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all hover:-translate-y-1 flex flex-col">
+                        <div className="flex justify-between items-start mb-6">
+                          <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-500/20">
+                            {curr.category || '일반'}
+                          </span>
+                          <span className={`px-3 py-1 text-[10px] font-black rounded-full ${curr.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-slate-50 dark:bg-white/5 text-slate-400'}`}>
+                            {curr.status === 'active' ? '모집중' : '준비중'}
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-black text-slate-800 dark:text-white mb-4 group-hover:text-indigo-600 transition-colors">{curr.title}</h3>
+                        <div className="space-y-3 mb-8 flex-1">
+                          <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+                            <Clock size={14} className="text-slate-400" /> {curr.date_time?.replace('T', ' ') || '일정 미정'}
+                          </div>
+                          <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+                            <MapPin size={14} className="text-slate-400" /> {curr.location || '온라인'}
+                          </div>
+                          <p className="text-[13px] text-slate-400 leading-relaxed line-clamp-3 mt-4 italic">
+                            {curr.description}
+                          </p>
+                        </div>
+                        <button 
+                          onClick={() => { setSelectedCourse(curr.title); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn shadow-lg"
+                        >
+                          신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {curriculums.map((curr) => (
-                  <div key={curr.id} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all hover:-translate-y-1 flex flex-col">
-                    <div className="flex justify-between items-start mb-6">
-                      <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-500/20">
-                        {curr.category || '일반'}
-                      </span>
-                      <span className={`px-3 py-1 text-[10px] font-black rounded-full ${curr.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-slate-50 dark:bg-white/5 text-slate-400'}`}>
-                        {curr.status === 'active' ? '모집중' : '준비중'}
-                      </span>
+              /* Application Form View */
+              <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-6">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-indigo-600 font-black text-xs uppercase tracking-widest">
+                      <BookOpen size={14} /> Course Application
                     </div>
-                    <h3 className="text-xl font-black text-slate-800 dark:text-white mb-4 group-hover:text-indigo-600 transition-colors">{curr.title}</h3>
-                    <div className="space-y-3 mb-8 flex-1">
-                      <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
-                        <Clock size={14} className="text-slate-400" /> {curr.date_time?.replace('T', ' ') || '일정 미정'}
-                      </div>
-                      <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
-                        <MapPin size={14} className="text-slate-400" /> {curr.location || '온라인'}
-                      </div>
-                      <p className="text-[13px] text-slate-400 leading-relaxed line-clamp-3 mt-4">
-                        {curr.description}
-                      </p>
+                    <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">수강 신청서 작성</h2>
+                  </div>
+                  <button onClick={() => setSelectedCourse(null)} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full text-slate-400 transition-colors">
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-white/5 p-8 md:p-12 shadow-xl shadow-indigo-500/5 space-y-10">
+                  {/* Selected Course Display */}
+                  <div className="bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-2xl p-6">
+                    <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">신청 중인 과정</p>
+                    <h3 className="text-lg font-black text-slate-800 dark:text-white">{selectedCourse}</h3>
+                  </div>
+
+                  {/* Personal Info */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">성함 <span className="text-indigo-600">*</span></label>
+                      <input type="text" value={applyData.name} onChange={e => setApplyData({...applyData, name: e.target.value})} placeholder="성함을 입력해 주세요" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                     </div>
+                    <div className="space-y-3">
+                      <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">연락처 <span className="text-indigo-600">*</span></label>
+                      <input type="tel" value={applyData.contact} onChange={e => setApplyData({...applyData, contact: e.target.value})} placeholder="010-0000-0000" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                    </div>
+                  </div>
+
+                  {/* Multi-Select: Days */}
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">교육 가능 요일 (다중 선택) <span className="text-indigo-600">*</span></label>
+                    <div className="flex flex-wrap gap-2">
+                      {DAYS.map(day => (
+                        <button
+                          key={day}
+                          onClick={() => toggleDay(day)}
+                          className={`w-12 h-12 rounded-xl border-2 font-black transition-all text-sm ${applyData.days.includes(day) ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-white/5 text-slate-400 hover:border-indigo-200'}`}
+                        >
+                          {day}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Multi-Select: Study Types */}
+                  <div className="space-y-4">
+                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">수강 형태 (다중 선택) <span className="text-indigo-600">*</span></label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {STUDY_TYPES.map(type => (
+                        <button
+                          key={type}
+                          onClick={() => toggleType(type)}
+                          className={`py-4 rounded-xl border-2 font-black transition-all text-sm flex items-center justify-center gap-2 ${applyData.studyTypes.includes(type) ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-white/5 text-slate-400 hover:border-indigo-200'}`}
+                        >
+                          {applyData.studyTypes.includes(type) && <Check size={16} />}
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div className="space-y-3">
+                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">기타 문의 사항 (선택)</label>
+                    <textarea rows={4} value={applyData.message} onChange={e => setApplyData({...applyData, message: e.target.value})} placeholder="원하시는 구체적인 상담 내용이 있다면 입력해 주세요." className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white resize-none font-bold"></textarea>
+                  </div>
+
+                  {/* Agreement & Submit */}
+                  <div className="space-y-8 pt-4">
+                    <div className="flex items-center gap-3 p-5 bg-indigo-50/50 dark:bg-indigo-500/5 rounded-2xl border border-indigo-100 dark:border-white/5">
+                      <div onClick={() => setIsAgreed(!isAgreed)} className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center cursor-pointer transition-all ${isAgreed ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800'}`}>
+                        {isAgreed && <Check className="w-4 h-4" />}
+                      </div>
+                      <div className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                        <span onClick={() => setIsAgreed(!isAgreed)} className="cursor-pointer select-none">개인정보 수집 및 이용에 동의합니다</span>
+                      </div>
+                    </div>
+
                     <button 
-                      onClick={() => handleApplyNow(curr.title)}
-                      className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn"
+                      onClick={handleApplySubmit}
+                      disabled={!isAgreed || isSubmitting}
+                      className={`w-full py-5 rounded-[1.5rem] font-black text-lg flex items-center justify-center gap-4 transition-all shadow-2xl ${isAgreed && !isSubmitting ? 'bg-indigo-600 text-white shadow-indigo-600/30 hover:-translate-y-1 hover:shadow-indigo-600/40 active:scale-95' : 'bg-slate-100 dark:bg-white/5 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-white/5'}`}
                     >
-                      상담 및 신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                      {isSubmitting ? '신청 중...' : '신청서 제출하기'} <Send size={20} />
                     </button>
                   </div>
-                ))}
+                </div>
               </div>
             )}
           </div>
@@ -274,7 +425,7 @@ export default function ContactPage() {
 
                 <button 
                   type="button" 
-                  onClick={handleSubmit}
+                  onClick={handleInquirySubmit}
                   disabled={!isAgreed || isSubmitting}
                   className={`w-full py-5 rounded-[1.5rem] font-black text-lg flex items-center justify-center gap-4 transition-all shadow-2xl ${isAgreed && !isSubmitting ? 'bg-indigo-600 text-white shadow-indigo-600/30 hover:-translate-y-1 hover:shadow-indigo-600/40 active:scale-95' : 'bg-slate-100 dark:bg-white/5 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-white/5'}`}
                 >
@@ -290,15 +441,6 @@ export default function ContactPage() {
                   <InfoItem icon={Clock} title="24시간 내 답변" desc="영업일 기준 24시간 이내에 전문 상담사가 배정됩니다." />
                   <InfoItem icon={CheckCircle2} title="1:1 맞춤 상담" desc="단순 정보 전달을 넘어 최적의 해결책을 제시해 드립니다." />
                   <InfoItem icon={ShieldCheck} title="개인정보 보안" desc="입력하신 정보는 상담 목적으로만 안전하게 사용됩니다." />
-                </div>
-              </div>
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 space-y-6 shadow-sm">
-                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-widest uppercase border-b border-slate-100 dark:border-white/5 pb-4 px-1">Email Inquiry</h3>
-                <div className="space-y-4">
-                  <ContactLink icon={Mail} title="직접 문의" value="zmetron@nate.com" />
-                  <p className="text-[11px] text-slate-400 font-medium leading-relaxed px-1 pt-2">
-                    서류 첨부나 대량 문의가 필요하신 경우 위 이메일로 연락 주시면 더욱 편리합니다.
-                  </p>
                 </div>
               </div>
             </aside>
