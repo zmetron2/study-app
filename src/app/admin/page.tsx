@@ -762,9 +762,9 @@ export default function AdminDashboard() {
                 <div className="space-y-1.5">
                   <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">수강 상태</label>
                   <select value={modalData.status} onChange={e => setModalData({...modalData, status: e.target.value})} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold appearance-none">
-                    <option value="active">수강중 (Active)</option>
-                    <option value="completed">수료 (Completed)</option>
-                    <option value="paused">일시정지 (Paused)</option>
+                    <option value="active">수강중</option>
+                    <option value="completed">수료</option>
+                    <option value="paused">일시정지</option>
                   </select>
                 </div>
               </div>
