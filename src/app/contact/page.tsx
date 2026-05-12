@@ -351,11 +351,11 @@ export default function ContactPage() {
                           </thead>
                           <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                             <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
-                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">1:1 멘토링</td>
+                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">일반 과정</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">12만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">17만</td>
                               <td className="px-6 py-4 font-bold text-slate-500">29만</td>
                               <td className="px-6 py-4 font-bold text-slate-500">39만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">59만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">79만</td>
                             </tr>
                             <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
                               <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">그룹 신청</td>
@@ -365,11 +365,11 @@ export default function ContactPage() {
                               <td className="px-6 py-4 font-bold text-slate-500">55만</td>
                             </tr>
                             <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
-                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">일반 과정</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">12만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">17만</td>
+                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">1:1 멘토링</td>
                               <td className="px-6 py-4 font-bold text-slate-500">29만</td>
                               <td className="px-6 py-4 font-bold text-slate-500">39만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">59만</td>
+                              <td className="px-6 py-4 font-bold text-slate-500">79만</td>
                             </tr>
                           </tbody>
                         </table>
