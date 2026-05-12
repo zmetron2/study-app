@@ -313,7 +313,7 @@ export default function AdminDashboard() {
       setEditingCurriculum(curriculum);
       setCurriculumModalData({
         title: curriculum.title,
-        date_time: curriculum.date_time || '',
+        date_time: curriculum.date_time ? curriculum.date_time.replace(' ', 'T') : '',
         location: curriculum.location || '',
         description: curriculum.description || '',
         category: curriculum.category || '입문',
@@ -337,7 +337,12 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       const method = editingCurriculum ? 'PATCH' : 'POST';
-      const body = editingCurriculum ? { ...curriculumModalData, id: editingCurriculum.id } : curriculumModalData;
+      // T를 공백으로 변환하여 저장 (선택 사항이나 가독성 위해)
+      const formattedData = {
+        ...curriculumModalData,
+        date_time: curriculumModalData.date_time.replace('T', ' ')
+      };
+      const body = editingCurriculum ? { ...formattedData, id: editingCurriculum.id } : formattedData;
       
       const res = await fetch('/api/curriculum', {
         method,
@@ -648,7 +653,7 @@ export default function AdminDashboard() {
                               <span className="text-[12px] font-medium text-slate-400 dark:text-slate-500 mr-1.5">[{curr.category}]</span>
                               {curr.title}
                             </p>
-                            <p className="text-[12px] text-slate-400 mt-0.5">{curr.date_time || '일정 미정'}</p>
+                            <p className="text-[12px] text-slate-400 mt-0.5">{curr.date_time?.replace('T', ' ') || '일정 미정'}</p>
                           </div>
                         </div>
                         <div className="px-4 flex justify-center">
@@ -677,7 +682,7 @@ export default function AdminDashboard() {
                               <div>
                                 <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">교육일시</h4>
                                 <p className="text-sm font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                                  <Clock size={14} className="text-indigo-500" /> {curr.date_time || '미지정'}
+                                  <Clock size={14} className="text-indigo-500" /> {curr.date_time?.replace('T', ' ') || '미지정'}
                                 </p>
                               </div>
                               <div>
@@ -1052,7 +1057,7 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">교육일시</label>
-                  <input value={curriculumModalData.date_time} onChange={e => setCurriculumModalData({...curriculumModalData, date_time: e.target.value})} type="text" placeholder="2026-06-15 14:00" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                  <input value={curriculumModalData.date_time} onChange={e => setCurriculumModalData({...curriculumModalData, date_time: e.target.value})} type="datetime-local" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest px-1">교육장소</label>
