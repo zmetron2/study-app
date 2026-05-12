@@ -80,14 +80,25 @@ export default function AdminDashboard() {
     }
   }, [activeTab]);
 
+  interface ActiveUser {
+    ip_address: string;
+    uid?: string;
+    start_ts: number;
+  }
+
+  interface ActiveUsersResponse {
+    ok: boolean;
+    users: ActiveUser[];
+  }
+
   const fetchActiveUsers = async () => {
     try {
       const response = await fetch('/api/agora/active-users?channel=vibe-consulting');
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as ActiveUsersResponse;
         if (data.ok) {
-          const uniqueIps = Array.from(new Set(data.users.map((u: any) => u.ip_address))).map(ip => {
-            return data.users.find((u: any) => u.ip_address === ip);
+          const uniqueIps = Array.from(new Set(data.users.map((u) => u.ip_address))).map(ip => {
+            return data.users.find((u) => u.ip_address === ip);
           });
           setActiveSessions(uniqueIps as any);
         }

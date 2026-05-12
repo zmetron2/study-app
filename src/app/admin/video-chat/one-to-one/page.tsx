@@ -110,15 +110,26 @@ export default function OneToOneVideoChat() {
   useEffect(() => {
     if (!isAuthorized) return;
     
+    interface ActiveUser {
+      ip_address: string;
+      uid?: string;
+      start_ts: number;
+    }
+
+    interface ActiveUsersResponse {
+      ok: boolean;
+      users: ActiveUser[];
+    }
+
     const fetchActiveUsers = async () => {
       try {
         const response = await fetch('/api/agora/active-users?channel=' + CHANNEL);
         if (response.ok) {
-          const data = await response.json();
+          const data = (await response.json()) as ActiveUsersResponse;
           if (data.ok) {
             // 중복 IP 제거
-            const uniqueIps = Array.from(new Set(data.users.map((u: any) => u.ip_address))).map(ip => {
-              return data.users.find((u: any) => u.ip_address === ip);
+            const uniqueIps = Array.from(new Set(data.users.map((u) => u.ip_address))).map(ip => {
+              return data.users.find((u) => u.ip_address === ip);
             });
             setActiveSessions(uniqueIps as any);
           }
@@ -352,7 +363,7 @@ export default function OneToOneVideoChat() {
       }).then(r => r.json()).then(d => console.log('[Agora Session] end:', d)).catch(e => console.error('[Agora Session] end error:', e));
       
       // 즉각적인 UI 반영 (자신의 세션을 목록에서 제거)
-      fetch('/api/agora/active-users?channel=' + CHANNEL).then(r => r.json()).then(d => {
+      fetch('/api/agora/active-users?channel=' + CHANNEL).then(r => r.json()).then((d: any) => {
          if (d.ok) {
             const uniqueIps = Array.from(new Set(d.users.map((u: any) => u.ip_address))).map(ip => d.users.find((u: any) => u.ip_address === ip));
             setActiveSessions(uniqueIps as any);
