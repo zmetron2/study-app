@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { results } = await db.prepare(
-      'SELECT id, name, email, phone, title, category, message, status, completed_at, created_at FROM vibe_inquiries ORDER BY created_at DESC'
+      'SELECT id, name, email, phone, title, category, message, status, completed_at, created_at, admin_memo FROM vibe_inquiries ORDER BY created_at DESC'
     ).all();
     return NextResponse.json({ success: true, data: results });
   } catch (error) {
@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'No DB binding' }, { status: 500 });
     }
 
-    const body = await request.json() as { id: unknown; status: unknown };
+    const body = await request.json() as { id: unknown; status: unknown; admin_memo?: unknown };
 
     if (typeof body.id !== 'number' || typeof body.status !== 'string') {
       return NextResponse.json({ success: false, message: 'Invalid data' }, { status: 400 });
@@ -90,12 +90,48 @@ export async function PATCH(request: NextRequest) {
 
     // 완료 처리 시 completed_at 기록, 되돌릴 때는 NULL
     const completedAt = body.status === 'completed' ? new Date().toISOString() : null;
+    const adminMemo = typeof body.admin_memo === 'string' ? body.admin_memo : null;
 
-    await db.prepare('UPDATE vibe_inquiries SET status = ?, completed_at = ? WHERE id = ?')
-      .bind(body.status, completedAt, body.id)
-      .run();
+    if (adminMemo !== null) {
+      await db.prepare('UPDATE vibe_inquiries SET status = ?, completed_at = ?, admin_memo = ? WHERE id = ?')
+        .bind(body.status, completedAt, adminMemo, body.id)
+        .run();
+    } else {
+      await db.prepare('UPDATE vibe_inquiries SET status = ?, completed_at = ? WHERE id = ?')
+        .bind(body.status, completedAt, body.id)
+        .run();
+    }
 
     return NextResponse.json({ success: true, message: 'Status updated' });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: (error as Error).message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    let context;
+    try {
+      context = getRequestContext();
+    } catch (e) {
+      if (process.env.NODE_ENV !== 'development') throw e;
+    }
+    const env = context?.env;
+    const db = env?.DB;
+    if (!db) {
+      return NextResponse.json({ success: false, message: 'No DB binding' }, { status: 500 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'Missing id' }, { status: 400 });
+    }
+
+    await db.prepare('DELETE FROM vibe_inquiries WHERE id = ?').bind(Number(id)).run();
+
+    return NextResponse.json({ success: true, message: 'Inquiry deleted' });
   } catch (error) {
     return NextResponse.json({ success: false, message: (error as Error).message }, { status: 500 });
   }

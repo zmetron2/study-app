@@ -17,6 +17,7 @@ interface Inquiry {
   status: string;
   completed_at: string | null;
   created_at: string;
+  admin_memo: string | null;
 }
 
 // 간단한 마크다운 → HTML 렌더러 (bold, italic, code, heading, list)
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
   const [usageData, setUsageData] = useState({ totalMinutes: 0, limit: 10000, percentage: '0.0' });
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [adminMemoInput, setAdminMemoInput] = useState<Record<number, string>>({});
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -220,10 +222,23 @@ export default function AdminDashboard() {
 
   const updateStatus = async (id: number, status: string) => {
     try {
+      const memo = adminMemoInput[id] || undefined;
       await fetch('/api/inquiries', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status })
+        body: JSON.stringify({ id, status, admin_memo: memo })
+      });
+      fetchInquiries();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const deleteInquiry = async (id: number) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    try {
+      await fetch(`/api/inquiries?id=${id}`, {
+        method: 'DELETE'
       });
       fetchInquiries();
     } catch (e) {
@@ -279,10 +294,10 @@ export default function AdminDashboard() {
             {/* 목록 테이블 헤더 */}
             {!loading && inquiries.length > 0 && (
               <div className="grid grid-cols-[1fr_auto_auto_auto] gap-0 px-6 py-3 bg-slate-50/50 dark:bg-slate-800/20 border-b border-slate-100 dark:border-white/5">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">제목 / 문의자</span>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center px-4">카테고리</span>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center px-4">상태</span>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center px-2">관리</span>
+                <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">제목 / 문의자</span>
+                <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest text-center px-4">카테고리</span>
+                <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest text-center px-4">상태</span>
+                <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest text-center px-2">관리</span>
               </div>
             )}
 
@@ -318,7 +333,7 @@ export default function AdminDashboard() {
                           <div className="min-w-0">
                             <p className="text-sm font-black text-slate-800 dark:text-white truncate">
                               {inq.category && (
-                                <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 mr-1.5">[{inq.category}]</span>
+                                <span className="text-[12px] font-medium text-slate-400 dark:text-slate-500 mr-1.5">[{inq.category}]</span>
                               )}
                               {inq.title || inq.message.replace(/^\[.*?\]\n\n/, '').slice(0, 40) + (inq.message.length > 40 ? '...' : '')}
                             </p>
@@ -327,14 +342,14 @@ export default function AdminDashboard() {
 
                         {/* 카테고리 */}
                         <div className="px-4 flex justify-center">
-                          <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                          <span className="text-[12px] font-black px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                             {inq.category || '일반문의'}
                           </span>
                         </div>
 
                         {/* 상태 */}
                         <div className="px-4 flex justify-center">
-                          <span className={`text-[10px] font-black px-2.5 py-1 rounded-full whitespace-nowrap ${
+                          <span className={`text-[12px] font-black px-2.5 py-1 rounded-full whitespace-nowrap ${
                             inq.status === 'pending'
                               ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400'
                               : 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
@@ -358,9 +373,8 @@ export default function AdminDashboard() {
                             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3 bg-slate-50/80 dark:bg-slate-800/40 border-b border-slate-100 dark:border-white/5">
                               {/* 문의일시 */}
                               <div className="flex items-center gap-1.5">
-                                <Clock size={12} className="text-slate-400" />
-                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">문의일시</span>
-                                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-1">
+                                <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">문의일시</span>
+                                <span className="text-[12px] font-bold text-slate-600 dark:text-slate-300 ml-1">
                                   {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                 </span>
                               </div>
@@ -369,20 +383,18 @@ export default function AdminDashboard() {
                               {(() => {
                                 const match = inq.message.match(/^\[답변: (.+?)\]/);
                                 const contact = inq.email && inq.email !== '' ? inq.email : inq.phone || null;
-                                const contactIcon = inq.email && inq.email !== '' ? '📧' : '📱';
                                 if (!match && !contact) return null;
                                 return (
                                   <div className="flex items-center gap-1.5">
-                                    <MessageSquare size={12} className="text-slate-400" />
                                     {match && (
                                       <>
-                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">답변유형</span>
-                                        <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 ml-1">{match[1]}</span>
+                                        <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">답변유형</span>
+                                        <span className="text-[12px] font-bold text-indigo-600 dark:text-indigo-400 ml-1">{match[1]}</span>
                                       </>
                                     )}
                                     {contact && (
-                                      <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-2">
-                                        {contactIcon} {contact}
+                                      <span className="text-[12px] font-bold text-slate-600 dark:text-slate-300 ml-2">
+                                        {contact}
                                       </span>
                                     )}
                                   </div>
@@ -396,39 +408,67 @@ export default function AdminDashboard() {
                               dangerouslySetInnerHTML={{ __html: renderMarkdown(inq.message.replace(/^\[답변: .+?\]\n\n?/, '')) }}
                             />
 
+                            {/* 관리자 메모 (이미 저장된 메모가 있거나 편집 중일 때 표시) */}
+                            <div className="px-5 py-3 bg-slate-50/30 dark:bg-slate-800/20 border-t border-slate-100 dark:border-white/5">
+                              <label className="block text-[12px] font-black text-slate-400 uppercase tracking-widest mb-2">관리자 메모</label>
+                              <textarea
+                                value={adminMemoInput[inq.id] !== undefined ? adminMemoInput[inq.id] : (inq.admin_memo || '')}
+                                onChange={(e) => setAdminMemoInput({ ...adminMemoInput, [inq.id]: e.target.value })}
+                                placeholder="답변 내용이나 특이사항을 기록하세요..."
+                                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[4px] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all dark:text-white resize-none"
+                                rows={2}
+                              />
+                            </div>
+
                             {/* 완료 정보 */}
                             {inq.status === 'completed' && completedDate && (
                               <div className="px-5 py-3 bg-emerald-50 dark:bg-emerald-500/5 border-t border-emerald-100 dark:border-emerald-500/10 flex flex-wrap items-center gap-4">
                                 <div className="flex items-center gap-1.5">
                                   <CheckCircle2 size={14} className="text-emerald-500" />
-                                  <span className="text-[11px] font-black text-emerald-600 dark:text-emerald-400">답변완료</span>
+                                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">답변완료</span>
                                 </div>
-                                <span className="text-[11px] font-bold text-emerald-600/70 dark:text-emerald-400/70">
+                                <span className="text-[12px] font-bold text-emerald-600/70 dark:text-emerald-400/70">
                                   {completedDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                                 </span>
                                 {elapsedStr && (
-                                  <span className="text-[11px] font-bold text-emerald-600/50 dark:text-emerald-400/50">({elapsedStr})</span>
+                                  <span className="text-[12px] font-bold text-emerald-600/50 dark:text-emerald-400/50">({elapsedStr})</span>
                                 )}
                               </div>
                             )}
 
                             {/* 액션 버튼 */}
-                            <div className="px-5 py-3 border-t border-slate-100 dark:border-white/5 flex justify-end gap-2">
-                              {inq.status === 'pending' ? (
-                                <button
-                                  onClick={() => updateStatus(inq.id, 'completed')}
-                                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-[4px] transition-colors flex items-center gap-2"
-                                >
-                                  <CheckCircle2 size={14} /> 답변완료 처리
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => updateStatus(inq.id, 'pending')}
-                                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-black rounded-[4px] hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2"
-                                >
-                                  <Clock size={14} /> 대기 상태로 변경
-                                </button>
-                              )}
+                            <div className="px-5 py-3 border-t border-slate-100 dark:border-white/5 flex justify-between items-center">
+                              <button
+                                onClick={() => deleteInquiry(inq.id)}
+                                className="px-4 py-2 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-black rounded-[4px] hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors flex items-center gap-2"
+                              >
+                                <X size={14} /> 삭제
+                              </button>
+                              <div className="flex gap-2">
+                                {inq.status === 'pending' ? (
+                                  <button
+                                    onClick={() => updateStatus(inq.id, 'completed')}
+                                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black rounded-[4px] transition-colors flex items-center gap-2 shadow-lg shadow-indigo-600/10"
+                                  >
+                                    <CheckCircle2 size={14} /> 답변완료 처리
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => updateStatus(inq.id, 'pending')}
+                                    className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-black rounded-[4px] hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2"
+                                  >
+                                    <Clock size={14} /> 대기 상태로 변경
+                                  </button>
+                                )}
+                                {(adminMemoInput[inq.id] !== undefined && adminMemoInput[inq.id] !== (inq.admin_memo || '')) && (
+                                  <button
+                                    onClick={() => updateStatus(inq.id, inq.status)}
+                                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-[4px] transition-colors flex items-center gap-2 shadow-lg shadow-emerald-600/10"
+                                  >
+                                    <Save size={14} /> 메모 저장
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
