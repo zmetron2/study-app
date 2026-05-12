@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Code2, ArrowRight, 
   BookOpen, 
@@ -64,6 +64,15 @@ export default function ContactPage() {
 
   // FAQ State
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  // Scroll Ref
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedCourse && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedCourse]);
 
   useEffect(() => {
     if (activeTab === 'apply') {
@@ -251,7 +260,7 @@ export default function ContactPage() {
                           </p>
                         </div>
                         <button 
-                          onClick={() => { setSelectedCourse(curr.title); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          onClick={() => { setSelectedCourse(curr.title); }}
                           className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn shadow-lg"
                         >
                           신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -263,7 +272,7 @@ export default function ContactPage() {
               </div>
             ) : (
               /* Application Form View */
-              <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div ref={formRef} className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 scroll-mt-24">
                 <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-6">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-indigo-600 font-black text-xs uppercase tracking-widest">
