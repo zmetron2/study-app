@@ -392,7 +392,7 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('inquiries')}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-[4px] text-sm font-bold transition-all ${activeTab === 'inquiries' ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-white/5'}`}
             >
-              <MessageSquare size={16} /> 문의하기 관리
+              <MessageSquare size={16} /> 신청/문의 관리
             </button>
             <button
               onClick={() => setActiveTab('curriculum')}

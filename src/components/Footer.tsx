@@ -46,7 +46,7 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               <h4 className="text-xs font-black uppercase tracking-widest opacity-40 mb-2 text-foreground">지원</h4>
               <Link href="/faq" className="text-sm opacity-60 hover:opacity-100 hover:text-primary transition-all text-foreground">자주하는 질문</Link>
-              <Link href="/contact" className="text-sm opacity-60 hover:opacity-100 hover:text-primary transition-all text-foreground">문의하기</Link>
+              <Link href="/contact" className="text-sm opacity-60 hover:opacity-100 hover:text-primary transition-all text-foreground">교육신청/문의</Link>
               <Link href="/terms" className="text-sm opacity-60 hover:opacity-100 hover:text-primary transition-all text-foreground">이용약관</Link>
               <Link href="/privacy" className="text-sm opacity-60 hover:opacity-100 hover:text-primary transition-all text-foreground">개인정보처리방침</Link>
             </div>

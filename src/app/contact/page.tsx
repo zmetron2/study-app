@@ -1,20 +1,77 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Code2, ArrowRight, 
   BookOpen, 
   Users, ShieldCheck,
   Mail, MessageSquare, Send,
-  CheckCircle2, Clock, Phone, Smartphone, Check
+  CheckCircle2, Clock, Phone, Smartphone, Check, HelpCircle, ChevronDown, MapPin, Search
 } from 'lucide-react';
 
+interface Curriculum {
+  id: number;
+  title: string;
+  date_time: string | null;
+  location: string | null;
+  description: string | null;
+  category: string | null;
+  status: string;
+  created_at: string;
+}
+
+interface FAQItem {
+  question: string;
+  answer: string;
+  category: string;
+}
+
+const FAQ_DATA: FAQItem[] = [
+  { category: '서비스 이용', question: '비전공자도 바이브 코딩을 배울 수 있나요?', answer: '네, 물론입니다! 바이브 코딩은 복잡한 문법보다 논리적 흐름과 AI 활용 능력을 중시하므로 비전공자분들이 더 빠르게 결과물을 만드는 경우가 많습니다.' },
+  { category: '서비스 이용', question: '수강 기간에 제한이 있나요?', answer: '현재 제공되는 모든 사전 학습 및 가이드 자료는 기간 제한 없이 영구적으로 이용하실 수 있습니다.' },
+  { category: '기술 지원', question: 'Cursor AI 에디터는 유료로만 사용 가능한가요?', answer: '아니요, Cursor는 무료 버전으로도 충분한 기능을 제공합니다. 학습 초기에는 무료 버전으로 시작하시는 것을 권장합니다.' },
+  { category: '기술 지원', question: '코드가 동작하지 않을 때는 어떻게 하나요?', answer: '먼저 AI에게 오류 메시지를 그대로 전달하여 해결책을 물어보세요. 그래도 해결되지 않는다면 문의하기 페이지를 통해 질문을 남겨주시면 답변해 드립니다.' },
+  { category: '결제/계정', question: '회원 가입 없이도 이용할 수 있나요?', answer: '기본적인 가이드와 자료실 조회는 가능하지만, 실습 성취도 저장 및 프리미엄 자료 이용을 위해서는 로그인이 필요합니다.' },
+  { category: '결제/계정', question: '비밀번호를 잊어버렸어요.', answer: '로그인 페이지의 비밀번호 찾기 기능을 이용하시거나, 등록된 이메일로 문의해 주시면 재설정을 도와드립니다.' }
+];
+
 export default function ContactPage() {
+  const [activeTab, setActiveTab] = useState<'apply' | 'inquiry' | 'faq'>('apply');
+  
+  // Inquiry Form State
   const [responseType, setResponseType] = useState<'sms' | 'phone' | 'email'>('sms');
   const [isAgreed, setIsAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formData, setFormData] = useState({ type: '교육 문의', name: '', title: '', contact: '', message: '' });
+
+  // Curriculum State
+  const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
+  const [curriculumLoading, setCurriculumLoading] = useState(false);
+
+  // FAQ State
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (activeTab === 'apply') {
+      fetchCurriculums();
+    }
+  }, [activeTab]);
+
+  const fetchCurriculums = async () => {
+    setCurriculumLoading(true);
+    try {
+      const res = await fetch('/api/curriculum');
+      const data = await res.json();
+      if (data.success) {
+        setCurriculums(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch curriculums:', error);
+    } finally {
+      setCurriculumLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!formData.name || !formData.title || !formData.contact || !formData.message) {
@@ -28,11 +85,8 @@ export default function ContactPage() {
         name: formData.name,
         title: formData.title,
         category: formData.type,
-        // 이메일 답변 선택 시에만 email 필드 전송, 아니면 null
         email: responseType === 'email' ? formData.contact : null,
-        // 문자/전화 선택 시에만 phone 필드 전송
         phone: responseType !== 'email' ? formData.contact : null,
-        // 답변 유형 정보를 본문 앞에 태그로 추가
         message: `[답변: ${responseType === 'sms' ? '문자' : responseType === 'phone' ? '전화' : '이메일'}]\n\n${formData.message}`
       };
 
@@ -42,7 +96,7 @@ export default function ContactPage() {
         body: JSON.stringify(payload)
       });
       
-      const data = (await res.json()) as { success: boolean; message?: string };
+      const data = await res.json();
       if (data.success) {
         setShowSuccessModal(true);
         setFormData({ type: '교육 문의', name: '', title: '', contact: '', message: '' });
@@ -57,156 +111,254 @@ export default function ContactPage() {
     }
   };
 
+  const handleApplyNow = (courseTitle: string) => {
+    setFormData({
+      ...formData,
+      type: '교육 문의',
+      title: `[교육신청] ${courseTitle}`,
+      message: `${courseTitle} 교육 과정을 신청하고 싶습니다. 상담 요청드립니다.`
+    });
+    setActiveTab('inquiry');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans transition-colors selection:bg-indigo-100 selection:text-indigo-900">
 
       {/* --- Header Area --- */}
-      <header className="bg-slate-50 dark:bg-[#0b0f1a] text-slate-900 dark:text-white py-20 relative overflow-hidden transition-colors border-b border-slate-200 dark:border-white/5">
+      <header className="bg-slate-50 dark:bg-[#0b0f1a] text-slate-900 dark:text-white py-16 relative overflow-hidden transition-colors border-b border-slate-200 dark:border-white/5">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08),transparent)] pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-12 relative z-10">
-          <div className="space-y-6 flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-widest">
-              <MessageSquare className="w-3 h-3" /> Contact Us
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-              무엇이든 <span className="text-indigo-600">물어보세요</span>
-            </h1>
-            <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto lg:mx-0 leading-relaxed text-sm md:text-base font-medium">
-              강의, 프로젝트 협업, 시스템 구축 등 궁금하신 점을 남겨주세요.<br />
-              전문 상담사가 확인 후 빠르게 답변해 드립니다.
-            </p>
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-widest mb-6">
+            <MessageSquare className="w-3 h-3" /> Support Center
           </div>
-          
-          <div className="relative group flex-shrink-0">
-            <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-[3rem] blur-2xl opacity-10 group-hover:opacity-20 transition duration-1000"></div>
-            <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-10 w-72 h-72 flex flex-col items-center justify-center text-center space-y-6 shadow-2xl shadow-indigo-500/10 transition-colors">
-              <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-500/10 rounded-[2rem] flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                <Smartphone className="w-10 h-10 animate-bounce" />
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Live Inquiry</p>
-                <p className="text-base font-black text-slate-800 dark:text-white">빠른 답변을<br/>약속드립니다</p>
-              </div>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight mb-4">
+            교육신청 <span className="text-indigo-600">및 문의</span>
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto leading-relaxed text-sm md:text-base font-medium">
+            최적의 교육 과정을 찾고 계신가요? <br className="hidden sm:block" />
+            신청부터 상세 문의까지 한곳에서 도와드립니다.
+          </p>
+
+          {/* Custom Tabs */}
+          <div className="flex justify-center mt-12">
+            <div className="inline-flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5">
+              <TabButton active={activeTab === 'apply'} onClick={() => setActiveTab('apply')} icon={BookOpen} label="교육신청" />
+              <TabButton active={activeTab === 'inquiry'} onClick={() => setActiveTab('inquiry')} icon={MessageSquare} label="문의하기" />
+              <TabButton active={activeTab === 'faq'} onClick={() => setActiveTab('faq')} icon={HelpCircle} label="자주하는 질문" />
             </div>
           </div>
         </div>
       </header>
 
       {/* --- Main Content --- */}
-      <main className="max-w-7xl mx-auto w-full px-6 py-16">
-        <div className="flex flex-col lg:flex-row gap-16">
-          
-          {/* Inquiry Form */}
-          <div className="flex-1 space-y-12">
-            <div className="space-y-4">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">상세 문의 내용</h2>
-              <p className="text-sm text-slate-500 font-medium italic">필수 항목은 반드시 입력해 주시기 바랍니다.</p>
+      <main className="max-w-7xl mx-auto w-full px-6 py-16 flex-1">
+        
+        {/* 1. Education Apply Tab */}
+        {activeTab === 'apply' && (
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">모집 중인 교육 과정</h2>
+              <p className="text-slate-500 font-medium">현업 전문가와 함께하는 실전 코딩 커리큘럼입니다.</p>
             </div>
 
-            <form className="space-y-10 bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-white/5 p-8 md:p-12 shadow-xl shadow-indigo-500/5">
-              {/* Type Selection */}
-              <div className="space-y-6">
-                <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">문의 유형 <span className="text-indigo-600">*</span></label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <TypeButton icon={BookOpen} label="교육 문의" active={formData.type === '교육 문의'} onClick={() => setFormData({...formData, type: '교육 문의'})} />
-                  <TypeButton icon={Code2} label="프로젝트 제안" active={formData.type === '프로젝트 제안'} onClick={() => setFormData({...formData, type: '프로젝트 제안'})} />
-                  <TypeButton icon={Users} label="채용/제휴" active={formData.type === '채용/제휴'} onClick={() => setFormData({...formData, type: '채용/제휴'})} />
-                  <TypeButton icon={MessageSquare} label="기타 문의" active={formData.type === '기타 문의'} onClick={() => setFormData({...formData, type: '기타 문의'})} />
-                </div>
+            {curriculumLoading ? (
+              <div className="flex justify-center py-20">
+                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
               </div>
-
-              {/* Name & Title */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">성함/기업명 <span className="text-indigo-600">*</span></label>
-                  <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="성함을 입력해 주세요" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white" />
-                </div>
-                <div className="space-y-3">
-                  <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">문의 제목 <span className="text-indigo-600">*</span></label>
-                  <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="제목을 입력해 주세요" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white" />
-                </div>
+            ) : curriculums.length === 0 ? (
+              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-white/10 p-20 text-center">
+                <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <p className="text-slate-400 font-medium">현재 모집 중인 과정이 없습니다. 별도 문의를 남겨주세요.</p>
               </div>
-
-              {/* Response Method Selection */}
-              <div className="space-y-6">
-                <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">답변받으실 방법 <span className="text-indigo-600">*</span></label>
-                <div className="flex flex-wrap gap-4">
-                  <ResponseOption icon={Smartphone} label="문자 답변" active={responseType === 'sms'} onClick={() => {setResponseType('sms'); setFormData({...formData, contact: ''})}} />
-                  <ResponseOption icon={Phone} label="전화 상담" active={responseType === 'phone'} onClick={() => {setResponseType('phone'); setFormData({...formData, contact: ''})}} />
-                  <ResponseOption icon={Mail} label="이메일 답변" active={responseType === 'email'} onClick={() => {setResponseType('email'); setFormData({...formData, contact: ''})}} />
-                </div>
-              </div>
-
-              {/* Conditional Input based on Response Method */}
-              <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                {responseType === 'email' ? (
-                  <div className="space-y-3">
-                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">이메일 주소 <span className="text-indigo-600">*</span></label>
-                    <input type="email" value={formData.contact} onChange={e => setFormData({...formData, contact: e.target.value})} placeholder="example@email.com" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white" />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {curriculums.map((curr) => (
+                  <div key={curr.id} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all hover:-translate-y-1 flex flex-col">
+                    <div className="flex justify-between items-start mb-6">
+                      <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-500/20">
+                        {curr.category || '일반'}
+                      </span>
+                      <span className={`px-3 py-1 text-[10px] font-black rounded-full ${curr.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-slate-50 dark:bg-white/5 text-slate-400'}`}>
+                        {curr.status === 'active' ? '모집중' : '준비중'}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-black text-slate-800 dark:text-white mb-4 group-hover:text-indigo-600 transition-colors">{curr.title}</h3>
+                    <div className="space-y-3 mb-8 flex-1">
+                      <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+                        <Clock size={14} className="text-slate-400" /> {curr.date_time?.replace('T', ' ') || '일정 미정'}
+                      </div>
+                      <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+                        <MapPin size={14} className="text-slate-400" /> {curr.location || '온라인'}
+                      </div>
+                      <p className="text-[13px] text-slate-400 leading-relaxed line-clamp-3 mt-4">
+                        {curr.description}
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => handleApplyNow(curr.title)}
+                      className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn"
+                    >
+                      상담 및 신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
                   </div>
-                ) : (
-                  <div className="space-y-3">
-                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">연락처 <span className="text-indigo-600">*</span></label>
-                    <input type="tel" value={formData.contact} onChange={e => setFormData({...formData, contact: e.target.value})} placeholder="010-0000-0000" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white" />
-                  </div>
-                )}
+                ))}
               </div>
-
-              {/* Content Area */}
-              <div className="space-y-3">
-                <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">문의 내용 <span className="text-indigo-600">*</span></label>
-                <textarea rows={8} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} placeholder="내용을 상세히 입력해 주시면 더욱 정확한 답변이 가능합니다." className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white resize-none"></textarea>
-              </div>
-
-              {/* Agreement */}
-              <div className="flex items-center gap-3 p-5 bg-indigo-50/50 dark:bg-indigo-500/5 rounded-2xl border border-indigo-100 dark:border-white/5">
-                <div onClick={() => setIsAgreed(!isAgreed)} className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center cursor-pointer transition-all ${isAgreed ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800'}`}>
-                  {isAgreed && <Check className="w-4 h-4" />}
-                </div>
-                <div className="text-xs font-bold text-slate-600 dark:text-slate-400 flex flex-wrap items-center gap-x-2">
-                  <span onClick={() => setIsAgreed(!isAgreed)} className="cursor-pointer select-none hover:text-slate-900 dark:hover:text-white transition-colors">
-                    개인정보 수집 및 이용에 동의합니다 
-                  </span>
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-black underline decoration-indigo-200 underline-offset-4 hover:text-indigo-500 transition-colors">
-                    (상세보기)
-                  </a>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <button 
-                type="button" 
-                onClick={handleSubmit}
-                disabled={!isAgreed || isSubmitting}
-                className={`w-full py-5 rounded-[1.5rem] font-black text-lg flex items-center justify-center gap-4 transition-all shadow-2xl ${isAgreed && !isSubmitting ? 'bg-indigo-600 text-white shadow-indigo-600/30 hover:-translate-y-1 hover:shadow-indigo-600/40 active:scale-95' : 'bg-slate-100 dark:bg-white/5 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-white/5'}`}
-              >
-                {isSubmitting ? '제출 중...' : isAgreed ? '상담 신청하기' : '개인정보 동의가 필요합니다'} <Send className={`w-5 h-5 ${isAgreed ? '' : 'opacity-20'}`} />
-              </button>
-            </form>
+            )}
           </div>
+        )}
 
-          {/* Sidebar Info */}
-          <aside className="lg:w-80 space-y-8">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 space-y-8 shadow-sm">
-              <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-widest uppercase border-b border-slate-100 dark:border-white/5 pb-4 px-1">Info</h3>
-              <div className="space-y-8">
-                <InfoItem icon={Clock} title="24시간 내 답변" desc="영업일 기준 24시간 이내에 전문 상담사가 배정됩니다." />
-                <InfoItem icon={CheckCircle2} title="1:1 맞춤 상담" desc="단순 정보 전달을 넘어 최적의 해결책을 제시해 드립니다." />
-                <InfoItem icon={ShieldCheck} title="개인정보 보안" desc="입력하신 정보는 상담 목적으로만 안전하게 사용됩니다." />
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 space-y-6 shadow-sm">
-              <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-widest uppercase border-b border-slate-100 dark:border-white/5 pb-4 px-1">Email Inquiry</h3>
+        {/* 2. Inquiry Tab */}
+        {activeTab === 'inquiry' && (
+          <div className="flex flex-col lg:flex-row gap-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex-1 space-y-12">
               <div className="space-y-4">
-                <ContactLink icon={Mail} title="직접 문의" value="zmetron@nate.com" />
-                <p className="text-[11px] text-slate-400 font-medium leading-relaxed px-1 pt-2">
-                  서류 첨부나 대량 문의가 필요하신 경우 위 이메일로 연락 주시면 더욱 편리합니다.
-                </p>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">상세 문의 내용</h2>
+                <p className="text-sm text-slate-500 font-medium italic">필수 항목은 반드시 입력해 주시기 바랍니다.</p>
               </div>
+
+              <form className="space-y-10 bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-white/5 p-8 md:p-12 shadow-xl shadow-indigo-500/5">
+                <div className="space-y-6">
+                  <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">문의 유형 <span className="text-indigo-600">*</span></label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <TypeButton icon={BookOpen} label="교육 문의" active={formData.type === '교육 문의'} onClick={() => setFormData({...formData, type: '교육 문의'})} />
+                    <TypeButton icon={Code2} label="프로젝트 제안" active={formData.type === '프로젝트 제안'} onClick={() => setFormData({...formData, type: '프로젝트 제안'})} />
+                    <TypeButton icon={Users} label="채용/제휴" active={formData.type === '채용/제휴'} onClick={() => setFormData({...formData, type: '채용/제휴'})} />
+                    <TypeButton icon={MessageSquare} label="기타 문의" active={formData.type === '기타 문의'} onClick={() => setFormData({...formData, type: '기타 문의'})} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">성함/기업명 <span className="text-indigo-600">*</span></label>
+                    <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="성함을 입력해 주세요" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">문의 제목 <span className="text-indigo-600">*</span></label>
+                    <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="제목을 입력해 주세요" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">답변받으실 방법 <span className="text-indigo-600">*</span></label>
+                  <div className="flex flex-wrap gap-4">
+                    <ResponseOption icon={Smartphone} label="문자 답변" active={responseType === 'sms'} onClick={() => setResponseType('sms')} />
+                    <ResponseOption icon={Phone} label="전화 상담" active={responseType === 'phone'} onClick={() => setResponseType('phone')} />
+                    <ResponseOption icon={Mail} label="이메일 답변" active={responseType === 'email'} onClick={() => setResponseType('email')} />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">연락처/이메일 <span className="text-indigo-600">*</span></label>
+                  <input type={responseType === 'email' ? 'email' : 'text'} value={formData.contact} onChange={e => setFormData({...formData, contact: e.target.value})} placeholder={responseType === 'email' ? 'example@email.com' : '010-0000-0000'} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white font-bold" />
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">문의 내용 <span className="text-indigo-600">*</span></label>
+                  <textarea rows={6} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} placeholder="내용을 상세히 입력해 주시면 더욱 정확한 답변이 가능합니다." className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white resize-none font-bold"></textarea>
+                </div>
+
+                <div className="flex items-center gap-3 p-5 bg-indigo-50/50 dark:bg-indigo-500/5 rounded-2xl border border-indigo-100 dark:border-white/5">
+                  <div onClick={() => setIsAgreed(!isAgreed)} className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center cursor-pointer transition-all ${isAgreed ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800'}`}>
+                    {isAgreed && <Check className="w-4 h-4" />}
+                  </div>
+                  <div className="text-xs font-bold text-slate-600 dark:text-slate-400 flex flex-wrap items-center gap-x-2">
+                    <span onClick={() => setIsAgreed(!isAgreed)} className="cursor-pointer select-none hover:text-slate-900 dark:hover:text-white transition-colors">
+                      개인정보 수집 및 이용에 동의합니다 
+                    </span>
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-black underline decoration-indigo-200 underline-offset-4 hover:text-indigo-500 transition-colors">
+                      (상세보기)
+                    </a>
+                  </div>
+                </div>
+
+                <button 
+                  type="button" 
+                  onClick={handleSubmit}
+                  disabled={!isAgreed || isSubmitting}
+                  className={`w-full py-5 rounded-[1.5rem] font-black text-lg flex items-center justify-center gap-4 transition-all shadow-2xl ${isAgreed && !isSubmitting ? 'bg-indigo-600 text-white shadow-indigo-600/30 hover:-translate-y-1 hover:shadow-indigo-600/40 active:scale-95' : 'bg-slate-100 dark:bg-white/5 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-white/5'}`}
+                >
+                  {isSubmitting ? '제출 중...' : isAgreed ? '상담 신청하기' : '개인정보 동의가 필요합니다'} <Send className={`w-5 h-5 ${isAgreed ? '' : 'opacity-20'}`} />
+                </button>
+              </form>
             </div>
-          </aside>
-        </div>
+
+            <aside className="lg:w-80 space-y-8">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 space-y-8 shadow-sm">
+                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-widest uppercase border-b border-slate-100 dark:border-white/5 pb-4 px-1">Info</h3>
+                <div className="space-y-8">
+                  <InfoItem icon={Clock} title="24시간 내 답변" desc="영업일 기준 24시간 이내에 전문 상담사가 배정됩니다." />
+                  <InfoItem icon={CheckCircle2} title="1:1 맞춤 상담" desc="단순 정보 전달을 넘어 최적의 해결책을 제시해 드립니다." />
+                  <InfoItem icon={ShieldCheck} title="개인정보 보안" desc="입력하신 정보는 상담 목적으로만 안전하게 사용됩니다." />
+                </div>
+              </div>
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 space-y-6 shadow-sm">
+                <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-widest uppercase border-b border-slate-100 dark:border-white/5 pb-4 px-1">Email Inquiry</h3>
+                <div className="space-y-4">
+                  <ContactLink icon={Mail} title="직접 문의" value="zmetron@nate.com" />
+                  <p className="text-[11px] text-slate-400 font-medium leading-relaxed px-1 pt-2">
+                    서류 첨부나 대량 문의가 필요하신 경우 위 이메일로 연락 주시면 더욱 편리합니다.
+                  </p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        )}
+
+        {/* 3. FAQ Tab */}
+        {activeTab === 'faq' && (
+          <div className="max-w-3xl mx-auto w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+             <div className="text-center space-y-4 mb-12">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">자주 하는 질문</h2>
+              <p className="text-slate-500 font-medium">학습자들이 가장 궁금해하는 내용들을 모았습니다.</p>
+            </div>
+            
+            <div className="space-y-4">
+              {FAQ_DATA.map((item, index) => (
+                <div 
+                  key={index} 
+                  className={`group bg-white dark:bg-slate-900 rounded-3xl border transition-all duration-300 overflow-hidden ${openFaqIndex === index ? 'border-indigo-500 shadow-xl shadow-indigo-500/5' : 'border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'}`}
+                >
+                  <button 
+                    onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                    className="w-full flex items-center justify-between p-6 md:p-8 text-left"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${openFaqIndex === index ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-white/10 text-slate-400'}`}>
+                        {item.category}
+                      </span>
+                      <h3 className={`text-base font-black transition-colors ${openFaqIndex === index ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-800 dark:text-white'}`}>
+                        {item.question}
+                      </h3>
+                    </div>
+                    <div className={`p-2 rounded-full transition-all ${openFaqIndex === index ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 rotate-180' : 'text-slate-300'}`}>
+                      <ChevronDown className="w-5 h-5" />
+                    </div>
+                  </button>
+                  
+                  <div className={`transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="px-6 md:px-8 pb-8">
+                      <div className="h-px bg-slate-100 dark:bg-white/5 mb-6" />
+                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                        {item.answer}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 bg-slate-900 rounded-3xl p-8 text-center space-y-4">
+              <h3 className="text-xl font-black text-white">원하는 답변을 찾지 못하셨나요?</h3>
+              <button 
+                onClick={() => setActiveTab('inquiry')}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-2xl font-black transition-all shadow-xl shadow-indigo-600/20 active:scale-95 text-sm"
+              >
+                1:1 문의 남기기
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Success Modal */}
@@ -219,7 +371,7 @@ export default function ContactPage() {
             </div>
             <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2">접수 완료</h3>
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-              성공적으로 문의가 접수되었습니다.<br/>
+              성공적으로 신청/문의가 접수되었습니다.<br/>
               담당자가 확인 후 빠르게 답변해 드리겠습니다.
             </p>
             <button 
@@ -236,6 +388,17 @@ export default function ContactPage() {
 }
 
 // --- Helper Components ---
+function TabButton({ active, onClick, icon: Icon, label }: { active: boolean, onClick: () => void, icon: any, label: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-black transition-all ${active ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+    >
+      <Icon size={16} /> {label}
+    </button>
+  );
+}
+
 function TypeButton({ icon: Icon, label, active = false, onClick }: { icon: React.ElementType, label: string, active?: boolean, onClick: () => void }) {
   return (
     <div
