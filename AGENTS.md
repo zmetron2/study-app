@@ -24,6 +24,7 @@
 7. **CSS & Theme Management (Tailwind v3 Only)**:
    - **Version Lock**: Cloudflare 빌드 서버와의 원어민(Native) 라이브러리 충돌 방지를 위해 **Tailwind CSS v3**를 고수합니다. (v4는 실험적 환경에서만 사용)
    - **Semantic Classes**: 하드코딩된 색상 대신 테마 변수를 활용한 시맨틱 클래스(`bg-background`, `bg-card`, `border-border` 등)를 우선적으로 사용합니다.
+   - **Specificity & Layer Priority**: CSS 작업 시 전역 스타일(예: `.footer-brand p`)과 Tailwind 유틸리티 클래스 간의 구체성(Specificity) 충돌 및 레이어 우선순위를 항상 고려합니다. 유틸리티 클래스가 적용되지 않을 경우 태그 변경이나 `!important`를 활용하여 스타일이 정확히 반영되도록 조치합니다.
 8. **Cloudflare Edge & Runtime Stability (CRITICAL)**:
    - **Runtime Selective Use**: `export const runtime = 'edge';`는 API Route나 실시간 DB 접근이 필요한 페이지에만 제한적으로 사용합니다. 일반 정적/홍보 페이지에는 사용을 지양하여 500 Internal Server Error를 방지합니다.
    - **Dashboard Configuration (Next.js 15+)**: Cloudflare Pages 대시보드에서 다음 설정이 누락되면 워커가 즉시 크래시되며 500 에러가 발생합니다. 반드시 대시보드(Settings)에 직접 설정해야 합니다.

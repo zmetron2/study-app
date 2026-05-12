@@ -42,7 +42,18 @@ export async function POST(request: Request) {
       // 클라이언트 IP 추출 (Cloudflare headers)
       const ipAddress = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'Unknown IP';
 
-      // 기존 세션이 있으면 무시 (중복 start 방지)
+      // ① 같은 IP의 미종료 세션 자동 정리
+      // (브라우저 crash, 새로고침 등으로 end 신호 없이 재접속한 경우)
+      await db.prepare(
+        `UPDATE agora_sessions
+         SET end_ts = ?,
+             duration_seconds = MIN(? - start_ts, 12 * 60 * 60)
+         WHERE ip_address = ?
+           AND channel = ?
+           AND end_ts IS NULL`
+      ).bind(nowTs, nowTs, ipAddress, channel).run();
+
+      // ② 새 세션 삽입 (중복 start 방지)
       await db.prepare(
         `INSERT OR IGNORE INTO agora_sessions (session_id, channel, uid, start_ts, ip_address)
          VALUES (?, ?, ?, ?, ?)`
@@ -61,7 +72,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: '세션을 찾을 수 없습니다.' }, { status: 404 });
       }
 
-      const duration = nowTs - row.start_ts;
+      // ③ 최대 12시간 캡 적용 (비정상 장시간 세션으로 인한 과다 집계 방지)
+      const rawDuration = nowTs - row.start_ts;
+      const duration = Math.min(rawDuration, 12 * 60 * 60);
 
       await db.prepare(
         `UPDATE agora_sessions SET end_ts = ?, duration_seconds = ? WHERE session_id = ?`
