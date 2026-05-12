@@ -312,23 +312,15 @@ export default function AdminDashboard() {
                         onClick={() => setExpandedId(isExpanded ? null : inq.id)}
                         className="w-full grid grid-cols-[1fr_auto_auto_auto] gap-0 px-6 py-4 items-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
                       >
-                        {/* 제목 + 문의자 */}
+                        {/* 제목만 표시 */}
                         <div className="flex items-center gap-3 min-w-0">
                           <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${inq.status === 'pending' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
                           <div className="min-w-0">
                             <p className="text-sm font-black text-slate-800 dark:text-white truncate">
                               {inq.category && (
-                                <span className="text-[10px] font-light text-slate-400 dark:text-slate-500 mr-1.5">[{inq.category}]</span>
+                                <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 mr-1.5">[{inq.category}]</span>
                               )}
                               {inq.title || inq.message.replace(/^\[.*?\]\n\n/, '').slice(0, 40) + (inq.message.length > 40 ? '...' : '')}
-                            </p>
-                            <p className="text-[11px] text-slate-400 font-medium mt-0.5">
-                              {inq.name}
-                              {inq.email && inq.email !== 'no-email@provided.com' && inq.email !== '' ? ` · ${inq.email}` : ''}
-                              {inq.phone ? ` · ${inq.phone}` : ''}
-                              <span className="ml-2 opacity-60">
-                                {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                              </span>
                             </p>
                           </div>
                         </div>
@@ -362,19 +354,9 @@ export default function AdminDashboard() {
                         <div className="px-6 pb-6 animate-in fade-in slide-in-from-top-2 duration-200">
                           <div className="border border-slate-100 dark:border-white/5 rounded-[4px] overflow-hidden">
 
-                            {/* 메타 정보 바 - 답변유형 + 문의일시 + 연락처만 표시 */}
-                            <div className="flex flex-wrap items-center gap-4 px-5 py-3 bg-slate-50/80 dark:bg-slate-800/40 border-b border-slate-100 dark:border-white/5">
-                              {/* 답변유형: 본문 첫 줄에서 추출 */}
-                              {(() => {
-                                const match = inq.message.match(/^\[답변: (.+?)\]/);
-                                return match ? (
-                                  <div className="flex items-center gap-1.5">
-                                    <MessageSquare size={12} className="text-slate-400" />
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">답변유형</span>
-                                    <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 ml-1">{match[1]}</span>
-                                  </div>
-                                ) : null;
-                              })()}
+                            {/* 메타 정보 바: 문의일시 | 답변유형 + 연락처 연속 배치 */}
+                            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3 bg-slate-50/80 dark:bg-slate-800/40 border-b border-slate-100 dark:border-white/5">
+                              {/* 문의일시 */}
                               <div className="flex items-center gap-1.5">
                                 <Clock size={12} className="text-slate-400" />
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">문의일시</span>
@@ -382,24 +364,36 @@ export default function AdminDashboard() {
                                   {createdDate.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                 </span>
                               </div>
-                              {inq.email && inq.email !== 'no-email@provided.com' && (
-                                <div className="flex items-center gap-1.5">
-                                  <span className="text-[10px] font-black text-slate-400">📧</span>
-                                  <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{inq.email}</span>
-                                </div>
-                              )}
-                              {inq.phone && (
-                                <div className="flex items-center gap-1.5">
-                                  <span className="text-[10px] font-black text-slate-400">📱</span>
-                                  <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{inq.phone}</span>
-                                </div>
-                              )}
+
+                              {/* 답변유형 + 연락처 연속 */}
+                              {(() => {
+                                const match = inq.message.match(/^\[답변: (.+?)\]/);
+                                const contact = inq.email && inq.email !== '' ? inq.email : inq.phone || null;
+                                const contactIcon = inq.email && inq.email !== '' ? '📧' : '📱';
+                                if (!match && !contact) return null;
+                                return (
+                                  <div className="flex items-center gap-1.5">
+                                    <MessageSquare size={12} className="text-slate-400" />
+                                    {match && (
+                                      <>
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">답변유형</span>
+                                        <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 ml-1">{match[1]}</span>
+                                      </>
+                                    )}
+                                    {contact && (
+                                      <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 ml-2">
+                                        {contactIcon} {contact}
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })()}
                             </div>
 
-                            {/* 본문 (마크다운) */}
+                            {/* 본문 (마크다운) - [답변: ...] 태그 제외 후 렌더링 */}
                             <div
                               className="p-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed prose-sm max-w-none"
-                              dangerouslySetInnerHTML={{ __html: renderMarkdown(inq.message) }}
+                              dangerouslySetInnerHTML={{ __html: renderMarkdown(inq.message.replace(/^\[답변: .+?\]\n\n?/, '')) }}
                             />
 
                             {/* 완료 정보 */}
