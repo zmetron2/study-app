@@ -42,7 +42,7 @@ export default function ContactPage() {
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      const data = (await res.json()) as { success: boolean; message?: string };
       if (data.success) {
         setShowSuccessModal(true);
         setFormData({ type: '교육 문의', name: '', title: '', contact: '', message: '' });
