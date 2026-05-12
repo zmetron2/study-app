@@ -65,6 +65,17 @@ interface AgoraUsage {
   percentage: string;
 }
 
+interface ActiveUser {
+  ip_address: string;
+  uid?: string;
+  start_ts: number;
+}
+
+interface ActiveUsersResponse {
+  ok: boolean;
+  users: ActiveUser[];
+}
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'inquiries' | 'students' | 'video-chat' | 'curriculum'>('inquiries');
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
@@ -128,17 +139,6 @@ export default function AdminDashboard() {
       return () => clearInterval(interval);
     }
   }, [activeTab]);
-
-  interface ActiveUser {
-    ip_address: string;
-    uid?: string;
-    start_ts: number;
-  }
-
-  interface ActiveUsersResponse {
-    ok: boolean;
-    users: ActiveUser[];
-  }
 
   const fetchActiveUsers = async () => {
     try {
@@ -710,6 +710,7 @@ export default function AdminDashboard() {
               </div>
             )}
           </div>
+        )}
 
         {activeTab === 'students' && (
           <div className="bg-white dark:bg-slate-900 rounded-[4px] border border-slate-200 dark:border-white/5 shadow-xl shadow-indigo-500/5 overflow-hidden animate-in fade-in duration-300">
