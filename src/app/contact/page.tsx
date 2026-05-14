@@ -6,7 +6,8 @@ import {
   BookOpen, 
   Users, ShieldCheck,
   Mail, MessageSquare, Send,
-  CheckCircle2, Clock, Phone, Smartphone, Check, HelpCircle, ChevronDown, MapPin, X
+  CheckCircle2, Clock, Phone, Smartphone, Check, HelpCircle, ChevronDown, MapPin, X,
+  Plus, Trash2, Edit
 } from 'lucide-react';
 
 interface Curriculum {
@@ -64,6 +65,31 @@ export default function ContactPage() {
 
   // FAQ State
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  // Admin State
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Curriculum Management State
+  const [isCurriculumModalOpen, setIsCurriculumModalOpen] = useState(false);
+  const [editingCurriculum, setEditingCurriculum] = useState<Curriculum | null>(null);
+  const [curriculumModalData, setCurriculumModalData] = useState({
+    title: '',
+    date_time: '',
+    location: '',
+    description: '',
+    category: '입문',
+    status: 'active'
+  });
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      if (user.role === 'admin') {
+        setIsAdmin(true);
+      }
+    }
+  }, []);
 
   // Scroll Ref
   const formRef = useRef<HTMLDivElement>(null);
@@ -185,6 +211,69 @@ export default function ContactPage() {
     }));
   };
 
+  const handleOpenCurriculumModal = (curr?: Curriculum) => {
+    if (curr) {
+      setEditingCurriculum(curr);
+      setCurriculumModalData({
+        title: curr.title,
+        date_time: curr.date_time?.replace(' ', 'T') || '',
+        location: curr.location || '',
+        description: curr.description || '',
+        category: curr.category || '입문',
+        status: curr.status
+      });
+    } else {
+      setEditingCurriculum(null);
+      setCurriculumModalData({
+        title: '',
+        date_time: '',
+        location: '',
+        description: '',
+        category: '입문',
+        status: 'active'
+      });
+    }
+    setIsCurriculumModalOpen(true);
+  };
+
+  const handleCurriculumSubmit = async () => {
+    try {
+      const method = editingCurriculum ? 'PUT' : 'POST';
+      const payload = {
+        ...curriculumModalData,
+        id: editingCurriculum?.id,
+        date_time: curriculumModalData.date_time.replace('T', ' ')
+      };
+
+      const res = await fetch('/api/curriculum', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        setIsCurriculumModalOpen(false);
+        fetchCurriculums();
+      }
+    } catch (e) {
+      alert('저장 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleDeleteCurriculum = async (id: number) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    try {
+      const res = await fetch(`/api/curriculum?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        fetchCurriculums();
+      }
+    } catch (e) {
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans transition-colors selection:bg-indigo-100 selection:text-indigo-900">
 
@@ -221,9 +310,18 @@ export default function ContactPage() {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             {!selectedCourse ? (
               <div className="space-y-12">
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-4 relative">
                   <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">모집 중인 교육 과정</h2>
                   <p className="text-slate-500 font-medium">현업 전문가와 함께하는 실전 코딩 커리큘럼입니다.</p>
+                  
+                  {isAdmin && (
+                    <button 
+                      onClick={() => handleOpenCurriculumModal()}
+                      className="absolute right-0 top-0 flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-black shadow-lg shadow-indigo-600/20 hover:bg-indigo-500 transition-all active:scale-95"
+                    >
+                      <Plus size={16} /> 과정 추가
+                    </button>
+                  )}
                 </div>
 
                 {curriculumLoading ? (
@@ -247,8 +345,23 @@ export default function ContactPage() {
                             {curr.status === 'active' ? '모집중' : '준비중'}
                           </span>
                         </div>
-                        <h3 className="text-xl font-black text-slate-800 dark:text-white mb-4 group-hover:text-indigo-600 transition-colors">{curr.title}</h3>
-                        <div className="space-y-3 mb-8 flex-1">
+                        
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-xl font-black text-slate-800 dark:text-white group-hover:text-indigo-600 transition-colors">{curr.title}</h3>
+                            {isAdmin && (
+                              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onClick={(e) => { e.stopPropagation(); handleOpenCurriculumModal(curr); }} className="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors">
+                                  <Edit size={14} />
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); handleDeleteCurriculum(curr.id); }} className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors">
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-3 mb-8">
                           <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
                             <Clock size={14} className="text-slate-400" /> {curr.date_time?.replace('T', ' ') || '일정 미정'}
                           </div>
@@ -259,7 +372,8 @@ export default function ContactPage() {
                             {curr.description}
                           </p>
                         </div>
-                        <button 
+                      </div>
+                      <button 
                           onClick={() => { setSelectedCourse(curr.title); }}
                           className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn shadow-lg"
                         >
@@ -596,6 +710,107 @@ export default function ContactPage() {
             >
               확인
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Curriculum Add/Edit Modal */}
+      {isCurriculumModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsCurriculumModalOpen(false)}></div>
+          <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+              <h3 className="text-lg font-black text-slate-800 dark:text-white">교육과정 {editingCurriculum ? '수정' : '등록'}</h3>
+              <button onClick={() => setIsCurriculumModalOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full text-slate-400 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-5 overflow-y-auto">
+              <div className="space-y-2">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">교육명</label>
+                <input 
+                  type="text" 
+                  value={curriculumModalData.title}
+                  onChange={e => setCurriculumModalData({...curriculumModalData, title: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold dark:text-white" 
+                  placeholder="교육명을 입력하세요"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">교육일시</label>
+                  <input 
+                    type="datetime-local" 
+                    value={curriculumModalData.date_time}
+                    onChange={e => setCurriculumModalData({...curriculumModalData, date_time: e.target.value})}
+                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold dark:text-white" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">카테고리</label>
+                  <select 
+                    value={curriculumModalData.category || '입문'}
+                    onChange={e => setCurriculumModalData({...curriculumModalData, category: e.target.value})}
+                    className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold dark:text-white appearance-none"
+                  >
+                    <option value="입문">입문</option>
+                    <option value="기초">기초</option>
+                    <option value="실전">실전</option>
+                    <option value="심화">심화</option>
+                    <option value="디자인">디자인</option>
+                    <option value="기타">기타</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">교육장소</label>
+                <input 
+                  type="text" 
+                  value={curriculumModalData.location}
+                  onChange={e => setCurriculumModalData({...curriculumModalData, location: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold dark:text-white" 
+                  placeholder="예: 온라인 ZOOM / 강남 강의실"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">상태</label>
+                <div className="flex gap-2">
+                  {['active', 'upcoming', 'closed'].map(s => (
+                    <button
+                      key={s}
+                      onClick={() => setCurriculumModalData({...curriculumModalData, status: s})}
+                      className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${curriculumModalData.status === s ? 'bg-slate-900 text-white dark:bg-indigo-600' : 'bg-slate-50 dark:bg-white/5 text-slate-400 border border-slate-100 dark:border-white/5 hover:border-indigo-500'}`}
+                    >
+                      {s === 'active' ? '모집중' : s === 'upcoming' ? '준비중' : '마감'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">상세내용</label>
+                <textarea 
+                  rows={4} 
+                  value={curriculumModalData.description}
+                  onChange={e => setCurriculumModalData({...curriculumModalData, description: e.target.value})}
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold dark:text-white resize-none" 
+                  placeholder="상세 내용을 입력하세요"
+                ></textarea>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 dark:border-white/5">
+              <button 
+                onClick={handleCurriculumSubmit}
+                className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-sm shadow-xl shadow-indigo-600/20 hover:bg-indigo-500 transition-all active:scale-95"
+              >
+                저장하기
+              </button>
+            </div>
           </div>
         </div>
       )}
