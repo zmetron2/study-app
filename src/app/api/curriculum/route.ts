@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'No DB binding' }, { status: 500 });
     }
 
-    const { results } = await db.prepare('SELECT * FROM vibe_curriculum ORDER BY date_time ASC').all();
+    const { results } = await db.prepare('SELECT * FROM vibe_curriculum ORDER BY sort_order ASC, date_time ASC').all();
     return NextResponse.json({ success: true, data: results });
   } catch (error) {
     return NextResponse.json({ success: false, message: (error as Error).message }, { status: 500 });

@@ -7,8 +7,28 @@ import {
   Users, ShieldCheck,
   Mail, MessageSquare, Send,
   CheckCircle2, Clock, Phone, Smartphone, Check, HelpCircle, ChevronDown, MapPin, X,
-  Plus, Trash2, Edit
+  Plus, Trash2, Edit, GripVertical
 } from 'lucide-react';
+
+import {
+  DndContext, 
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  TouchSensor
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers';
 
 interface Curriculum {
   id: number;
@@ -81,7 +101,10 @@ export default function ContactPage() {
     status: 'active'
   });
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
@@ -274,6 +297,50 @@ export default function ContactPage() {
     }
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = curriculums.findIndex((i) => i.id === Number(active.id));
+    const newIndex = curriculums.findIndex((i) => i.id === Number(over.id));
+    
+    const newItems = arrayMove(curriculums, oldIndex, newIndex);
+    setCurriculums(newItems);
+    
+    // Save to DB
+    try {
+      const orders = newItems.map((item, index) => ({
+        id: item.id,
+        sort_order: index + 1
+      }));
+      
+      await fetch('/api/curriculum/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orders })
+      });
+    } catch (e) {
+      console.error('Failed to save order:', e);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans transition-colors selection:bg-indigo-100 selection:text-indigo-900">
 
@@ -334,54 +401,44 @@ export default function ContactPage() {
                     <p className="text-slate-400 font-medium">현재 모집 중인 과정이 없습니다. 별도 문의를 남겨주세요.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {curriculums.map((curr) => (
-                      <div key={curr.id} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all hover:-translate-y-1 flex flex-col">
-                        <div className="flex justify-between items-start mb-6">
-                          <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-500/20">
-                            {curr.category || '일반'}
-                          </span>
-                          <span className={`px-3 py-1 text-[10px] font-black rounded-full ${curr.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-slate-50 dark:bg-white/5 text-slate-400'}`}>
-                            {curr.status === 'active' ? '모집중' : '준비중'}
-                          </span>
+                  mounted ? (
+                    <DndContext 
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleDragEnd}
+                      modifiers={[restrictToFirstScrollableAncestor]}
+                    >
+                      <SortableContext 
+                        items={curriculums.map(c => c.id)}
+                        strategy={rectSortingStrategy}
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                          {curriculums.map((curr) => (
+                            <SortableCurriculumCard 
+                              key={curr.id} 
+                              curr={curr} 
+                              isAdmin={isAdmin}
+                              onEdit={() => handleOpenCurriculumModal(curr)}
+                              onDelete={() => handleDeleteCurriculum(curr.id)}
+                              onApply={() => setSelectedCourse(curr.title)}
+                            />
+                          ))}
                         </div>
-                        
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-xl font-black text-slate-800 dark:text-white group-hover:text-indigo-600 transition-colors">{curr.title}</h3>
-                            {isAdmin && (
-                              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={(e) => { e.stopPropagation(); handleOpenCurriculumModal(curr); }} className="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors">
-                                  <Edit size={14} />
-                                </button>
-                                <button onClick={(e) => { e.stopPropagation(); handleDeleteCurriculum(curr.id); }} className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors">
-                                  <Trash2 size={14} />
-                                </button>
-                              </div>
-                            )}
+                      </SortableContext>
+                    </DndContext>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {curriculums.map((curr) => (
+                        <div key={curr.id} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm flex flex-col">
+                          <h3 className="text-xl font-black text-slate-800 dark:text-white mb-4">{curr.title}</h3>
+                          <div className="flex-1 space-y-3 mb-8">
+                            <p className="text-[13px] text-slate-400 italic line-clamp-3">{curr.description}</p>
                           </div>
-                          
-                          <div className="space-y-3 mb-8">
-                          <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
-                            <Clock size={14} className="text-slate-400" /> {curr.date_time?.replace('T', ' ') || '일정 미정'}
-                          </div>
-                          <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
-                            <MapPin size={14} className="text-slate-400" /> {curr.location || '온라인'}
-                          </div>
-                          <p className="text-[13px] text-slate-400 leading-relaxed line-clamp-3 mt-4 italic">
-                            {curr.description}
-                          </p>
+                          <button className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm">신청하기</button>
                         </div>
-                      </div>
-                      <button 
-                          onClick={() => { setSelectedCourse(curr.title); }}
-                          className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn shadow-lg"
-                        >
-                          신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )
                 )}
               </div>
             ) : (
@@ -864,6 +921,86 @@ function InfoItem({ icon: Icon, title, desc }: { icon: React.ElementType, title:
         <h4 className="text-xs font-black text-slate-900 dark:text-white tracking-tight">{title}</h4>
         <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{desc}</p>
       </div>
+    </div>
+  );
+}
+
+function SortableCurriculumCard({ curr, isAdmin, onEdit, onDelete, onApply }: { curr: Curriculum, isAdmin: boolean, onEdit: () => void, onDelete: () => void, onApply: () => void }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: curr.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 'auto',
+    opacity: isDragging ? 0.6 : 1,
+  };
+
+  return (
+    <div 
+      ref={setNodeRef} 
+      style={style}
+      className={`group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all flex flex-col relative ${isDragging ? 'shadow-2xl ring-2 ring-indigo-500/20' : 'hover:-translate-y-1'}`}
+    >
+      {isAdmin && (
+        <div 
+          {...attributes} 
+          {...listeners} 
+          className="absolute top-8 right-8 p-1.5 text-slate-300 hover:text-indigo-600 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+          title="드래그하여 순서 변경"
+        >
+          <GripVertical size={20} />
+        </div>
+      )}
+
+      <div className="flex justify-between items-start mb-6 pr-8">
+        <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-500/20">
+          {curr.category || '일반'}
+        </span>
+        <span className={`px-3 py-1 text-[10px] font-black rounded-full ${curr.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-slate-50 dark:bg-white/5 text-slate-400'}`}>
+          {curr.status === 'active' ? '모집중' : '준비중'}
+        </span>
+      </div>
+      
+      <div className="flex-1">
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="text-xl font-black text-slate-800 dark:text-white group-hover:text-indigo-600 transition-colors pr-4">{curr.title}</h3>
+          {isAdmin && (
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors">
+                <Edit size={14} />
+              </button>
+              <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors">
+                <Trash2 size={14} />
+              </button>
+            </div>
+          )}
+        </div>
+        
+        <div className="space-y-3 mb-8">
+          <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+            <Clock size={14} className="text-slate-400" /> {curr.date_time?.replace('T', ' ') || '일정 미정'}
+          </div>
+          <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+            <MapPin size={14} className="text-slate-400" /> {curr.location || '온라인'}
+          </div>
+          <p className="text-[13px] text-slate-400 leading-relaxed line-clamp-3 mt-4 italic">
+            {curr.description}
+          </p>
+        </div>
+      </div>
+      <button 
+        onClick={onApply}
+        className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn shadow-lg"
+      >
+        신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+      </button>
     </div>
   );
 }
