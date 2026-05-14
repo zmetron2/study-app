@@ -261,7 +261,7 @@ export default function ContactPage() {
 
   const handleCurriculumSubmit = async () => {
     try {
-      const method = editingCurriculum ? 'PUT' : 'POST';
+      const method = editingCurriculum ? 'PATCH' : 'POST';
       const payload = {
         ...curriculumModalData,
         id: editingCurriculum?.id,
