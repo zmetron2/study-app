@@ -125,7 +125,7 @@ export default function PracticePage() {
         const parseViews = (v: string) => parseFloat(v.replace('K', '')) * (v.includes('K') ? 1000 : 1);
         return parseViews(b.views) - parseViews(a.views);
       } else if (sortBy === 'level') {
-        const levelMap: Record<string, number> = { '입문': 1, '초급': 2, '중급': 3, '고급': 4 };
+        const levelMap: Record<string, number> = { '입문': 1, '기초': 2, '실전': 3, '심화': 4 };
         return levelMap[a.level] - levelMap[b.level];
       }
       return 0;
@@ -246,12 +246,12 @@ export default function PracticePage() {
         {/* Sidebar Filters */}
         <aside className="lg:w-64 space-y-8 shrink-0">
           <div className="space-y-6">
-            <FilterSection title="난이도">
+            <FilterSection title="커리큘럼">
               <Checkbox label="전체" checked={selectedLevels.includes('전체')} onChange={() => toggleLevel('전체')} />
               <Checkbox label="입문" checked={selectedLevels.includes('입문')} onChange={() => toggleLevel('입문')} />
-              <Checkbox label="초급" checked={selectedLevels.includes('초급')} onChange={() => toggleLevel('초급')} />
-              <Checkbox label="중급" checked={selectedLevels.includes('중급')} onChange={() => toggleLevel('중급')} />
-              <Checkbox label="고급" checked={selectedLevels.includes('고급')} onChange={() => toggleLevel('고급')} />
+              <Checkbox label="기초" checked={selectedLevels.includes('기초')} onChange={() => toggleLevel('기초')} />
+              <Checkbox label="실전" checked={selectedLevels.includes('실전')} onChange={() => toggleLevel('실전')} />
+              <Checkbox label="심화" checked={selectedLevels.includes('심화')} onChange={() => toggleLevel('심화')} />
             </FilterSection>
 
             <FilterSection title="카테고리">
@@ -445,21 +445,21 @@ export default function PracticePage() {
             <StepItem 
               step="기초 단계" 
               title="흐름 설계" 
-              count={projects.filter(p => p.level === '초급').length.toString()} 
+              count={projects.filter(p => p.level === '기초').length.toString()} 
               color="sky"
             />
             <StepArrow />
             <StepItem 
               step="실전 단계" 
               title="연결 구현" 
-              count={projects.filter(p => p.level === '중급').length.toString()} 
+              count={projects.filter(p => p.level === '실전').length.toString()} 
               color="indigo"
             />
             <StepArrow />
             <StepItem 
               step="심화 단계" 
               title="서비스 확장" 
-              count={projects.filter(p => p.level === '고급').length.toString()} 
+              count={projects.filter(p => p.level === '심화').length.toString()} 
               color="purple"
             />
           </div>
@@ -589,9 +589,9 @@ function ProjectCard({ project, onEdit, onDelete, onHide, onRefresh }: { project
   })();
   const levelColors: Record<string, string> = {
     '입문': 'text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400',
-    '초급': 'text-sky-500 bg-sky-50 dark:bg-sky-500/10 dark:text-sky-400',
-    '중급': 'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 dark:text-indigo-400',
-    '고급': 'text-purple-500 bg-purple-50 dark:bg-purple-500/10 dark:text-purple-400'
+    '기초': 'text-sky-500 bg-sky-50 dark:bg-sky-500/10 dark:text-sky-400',
+    '실전': 'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 dark:text-indigo-400',
+    '심화': 'text-purple-500 bg-purple-50 dark:bg-purple-500/10 dark:text-purple-400'
   };
 
   return (
@@ -761,9 +761,9 @@ function ProjectAdminModal({ isOpen, onClose, project, onSuccess }: { isOpen: bo
             </div>
 
             <div className="space-y-1.5 col-span-2 md:col-span-1">
-              <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">난이도 설정</label>
+              <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">커리큘럼 설정</label>
               <div className="flex gap-1.5">
-                {['입문', '초급', '중급', '고급'].map(l => (
+                {['입문', '기초', '실전', '심화'].map(l => (
                   <button key={l} type="button" onClick={() => setFormData({...formData, level: l})} className={`flex-1 py-2 rounded-lg text-[11px] font-black border transition-all ${formData.level === l ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-400 hover:border-slate-300'}`}>
                     {l}
                   </button>
