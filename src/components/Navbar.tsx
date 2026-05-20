@@ -69,13 +69,14 @@ export default function Navbar() {
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
+  const isAdmin = mounted && isLoggedIn && user?.role === 'admin';
+
   const navLinks = [
     { href: '/curriculum', label: '커리큘럼' },
     { href: '/practice', label: '기능실습' },
     { href: '/resources', label: '자료실' },
     { href: '/guide', label: '사전학습' },
     { href: '/contact', label: '교육신청/문의' },
-    { href: '/admin?tab=video-chat', label: '화상채팅' },
   ];
 
   return (
@@ -116,6 +117,23 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            {/* 화상채팅: 관리자 로그인 시에만 표시 */}
+            {isAdmin && (
+              <Link
+                href="/admin?tab=video-chat"
+                className={`relative flex items-center h-full px-1 text-sm font-black transition-all hover:text-primary ${
+                  pathname.startsWith('/admin') ? 'text-primary' : 'text-foreground/40 hover:text-foreground/80'
+                }`}
+              >
+                화상채팅
+                {pathname.startsWith('/admin') && (
+                  <>
+                    <span className="absolute bottom-0 left-0 w-full h-[4px] bg-primary rounded-t-full shadow-[0_-2px_10px_rgba(var(--primary-rgb),0.3)] animate-in fade-in slide-in-from-bottom-1 duration-300" />
+                    <span className="absolute inset-x-0 bottom-2 top-2 bg-primary/5 dark:bg-primary/10 rounded-xl -z-10" />
+                  </>
+                )}
+              </Link>
+            )}
           </div>
 
           {/* Actions */}
@@ -255,6 +273,21 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            {/* 화상채팅: 관리자 로그인 시에만 표시 */}
+            {isAdmin && (
+              <Link
+                href="/admin?tab=video-chat"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`text-base text-center font-black p-4 rounded-xl transition-all flex items-center justify-center gap-3 ${
+                  pathname.startsWith('/admin')
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]'
+                    : 'text-foreground/60 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                화상채팅
+                {pathname.startsWith('/admin') && <ArrowRight size={18} className="animate-in slide-in-from-left-2 duration-300" />}
+              </Link>
+            )}
           </div>
         )}
       </nav>
