@@ -127,10 +127,24 @@ export default function CurriculumPage() {
                 <OutcomeItem icon={<Box size={12} />} label="결과물 1개" desc="자신만의 첫 결과물 완성" />
               </div>
               
-              <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5">
+              <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5 space-y-1.5">
                 <div className="flex items-center justify-between bg-emerald-600/5 dark:bg-emerald-500/10 rounded-xl px-3 py-2 border border-emerald-500/10">
                   <span className="text-[12px] font-bold text-emerald-600/70 dark:text-emerald-400/70 uppercase">Goal</span>
                   <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">AI로 원하는 결과 만들기</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
+                    <Clock className="w-3 h-3 text-emerald-500" />
+                    정규과정 교육시간
+                  </span>
+                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">총 6시간</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
+                    <Clock className="w-3 h-3 text-amber-500" />
+                    특강 교육시간
+                  </span>
+                  <span className="text-[12px] font-black text-amber-600 dark:text-amber-400">총 3시간</span>
                 </div>
               </div>
             </div>

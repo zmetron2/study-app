@@ -127,10 +127,24 @@ export default function BasicCurriculumPage() {
                 <OutcomeItem icon={<Layers size={12} />} label="구조 설계" desc="확장 가능한 아키텍처 설계" />
               </div>
               
-              <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5">
+              <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5 space-y-1.5">
                 <div className="flex items-center justify-between bg-sky-600/5 dark:bg-sky-500/10 rounded-xl px-3 py-2 border border-sky-500/10">
                   <span className="text-[12px] font-bold text-sky-600/70 dark:text-sky-400/70 uppercase">Goal</span>
                   <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">원하는 웹페이지 구현</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
+                    <Clock className="w-3 h-3 text-sky-500" />
+                    정규과정 교육시간
+                  </span>
+                  <span className="text-[12px] font-black text-sky-600 dark:text-sky-400">총 6시간</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
+                    <Clock className="w-3 h-3 text-amber-500" />
+                    특강 교육시간
+                  </span>
+                  <span className="text-[12px] font-black text-amber-600 dark:text-amber-400">총 3시간</span>
                 </div>
               </div>
             </div>
