@@ -621,10 +621,6 @@ function ProjectCard({ project, onEdit, onDelete, onHide, onRefresh }: { project
         </div>
       </div>
       <div className="pt-6 mt-6 border-t border-border space-y-3 transition-colors">
-        <div className="flex items-center gap-1.5 text-[12px] text-slate-400 font-medium">
-          <Layers className="w-3 h-3 text-slate-300 dark:text-slate-700" />
-          연계: <span className="text-slate-600 dark:text-slate-400">{curriculum_link}</span>
-        </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
@@ -773,10 +769,41 @@ function ProjectAdminModal({ isOpen, onClose, project, onSuccess }: { isOpen: bo
 
             <div className="space-y-1.5 col-span-2 md:col-span-1">
               <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">연계 커리큘럼</label>
-              <select value={formData.curriculum_link} onChange={e => setFormData({...formData, curriculum_link: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm outline-none dark:text-white focus:border-indigo-500 transition-colors cursor-pointer">
-                <option>입문 단계</option><option>기초 단계</option><option>실전 단계</option><option>심화 단계</option>
-                <option>1회차 - UI 기본</option><option>2회차 - 인증 기초</option><option>3회차 - 상태 관리</option><option>4회차 - API 실무</option>
-              </select>
+              {formData.level === '심화' ? (
+                <div className="space-y-2">
+                  <p className="text-[10px] text-indigo-500 font-bold">심화 트랙 중복 선택 가능</p>
+                  {[
+                    { key: '트랙 A: 수익형 빌딩', label: '트랙 A: 수익형 빌딩 (SaaS & Game)' },
+                    { key: '트랙 B: 플랫폼 확장', label: '트랙 B: 플랫폼 확장 (Mobile & Extensions)' },
+                    { key: '트랙 C: 고급 OS & AI 인프라', label: '트랙 C: 고급 OS & AI 인프라' },
+                    { key: '트랙 D: 자동화 파이프라인', label: '트랙 D: 자동화 파이프라인' }
+                  ].map(track => {
+                    const currentTracks = formData.curriculum_link.split(', ').filter(Boolean);
+                    const isChecked = currentTracks.includes(track.key);
+                    const handleToggle = () => {
+                      const updated = isChecked
+                        ? currentTracks.filter(t => t !== track.key)
+                        : [...currentTracks, track.key];
+                      setFormData({...formData, curriculum_link: updated.join(', ')});
+                    };
+                    return (
+                      <label key={track.key} className="flex items-center gap-2.5 cursor-pointer group" onClick={handleToggle}>
+                        <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                          isChecked ? 'bg-indigo-600 border-indigo-600' : 'border-slate-200 dark:border-slate-700 group-hover:border-indigo-400'
+                        }`}>
+                          {isChecked && <Check className="w-3.5 h-3.5 text-white" />}
+                        </div>
+                        <span className={`text-xs font-bold transition-colors ${isChecked ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400'}`}>{track.label}</span>
+                      </label>
+                    );
+                  })}
+                  <input type="hidden" value={formData.curriculum_link} onChange={() => {}} />
+                </div>
+              ) : (
+                <select value={formData.curriculum_link} onChange={e => setFormData({...formData, curriculum_link: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm outline-none dark:text-white focus:border-indigo-500 transition-colors cursor-pointer">
+                  <option>입문 단계</option><option>기초 단계</option><option>실전 단계</option>
+                </select>
+              )}
             </div>
 
             <div className="space-y-1.5 col-span-2 md:col-span-1">
@@ -936,8 +963,9 @@ function IdeaModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
 }
 
 function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeProject, onClose: () => void, onUpdate: () => void }) {
-  const { id, title, description, level, category, tags, content, icon_name, completion_rate } = project;
+  const { id, title, description, level, category, tags, content, icon_name, completion_rate, curriculum_link } = project;
   const tagList = tags?.split(',') || [];
+  const trackList = (curriculum_link && level === '심화') ? curriculum_link.split(', ').filter(Boolean) : [];
   const [isCompleting, setIsCompleting] = useState(false);
   const [promptCount, setPromptCount] = useState(completion_rate || 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1024,6 +1052,13 @@ function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeP
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{level} 단계</span>
               </div>
               <h2 className="text-xl font-black text-slate-800 dark:text-white">{title}</h2>
+              {trackList.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  {trackList.map((track: string, i: number) => (
+                    <span key={i} className="text-[9px] font-black px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20">{track}</span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors">
