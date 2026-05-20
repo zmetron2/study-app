@@ -121,10 +121,11 @@ export default function Navbar() {
             {isAdmin && (
               <Link
                 href="/admin?tab=video-chat"
-                className={`relative flex items-center h-full px-1 text-sm font-black transition-all hover:text-primary ${
+                className={`relative flex items-center gap-1.5 h-full px-1 text-sm font-black transition-all hover:text-primary ${
                   pathname.startsWith('/admin') ? 'text-primary' : 'text-foreground/40 hover:text-foreground/80'
                 }`}
               >
+                <Shield size={13} className="shrink-0" />
                 화상채팅
                 {pathname.startsWith('/admin') && (
                   <>
@@ -284,6 +285,7 @@ export default function Navbar() {
                     : 'text-foreground/60 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
+                <Shield size={16} className="shrink-0" />
                 화상채팅
                 {pathname.startsWith('/admin') && <ArrowRight size={18} className="animate-in slide-in-from-left-2 duration-300" />}
               </Link>
