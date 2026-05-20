@@ -135,16 +135,29 @@ export default function CurriculumPage() {
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
                   <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
                     <Clock className="w-3 h-3 text-emerald-500" />
-                    정규과정 교육시간
+                    정규과정 (입문 단계)
                   </span>
-                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">총 6시간</span>
+                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">이 단계: 6시간</span>
                 </div>
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
                   <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
                     <Clock className="w-3 h-3 text-amber-500" />
-                    특강 교육시간
+                    특강 (입문 단계)
+                    <span className="relative group/tooltip inline-flex items-center ml-0.5">
+                      <svg className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-350 cursor-help transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                      </svg>
+                      {/* Tooltip Popup */}
+                      <span className="absolute bottom-full left-0 mb-2 w-64 p-3 bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md text-white text-[11px] rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 z-50 pointer-events-none border border-white/10 font-normal leading-relaxed text-left">
+                        <span className="block font-bold text-amber-400 mb-1 text-[12px]">
+                          💡 특강 과정이란?
+                        </span>
+                        디자이너, 기획자, 개발자, PM 등 관련 종사자처럼 <strong>배경지식이 있어 빠르게 교육 진행이 가능한 분</strong>들을 위한 맞춤형 단기 압축 과정입니다. (입문, 기초... 각 단계별로 각각 3시간씩 진행)
+                        <span className="absolute top-full left-4 border-4 border-transparent border-t-slate-900/95 dark:border-t-slate-800/95" />
+                      </span>
+                    </span>
                   </span>
-                  <span className="text-[12px] font-black text-amber-600 dark:text-amber-400">총 3시간</span>
+                  <span className="text-[12px] font-black text-amber-600 dark:text-amber-400">이 단계: 3시간</span>
                 </div>
               </div>
             </div>
