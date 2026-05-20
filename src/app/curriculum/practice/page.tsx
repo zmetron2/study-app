@@ -47,7 +47,7 @@ export default function PracticeCurriculumPage() {
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions);
-    const sections = ['core', 'track-a', 'track-b', 'track-c', 'track-d', 'track-e'];
+    const sections = ['core', 'track-a', 'track-b', 'track-c'];
     sections.forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
@@ -84,12 +84,12 @@ export default function PracticeCurriculumPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
           <div className="space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold">
-              <Rocket size={14} className="animate-pulse" /> Step 03. Execution
+              <Rocket size={14} className="animate-pulse" /> Step 03. Serverless & Global Execution
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 실전</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
-              아이디어를 실제 동작하는 프로덕트로 구현하는 실습 중심 과정입니다.<br />
-              이론을 넘어 시장에 내놓을 수 있는 결과물을 직접 완성해보세요.
+              해외 플랫폼을 활용하여 서버리스 아키텍처로 웹 서비스를 실전 운영하는 단계입니다.<br />
+              글로벌 배포, 기능별 최적의 서버리스 조합, 그리고 지능형 에이전트와 인증 기능까지 완벽하게 결합합니다.
             </p>
             <div className="flex gap-3 pt-2">
               <Link 
@@ -122,15 +122,15 @@ export default function PracticeCurriculumPage() {
             
             <div className="space-y-1 relative z-10">
               <div className="grid grid-cols-1 gap-1">
-                <OutcomeItem icon={<Layers size={12} />} label="구조 이해" desc="상용 서비스 급의 체계적 폴더 설계" />
-                <OutcomeItem icon={<Zap size={12} />} label="연결 구현" desc="데이터 통신 및 기능 유기적 결합" />
-                <OutcomeItem icon={<Rocket size={12} />} label="서비스 완성" desc="완성도 높은 실제 프로덕트 구축" />
+                <OutcomeItem icon={<Layers size={12} />} label="글로벌 서버리스 배포" desc="Cloudflare, Vercel 등을 통한 배포 통제" />
+                <OutcomeItem icon={<Zap size={12} />} label="기능별 서버 조합" desc="기능성 페이지를 서버리스로 유기적 설계" />
+                <OutcomeItem icon={<Rocket size={12} />} label="지능형 에이전트 통합" desc="보안 인증 및 AI 에이전트 파이프라인 완성" />
               </div>
               
               <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5 space-y-1.5">
                 <div className="flex items-center justify-between bg-indigo-600/5 dark:bg-indigo-500/10 rounded-xl px-3 py-2 border border-indigo-500/10">
                   <span className="text-[12px] font-bold text-indigo-600/70 dark:text-indigo-400/70 uppercase">Goal</span>
-                  <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">실제 서비스 배포</span>
+                  <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">글로벌 서버리스 상용 서비스 배포 및 런칭</span>
                 </div>
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
                   <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
@@ -206,16 +206,14 @@ export default function PracticeCurriculumPage() {
                 <div className="flex flex-col">
                   <SidebarItem 
                     title="선택형 프로젝트 트랙" 
-                    active={['track-a', 'track-b', 'track-c', 'track-d', 'track-e'].includes(activeSection)}
+                    active={['track-a', 'track-b', 'track-c'].includes(activeSection)}
                     onClick={() => scrollToSection('track-a')}
                   />
                   
                   <div className="bg-slate-50/50 dark:bg-white/5 py-1">
-                    <SidebarItem title="트랙 A: 웹 서비스" active={activeSection === 'track-a'} onClick={() => scrollToSection('track-a')} isSubItem />
-                    <SidebarItem title="트랙 B: 자동화 툴" active={activeSection === 'track-b'} onClick={() => scrollToSection('track-b')} isSubItem />
-                    <SidebarItem title="트랙 C: 크롬 확장" active={activeSection === 'track-c'} onClick={() => scrollToSection('track-c')} isSubItem />
-                    <SidebarItem title="트랙 D: AI 서비스" active={activeSection === 'track-d'} onClick={() => scrollToSection('track-d')} isSubItem />
-                    <SidebarItem title="트랙 E: 콘텐츠 플랫폼" active={activeSection === 'track-e'} onClick={() => scrollToSection('track-e')} isSubItem />
+                    <SidebarItem title="트랙 A: 글로벌 에지 배포" active={activeSection === 'track-a'} onClick={() => scrollToSection('track-a')} isSubItem />
+                    <SidebarItem title="트랙 B: 기능별 서버 조합" active={activeSection === 'track-b'} onClick={() => scrollToSection('track-b')} isSubItem />
+                    <SidebarItem title="트랙 C: 에이전트 & 인증 연동" active={activeSection === 'track-c'} onClick={() => scrollToSection('track-c')} isSubItem />
                   </div>
                 </div>
               </div>
@@ -228,14 +226,29 @@ export default function PracticeCurriculumPage() {
                   <span className="text-lg">🎁</span> 실전 프로젝트 가이드
                 </h3>
               </div>
-              <div className="space-y-4">
-                <p className="text-[12px] text-slate-500 leading-relaxed">
-                  본인의 관심 분야나 비즈니스 목표에 맞는 트랙을 선택하세요. 1개 이상의 프로젝트 완성을 권장합니다.
-                </p>
-                <div className="space-y-3">
-                  <BenefitItem text="실질적인 포트폴리오 확보" />
-                  <BenefitItem text="상용화 가능한 수준의 개발" />
-                  <BenefitItem text="보안 및 운영 기초 습득" />
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <p className="text-[12px] font-black text-indigo-500 uppercase tracking-widest">트랙 A 선택 시</p>
+                  <ul className="space-y-1.5">
+                    <BenefitItem text="Cloudflare/Vercel 에지 글로벌 배포" />
+                    <BenefitItem text="커스텀 도메인 & SSL 보안 적용" />
+                  </ul>
+                </div>
+                <div className="h-[1px] bg-border" />
+                <div className="space-y-2">
+                  <p className="text-[12px] font-black text-teal-500 uppercase tracking-widest">트랙 B 선택 시</p>
+                  <ul className="space-y-1.5">
+                    <BenefitItem text="Supabase, R2, D1 서버리스 데이터 연동" />
+                    <BenefitItem text="특성별 기능성 페이지 API 조합 설계" />
+                  </ul>
+                </div>
+                <div className="h-[1px] bg-border" />
+                <div className="space-y-2">
+                  <p className="text-[12px] font-black text-orange-500 uppercase tracking-widest">트랙 C 선택 시</p>
+                  <ul className="space-y-1.5">
+                    <BenefitItem text="OAuth 소셜 로그인 및 보안 회원가입" />
+                    <BenefitItem text="지능형 에이전트 런타임 탑재 완성" />
+                  </ul>
                 </div>
               </div>
             </div>
@@ -271,12 +284,12 @@ export default function PracticeCurriculumPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { title: "프로젝트 구조 설계", desc: "유지보수가 쉬운 파일 구조와 컴포넌트 분리 전략" },
-                    { title: "코드 일관성 유지 전략", desc: "린트 설정 및 팀 협업을 위한 코드 컨벤션 수립" },
-                    { title: "서브도메인 & 이메일 관리", desc: "서브도메인 할당 원리 및 브랜드 이메일 계정 생성/관리" },
-                    { title: "디자인 명시도 개선", desc: "UI 가독성과 사용성을 높이는 디테일한 CSS/UX 튜닝" },
-                    { title: "API 활용 및 에러 처리", desc: "외부 서비스 연동 시 발생할 수 있는 예외 상황 대응" },
-                    { title: "보안 기초 (.env, 인증)", desc: "API 키 관리 및 사용자 인증(Auth) 시스템의 기본 보안" },
+                    { title: "글로벌 서버리스 원리", desc: "Vercel/Cloudflare Pages 등 글로벌 에지 노드 배포 메커니즘" },
+                    { title: "서버리스 데이터 저장소", desc: "D1, Supabase PostgreSQL, R2 스토리지의 기능 및 특장점 비교" },
+                    { title: "OAuth & 보안 회원가입", desc: "간편 소셜 로그인 및 토큰 기반 보안 회원 인증 체계" },
+                    { title: "지능형 에이전트 아키텍처", desc: "서버 환경에서의 AI 에이전트 설정 및 상태 보존 프레임워크" },
+                    { title: "마이크로서비스 조합 설계", desc: "결제, 이메일, 이미지 처리 등 서버리스 기능 유기적 연동" },
+                    { title: "트래픽 모니터링 & 로깅", desc: "서버리스 환경에서의 실시간 트래픽 추적과 비용 최적화 전략" },
                   ].map((item, idx) => (
                     <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-indigo-500/30 transition-all flex items-start gap-4 group">
                       <CheckCircle2 className="w-5 h-5 text-indigo-500 mt-0.5 shrink-0" />
@@ -306,22 +319,24 @@ export default function PracticeCurriculumPage() {
                       <Monitor className="w-5 h-5 text-emerald-500" />
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">웹 서비스 트랙</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">수익화가 가능한 SaaS 형태의 웹 어플리케이션을 구축합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">서버리스 글로벌 배포</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">작성한 코드를 글로벌 에지 네트워크에 배포하고 무중단 운영 환경을 조성합니다.</p>
                     </div>
-                    <ul className="space-y-3 pt-2">
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 로그인 및 회원가입 연동
-                      </li>
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 사용자 데이터 영구 저장 및 관리
-                      </li>
-                    </ul>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                        <p className="text-xs font-bold mb-2">실습 01. Cloudflare Pages & Vercel 프로덕션 배포</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">로컬 코드를 Git과 연동하여 전 세계 사용자가 1초 만에 접근 가능한 글로벌 에지 CDN 배포를 수행합니다.</p>
+                      </div>
+                      <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                        <p className="text-xs font-bold mb-2">실습 02. 커스텀 도메인 & SSL 자동 바인딩</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">배포된 서버리스 어플리케이션에 브랜드 고유한 도메인과 서브도메인을 할당하고 무료 SSL 보안 인증서를 자동 적용합니다.</p>
+                      </div>
+                    </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-500 transition-all"
                     >
-                      웹 프로젝트 시작
+                      서버리스 배포 시작
                     </button>
                   </div>
 
@@ -332,100 +347,52 @@ export default function PracticeCurriculumPage() {
                       <Code className="w-5 h-5 text-blue-500" />
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">자동화 툴 트랙</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">일상의 불편함을 해결하는 맞춤형 업무 자동화 프로그램을 제작합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">기능별 서버 조합 아키텍처</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">데이터베이스, 스토리지, 컴퓨팅 리소스를 서버리스 서비스별 특장점에 맞게 최적으로 조합합니다.</p>
                     </div>
-                    <ul className="space-y-3 pt-2">
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-blue-500" /> 웹 크롤링 및 데이터 전처리
-                      </li>
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-blue-500" /> 주기적 태스크 실행 및 리포트 발송
-                      </li>
-                    </ul>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                        <p className="text-xs font-bold mb-2">실습 01. Supabase DB + R2 스토리지 연계</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">안정적인 대용량 파일 저장소(R2)와 트랜잭션 유저 DB(Supabase)를 연결하여 멀티 리소스 간의 효율적 연동을 이뤄냅니다.</p>
+                      </div>
+                      <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                        <p className="text-xs font-bold mb-2">실습 02. 기능성 페이지 API 서버 조합 구성</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">로그인, 상품 조회, 결제 처리 등 각 페이지의 비즈니스 성격에 따라 가장 합리적이고 저비용의 컴퓨팅 유닛 조합을 완성합니다.</p>
+                      </div>
+                    </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-500 transition-all"
                     >
-                      자동화 툴 시작
+                      서버리스 아키텍처 실습 시작
                     </button>
                   </div>
 
                   {/* Track C */}
-                  <div id="track-c" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-purple-100 dark:border-purple-500/20 p-8 space-y-6 hover:border-purple-500 transition-all group shadow-sm">
+                  <div id="track-c" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-orange-100 dark:border-orange-500/20 p-8 space-y-6 hover:border-orange-500 transition-all group shadow-sm">
                     <div className="flex justify-between items-center">
-                      <div className="inline-flex bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track C</div>
-                      <Zap className="w-5 h-5 text-purple-500" />
-                    </div>
-                    <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">크롬 확장 프로그램</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">브라우저 기능을 확장하여 생산성을 높이는 익스텐션을 개발합니다.</p>
-                    </div>
-                    <ul className="space-y-3 pt-2">
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-purple-500" /> 브라우저 탭 및 DOM 조작 기초
-                      </li>
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-purple-500" /> 확장 프로그램 전용 UI 및 백그라운드 스크립트
-                      </li>
-                    </ul>
-                    <button 
-                      onClick={handleStartPractice}
-                      className="w-full py-4 bg-purple-600 text-white font-black rounded-2xl hover:bg-purple-500 transition-all"
-                    >
-                      확장 프로그램 시작
-                    </button>
-                  </div>
-
-                  {/* Track D */}
-                  <div id="track-d" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-orange-100 dark:border-orange-500/20 p-8 space-y-6 hover:border-orange-500 transition-all group shadow-sm">
-                    <div className="flex justify-between items-center">
-                      <div className="inline-flex bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track D</div>
+                      <div className="inline-flex bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track C</div>
                       <Bot className="w-5 h-5 text-orange-500" />
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">AI 서비스 트랙</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">최신 AI API를 연동하여 지능형 챗봇이나 생성 서비스를 구축합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">에이전트 및 연동 설정</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">보안 회원가입 인프라를 마련하고 지능형 AI 에이전트를 안정적으로 서비스에 탑재합니다.</p>
                     </div>
-                    <ul className="space-y-3 pt-2">
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-orange-500" /> 스트리밍 응답 처리 및 대화 이력 관리
-                      </li>
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-orange-500" /> 지능형 에이전트 서비스 기획 및 연동
-                      </li>
-                    </ul>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                        <p className="text-xs font-bold mb-2">실습 01. 보안 회원가입 & 배포 설정 연동</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">OAuth 소셜 로그인과 회원가입 흐름을 연동하고, 상용 배포 단계에서 필수적인 환경 변수(.env) 보안 관리 체계를 수립합니다.</p>
+                      </div>
+                      <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
+                        <p className="text-xs font-bold mb-2">실습 02. AI 에이전트 설정 & 실시간 파이프라인</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">사용자의 동적 요청에 대응하고 다양한 작업을 자율 처리하는 AI 에이전트를 클라우드 에지 함수에 탑재하여 실시간 구동시킵니다.</p>
+                      </div>
+                    </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-orange-600 text-white font-black rounded-2xl hover:bg-orange-500 transition-all"
                     >
-                      AI 서비스 시작
-                    </button>
-                  </div>
-
-                  {/* Track E */}
-                  <div id="track-e" className="scroll-mt-32 bg-white dark:bg-slate-900 rounded-3xl border-2 border-indigo-100 dark:border-indigo-500/20 p-8 space-y-6 hover:border-indigo-500 transition-all group shadow-sm">
-                    <div className="flex justify-between items-center">
-                      <div className="inline-flex bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track E</div>
-                      <Newspaper className="w-5 h-5 text-indigo-500" />
-                    </div>
-                    <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">콘텐츠 플랫폼</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">게시판, 업로드, 관리 기능을 갖춘 커뮤니티 형태의 플랫폼을 개발합니다.</p>
-                    </div>
-                    <ul className="space-y-3 pt-2">
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-indigo-500" /> 멀티미디어 파일 업로드 및 클라우드 저장
-                      </li>
-                      <li className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
-                        <CheckCircle2 className="w-4 h-4 text-indigo-500" /> 게시글 필터링, 검색 및 관리자 대시보드
-                      </li>
-                    </ul>
-                    <button 
-                      onClick={handleStartPractice}
-                      className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-500 transition-all"
-                    >
-                      플랫폼 프로젝트 시작
+                      에이전트 및 인증 실습 시작
                     </button>
                   </div>
                 </div>

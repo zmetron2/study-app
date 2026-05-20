@@ -84,12 +84,12 @@ export default function BasicCurriculumPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
           <div className="space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-bold">
-              <Database size={14} className="animate-pulse" /> Step 02. System
+              <Database size={14} className="animate-pulse" /> Step 02. System & Service
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 기초</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
-              결과물이 만들어지는 원리를 이해하고 설계하는 단계입니다.<br />
-              단순한 따라하기를 넘어, 아키텍처의 기초를 단단히 다져보세요.
+              결과물이 만들어지는 원리를 설계하고 실무급 서비스를 모두 구현해보는 단계입니다.<br />
+              도메인 DNS 심화 설정부터 각종 데이터베이스 및 기능성 서버 활용, 보안 인증 대시보드 구축까지 실전 경쟁력을 기릅니다.
             </p>
             <div className="flex gap-3 pt-2">
               <Link 
@@ -122,15 +122,15 @@ export default function BasicCurriculumPage() {
             
             <div className="space-y-1 relative z-10">
               <div className="grid grid-cols-1 gap-1">
-                <OutcomeItem icon={<Database size={12} />} label="시스템 이해" desc="웹 서비스의 작동 원리와 구조 이해" />
-                <OutcomeItem icon={<GitBranch size={12} />} label="흐름 설계" desc="데이터 흐름 지도를 설계" />
-                <OutcomeItem icon={<Layers size={12} />} label="구조 설계" desc="확장 가능한 아키텍처 설계" />
+                <OutcomeItem icon={<Globe size={12} />} label="도메인 DNS 통제" desc="국내외 DNS 및 서브도메인 연결 지배" />
+                <OutcomeItem icon={<Database size={12} />} label="서버 & 데이터 아키텍처" desc="SQL/NoSQL DB, 스토리지, 소켓 서버 매핑" />
+                <OutcomeItem icon={<Layers size={12} />} label="실무형 기능 전체 구현" desc="로그인 인증, 회원관리 및 반응형 대시보드" />
               </div>
               
               <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5 space-y-1.5">
                 <div className="flex items-center justify-between bg-sky-600/5 dark:bg-sky-500/10 rounded-xl px-3 py-2 border border-sky-500/10">
                   <span className="text-[12px] font-bold text-sky-600/70 dark:text-sky-400/70 uppercase">Goal</span>
-                  <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">원하는 웹페이지 구현</span>
+                  <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">실무 필수 웹서비스 및 고도화 인프라 완성</span>
                 </div>
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
                   <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
@@ -212,19 +212,19 @@ export default function BasicCurriculumPage() {
                   
                   <div className="bg-slate-50/50 dark:bg-white/5 py-1">
                     <SidebarItem 
-                      title="트랙 A: 웹 구조 이해" 
+                      title="트랙 A: 도메인 & DNS 심화" 
                       active={activeSection === 'track-a'} 
                       onClick={() => scrollToSection('track-a')}
                       isSubItem
                     />
                     <SidebarItem 
-                      title="트랙 B: 데이터 흐름" 
+                      title="트랙 B: 기능성 서버 & 스택" 
                       active={activeSection === 'track-b'} 
                       onClick={() => scrollToSection('track-b')}
                       isSubItem
                     />
                     <SidebarItem 
-                      title="트랙 C: AI 구조 이해" 
+                      title="트랙 C: 실무 웹서비스 구현" 
                       active={activeSection === 'track-c'} 
                       onClick={() => scrollToSection('track-c')}
                       isSubItem
@@ -245,24 +245,24 @@ export default function BasicCurriculumPage() {
                 <div className="space-y-2">
                   <p className="text-[12px] font-black text-indigo-500 uppercase tracking-widest">트랙 A 선택 시</p>
                   <ul className="space-y-1.5">
-                    <BenefitItem text="프론트/백엔드 연결 흐름 이해" />
-                    <BenefitItem text="API 통신의 기본 원리 습득" />
+                    <BenefitItem text="국내외 DNS 레코드 제어력 확보" />
+                    <BenefitItem text="서브도메인 활용 멀티 서비스 연동" />
                   </ul>
                 </div>
                 <div className="h-[1px] bg-border" />
                 <div className="space-y-2">
                   <p className="text-[12px] font-black text-teal-500 uppercase tracking-widest">트랙 B 선택 시</p>
                   <ul className="space-y-1.5">
-                    <BenefitItem text="데이터베이스(DB) 핵심 개념" />
-                    <BenefitItem text="CRUD 데이터 수명 주기 설계" />
+                    <BenefitItem text="SQL/NoSQL DB 설계 및 운영 지식" />
+                    <BenefitItem text="스토리지 & 실시간 소켓 서버 개설" />
                   </ul>
                 </div>
                 <div className="h-[1px] bg-border" />
                 <div className="space-y-2">
                   <p className="text-[12px] font-black text-orange-500 uppercase tracking-widest">트랙 C 선택 시</p>
                   <ul className="space-y-1.5">
-                    <BenefitItem text="LLM 호출 아키텍처 파악" />
-                    <BenefitItem text="API 기반 지능형 서비스 설계" />
+                    <BenefitItem text="JWT/Session 회원인증 체계 구축" />
+                    <BenefitItem text="실시간 반응형 데이터 대시보드 제작" />
                   </ul>
                 </div>
               </div>
@@ -299,12 +299,12 @@ export default function BasicCurriculumPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { title: "서버 / 클라이언트 구조", desc: "요청(Request)과 응답(Response)의 기본 메커니즘 이해" },
-                    { title: "실행 환경 (로컬 vs 클라우드)", desc: "개발 환경과 배포 환경의 차이 및 에지 런타임 개념" },
-                    { title: "도메인 / DNS 설정", desc: "웹 사이트 주소의 원리와 도메인 네임 서버 연결 방법" },
-                    { title: "컨텍스트 & 기억 구조", desc: "AI가 정보를 유지하는 방식(Window Context)과 한계" },
-                    { title: "에이전트 한계 (일관성 문제)", desc: "할루시네이션 및 비결정적 응답에 대응하는 전략" },
-                    { title: "아키텍처 다이어그램 기초", desc: "복잡한 시스템 구성을 한눈에 그리는 설계 기법" },
+                    { title: "서버/클라이언트 & DNS 원리", desc: "국내외 DNS 레코드(A, CNAME, TXT) 구조와 라우팅 원리" },
+                    { title: "SQL vs NoSQL 데이터베이스", desc: "서비스 요구사항에 맞는 올바른 DB 엔진 선정 기법" },
+                    { title: "클라우드 스토리지 아키텍처", desc: "비정형 파일(이미지, 영상) 저장을 위한 클라우드 스토리지 설계" },
+                    { title: "실시간 통신 & 웹소켓", desc: "실시간 양방향 데이터 전송을 위한 소켓 서버의 기본 이해" },
+                    { title: "보안 회원인증 체계", desc: "세션(Session)과 토큰(JWT) 방식의 장단점 및 실무 적용 전략" },
+                    { title: "실무 웹 대시보드 기획", desc: "효율적인 데이터 시각화와 반응형 레이아웃 구성 방법" },
                   ].map((item, idx) => (
                     <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-sky-500/30 transition-all flex items-start gap-4 group">
                       <CheckCircle2 className="w-5 h-5 text-sky-500 mt-0.5 shrink-0" />
@@ -336,24 +336,24 @@ export default function BasicCurriculumPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">웹 구조 이해</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">프론트엔드와 백엔드가 어떻게 데이터를 주고받는지 실습합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">도메인 & DNS 심화</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">웹사이트 주소 연결과 멀티 도메인 구조를 완벽하게 통제합니다.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 01. 연결 흐름 분석</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">네트워크 탭을 통해 데이터가 오가는 전 과정을 모니터링합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 01. 가상 호스팅 DNS 레코드 매핑</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">국내 가비아 및 해외 Cloudflare 등을 활용한 CNAME, A 레코드 설정과 SSL 보안 연결을 연동합니다.</p>
                       </div>
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 02. API 호출 미션</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">외부 API를 연동하여 실시간 데이터를 화면에 출력해봅니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 02. 서브도메인을 통한 멀티 서비스 분리</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">하나의 도메인으로 메인 웹사이트, 회원 관리 페이지, API 서버를 완벽히 분리 연동하는 라우팅을 설계합니다.</p>
                       </div>
                     </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-sky-600 transition-all"
                     >
-                      웹 구조 실습 시작
+                      도메인 & DNS 실습 시작
                     </button>
                   </div>
 
@@ -366,24 +366,24 @@ export default function BasicCurriculumPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">데이터 흐름</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">데이터의 저장, 수정, 삭제(CRUD) 과정을 설계하고 직접 구현합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">기능성 서버 & 데이터베이스</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">웹앱에 필수적인 다양한 특수 목적 서버와 데이터 저장 체계를 마스터합니다.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 01. DB 스키마 설계</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">효율적인 데이터 보관을 위한 테이블 구조를 AI와 함께 설계합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 01. SQL vs NoSQL 멀티 DB 매핑</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">회원 데이터는 관계형 DB에, 실시간 로그는 비관계형 DB에 설계하고 분기 처리 CRUD API를 구축합니다.</p>
                       </div>
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 02. CRUD 로직 구현</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">데이터베이스에 직접 접근하여 정보를 다루는 API를 제작합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 02. 클라우드 스토리지 & 실시간 소켓</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">이미지/파일 저장을 위한 스토리지 연동 및 웹소켓을 통한 실시간 채팅/알림 서버 기능을 연계 구현합니다.</p>
                       </div>
                     </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-teal-600 transition-all"
                     >
-                      데이터 실습 시작
+                      기능성 서버 실습 시작
                     </button>
                   </div>
 
@@ -396,24 +396,24 @@ export default function BasicCurriculumPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">AI 구조 이해</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">LLM API가 어떻게 작동하며 서비스와 어떻게 결합되는지 파악합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">실무 웹서비스 전체 구현</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">인증, 회원 관리, 대시보드 등 현업에서 가장 필요로 하는 핵심 비즈니스 로직을 완제품으로 빌딩합니다.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 01. LLM API 핸들링</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">프롬프트를 API 파라미터로 전송하고 응답을 받는 구조를 실습합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 01. 보안 회원인증 및 관리자 대시보드</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">Bcrypt 암호화, JWT 발급 기반 로그인/회원가입 기능 및 회원 권한 통제 백오피스를 제작합니다.</p>
                       </div>
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 02. 서비스 파이프라인</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">사용자 입력부터 AI 처리, 최종 출력까지의 전체 흐름을 완성합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 02. 반응형 통계 대시보드 시각화</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">가입 추이, 서버 상태, 데이터 트래픽 등을 반응형 차트와 데이터 그리드 표를 활용하여 실전형 UI로 시각화합니다.</p>
                       </div>
                     </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-orange-600 transition-all"
                     >
-                      AI 구조 실습 시작
+                      실무 웹서비스 실습 시작
                     </button>
                   </div>
                 </div>

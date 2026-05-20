@@ -194,7 +194,7 @@ export default function CurriculumPage() {
                   <span className="bg-emerald-600 text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">1</span> 
                   입문 단계
                 </h3>
-                <p className="text-[12px] text-emerald-600 font-bold">"AI를 제대로 쓰기 시작하는 단계"</p>
+                <p className="text-[12px] text-emerald-600 font-bold">"국내 호스팅 환경에 웹사이트 제작"</p>
               </div>
               <div className="divide-y divide-border">
                 <SidebarItem 
@@ -214,19 +214,19 @@ export default function CurriculumPage() {
                   {/* Sub-menu Tracks with Indentation */}
                   <div className="bg-slate-50/50 dark:bg-white/5 py-1">
                     <SidebarItem 
-                      title="트랙 A: 웹 기초 체험" 
+                      title="트랙 A: 서버 및 도메인" 
                       active={activeSection === 'track-a'} 
                       onClick={() => scrollToSection('track-a')}
                       isSubItem
                     />
                     <SidebarItem 
-                      title="트랙 B: 콘텐츠 생성" 
+                      title="트랙 B: 웹 프로젝트 구현" 
                       active={activeSection === 'track-b'} 
                       onClick={() => scrollToSection('track-b')}
                       isSubItem
                     />
                     <SidebarItem 
-                      title="트랙 C: 업무 자동화" 
+                      title="트랙 C: DB 및 기술스택" 
                       active={activeSection === 'track-c'} 
                       onClick={() => scrollToSection('track-c')}
                       isSubItem
@@ -240,7 +240,7 @@ export default function CurriculumPage() {
             <div className="bg-card rounded-2xl border border-border p-6 space-y-6 shadow-sm transition-colors text-left">
               <div className="flex justify-between items-center">
                 <h3 className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
-                  <span className="text-lg">🎁</span> 실습 선택 가이드
+                  <span className="text-lg font-normal">🎁</span> 실습 선택 가이드
                 </h3>
               </div>
               <div className="space-y-5">
@@ -248,8 +248,8 @@ export default function CurriculumPage() {
                 <div className="space-y-2">
                   <p className="text-[12px] font-black text-emerald-500 uppercase tracking-widest">트랙 A 선택 시</p>
                   <ul className="space-y-1.5">
-                    <BenefitItem text="내가 만든 첫 웹페이지 완성" />
-                    <BenefitItem text="UI 요청하는 감각 습득" />
+                    <BenefitItem text="가상 호스팅 개설 및 도메인 DNS 연동" />
+                    <BenefitItem text="클라이언트-서버 웹 통신 체계 이해" />
                   </ul>
                 </div>
                 
@@ -259,8 +259,8 @@ export default function CurriculumPage() {
                 <div className="space-y-2">
                   <p className="text-[12px] font-black text-emerald-500 uppercase tracking-widest">트랙 B 선택 시</p>
                   <ul className="space-y-1.5">
-                    <BenefitItem text="콘텐츠 자동 생성 구조 이해" />
-                    <BenefitItem text="AI 활용 루틴 구축" />
+                    <BenefitItem text="웹 기획/디자인부터 코딩 실무 마스터" />
+                    <BenefitItem text="바이브코딩 활용 반응형 사이트 제작" />
                   </ul>
                 </div>
 
@@ -285,15 +285,15 @@ export default function CurriculumPage() {
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 pb-8 border-b border-border text-left">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="bg-emerald-500/10 text-emerald-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Mindset & Communication</span>
+                    <span className="bg-emerald-500/10 text-emerald-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Mindset & Background</span>
                   </div>
-                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">1. 입문: AI 바이브 잡기</h2>
+                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">1. 입문: 웹 인프라 및 사이트 제작</h2>
                   <p className="text-emerald-600 font-bold text-lg leading-relaxed max-w-2xl">
-                    "AI를 제대로 쓰기 시작하는 단계"
+                    "국내 호스팅 환경에서 실전 웹사이트 제작하기"
                   </p>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    코딩 실력 이전에 AI와 소통하는 법(Mindset)을 먼저 익힙니다.<br />
-                    명확한 지시가 어떻게 드라마틱한 결과의 차이를 만드는지 직접 경험해보세요.
+                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    코딩 실력 이전에 웹의 본질적인 원리(서버, DNS, DB)를 직관적으로 학습합니다.<br />
+                    AI 협업 코딩 기법인 <strong>바이브코딩</strong> 패러다임을 이해하고, 나만의 실질적인 웹 프로젝트를 인프라 위에 안전하게 구축해보세요.
                   </p>
                 </div>
               </div>
@@ -308,13 +308,13 @@ export default function CurriculumPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { title: "웹페이지 작동원리 이해하기", desc: "브라우저와 서버가 어떻게 대화하는지 웹의 기본 흐름 파악" },
-                    { title: "바이브 코딩 개념 이해", desc: "코딩을 넘어 AI에게 지시하는 새로운 개발 패러다임 이해" },
-                    { title: "바이브코딩 툴 종류와 설치하기", desc: "효율적인 개발을 위한 최적의 AI 도구 세팅 및 환경 구축" },
-                    { title: "프롬프트 구조 설계", desc: "역할(Role) / 목표(Goal) / 제약(Constraints)의 3요소 마스터" },
-                    { title: "명시도(구체성) 훈련", desc: "AI가 오해하지 않도록 정확하게 의도를 기술하는 연습" },
-                    { title: "실패 vs 성공 요청 분석", desc: "왜 AI가 엉뚱한 대답을 하는지 케이스 스터디" },
-                    { title: "일반 vs 특수 요청 구분", desc: "상황에 맞는 최적의 소통 방식(One-shot, Few-shot 등) 선택" },
+                    { title: "바이브코딩의 원리와 마인드셋", desc: "코딩 지식 한계를 뛰어넘어 AI와 매끄럽게 협업하는 프롬프트(Role/Goal/Constraints) 소통 원리 이해" },
+                    { title: "웹 작동원리 (Client-Server)", desc: "브라우저(Client)가 웹서버(Server)에 자원을 요청하고 화면을 렌더링하는 핵심 흐름 이해" },
+                    { title: "도메인(Domain)과 DNS 구조", desc: "도메인 구매부터 DNS 네임서버 연결을 통해 가상 호스팅 서버 IP와 문자 주소를 수동 매핑하는 과정 체득" },
+                    { title: "프레임워크 & 라이브러리 스택", desc: "React, Next.js 등의 모던 프레임워크와 기술스택의 차이점을 파악하고 비즈니스 목적에 맞게 매칭" },
+                    { title: "데이터베이스(DB) 입문 기초", desc: "데이터를 안정적으로 관리하고 보존하기 위한 RDBMS(MySQL)의 가치와 필요성 이해" },
+                    { title: "웹 아키텍처 모델링", desc: "호스팅 서버, 데이터베이스, 스토리지 등 기본적인 웹서비스 아키텍처의 설계 모델 파악" },
+                    { title: "프롬프트 명시도 및 구체성 훈련", desc: "AI가 엉뚱한 코드를 짜지 않도록 목표와 제한사항을 정교하게 제어하는 개발 명세 훈련" }
                   ].map((item, idx) => (
                     <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-emerald-500/30 transition-all flex items-start gap-4 group">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
@@ -335,7 +335,7 @@ export default function CurriculumPage() {
                   </div>
                   <h3 className="text-xl font-black text-slate-800 dark:text-white">선택형 실습 트랙 (Optional Tracks)</h3>
                 </div>
-                <p className="text-sm text-slate-500 mb-10">본인의 목표에 맞는 트랙을 선택하여 실습을 진행하세요. (중복 선택 가능)</p>
+                <p className="text-sm text-slate-500 mb-10">본인의 비즈니스 목표에 맞는 최적의 실습 트랙을 선택하세요. (중복 실습을 적극 추천합니다)</p>
                 
                 <div className="space-y-12">
                   {/* Track A */}
@@ -347,24 +347,24 @@ export default function CurriculumPage() {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">웹 기초 체험</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">직접 눈에 보이는 화면을 설계하며 AI와의 소통 결과를 즉각적으로 확인합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">서버 및 도메인</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">국내 웹 호스팅 환경을 기반으로 실제 가상 서버를 개설하고, 도메인 연결 및 통신 원리를 실전에 바로 적용해봅니다.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 01. 랜딩페이지</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">AI에게 지시하여 10분 만에 근사한 웹사이트 뼈대를 구축합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 01. 가상 호스팅 개설 & 도메인 DNS 맵핑</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">국내 호스팅사를 이용해 가상 웹 서버 공간을 활성화하고, 구입한 도메인의 네임서버(DNS) 정보와 서버 IP를 수동으로 매칭합니다.</p>
                       </div>
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 02. UI 요청 최적화</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">추상적인 요청이 아닌 정교한 지시어로 UI 레이아웃을 수정합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 02. 클라이언트-서버 웹 통신 추적</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">브라우저 개발자 도구를 열어 Client의 HTTP 요청 정보가 웹서버에 도달하고 리소스를 전송받는 실시간 네트워크 흐름을 확인합니다.</p>
                       </div>
                     </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 hover:shadow-emerald-600/25"
                     >
-                      웹 트랙 실습 시작하기
+                      서버/도메인 트랙 실습 시작하기
                     </button>
                   </div>
 
@@ -373,28 +373,28 @@ export default function CurriculumPage() {
                     <div className="flex justify-between items-center">
                       <div className="inline-flex bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track B</div>
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
-                        <Clock size={14} className="text-emerald-400" /> 예상 40분
+                        <Clock size={14} className="text-emerald-400" /> 예상 60분
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">콘텐츠 생성</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">마케터나 기획자처럼 AI를 활용하여 고품질의 콘텐츠 생산 체계를 구축합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">웹 프로젝트 구현</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">기획과 디자인 단계부터 AI 협업 바이브코딩을 접목하여, 반응형 정적 웹페이지를 온전히 제작하고 서버에 올려 론칭합니다.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 01. 블로그 자동화</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">특정 주제에 대해 AI가 논리적이고 풍부한 글을 쓰도록 지시합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 01. 사이트 기획 & 반응형 레이아웃 디자인</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">만들고자 하는 웹페이지의 요구사항을 명확히 하고, 모바일 및 데스크톱 디바이스 규격에 대처하는 반응형 구조를 기획/디자인합니다.</p>
                       </div>
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 02. 이미지 & 카피</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">시선을 끄는 썸네일 설명과 광고 카피를 생성하는 프롬프트를 만듭니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 02. 바이브코딩 코딩 & FTP 서버 업로드</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">AI 비서에게 구체적인 HTML/CSS 작성을 제안하여 사이트 코딩을 신속하게 완수하고, FTP로 호스팅 공간에 전송하여 실시간 오픈합니다.</p>
                       </div>
                     </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 hover:shadow-emerald-600/25"
                     >
-                      콘텐츠 트랙 실습 시작하기
+                      웹 프로젝트 트랙 실습 시작하기
                     </button>
                   </div>
 
@@ -403,28 +403,28 @@ export default function CurriculumPage() {
                     <div className="flex justify-between items-center">
                       <div className="inline-flex bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Track C</div>
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
-                        <Clock size={14} className="text-emerald-400" /> 예상 50분
+                        <Clock size={14} className="text-emerald-400" /> 예상 60분
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">업무 자동화</h4>
-                      <p className="text-sm text-slate-500 leading-relaxed">단순 반복 업무를 AI에게 맡기고 생산성을 극대화하는 방법을 실습합니다.</p>
+                      <h4 className="text-2xl font-black text-slate-800 dark:text-white mb-2">DB 및 기술스택</h4>
+                      <p className="text-sm text-slate-500 leading-relaxed">데이터를 수집하고 비즈니스를 유연하게 확장할 수 있도록 DB 설계 및 프레임워크 선택 안목을 탄탄히 합니다.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 01. 업무 템플릿</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">주간 보고, 이메일 답장 등 반복되는 문서의 표준 프롬프트를 제작합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 01. 호스팅 MySQL DB 연동 & 스키마 기본</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">호스팅에서 제공하는 MySQL DB 서버를 열고, 사용자 계정 설정 및 DB 테이블 스키마 생성과 기본적인 저장 쿼리(SELECT/INSERT)를 실습합니다.</p>
                       </div>
                       <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-xl border border-slate-100 dark:border-white/5">
-                        <p className="text-xs font-bold mb-2">실습 02. 문서 자동 요약</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">긴 회의록이나 보고서를 핵심 위주로 요약하고 Action Item을 추출합니다.</p>
+                        <p className="text-xs font-bold mb-2">실습 02. 서비스 최적화 프레임워크 & 기술 아키텍처 매칭</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">내 서비스 유형(단순 랜딩, 데이터 수집, 동적 앱)에 꼭 들어맞는 라이브러리/프레임워크 스택과 호스팅/클라우드 매핑 설계를 도출합니다.</p>
                       </div>
                     </div>
                     <button 
                       onClick={handleStartPractice}
                       className="w-full py-4 bg-slate-900 dark:bg-white/10 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 hover:shadow-emerald-600/25"
                     >
-                      자동화 트랙 실습 시작하기
+                      DB/기술스택 트랙 실습 시작하기
                     </button>
                   </div>
                 </div>
