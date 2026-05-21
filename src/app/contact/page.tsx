@@ -47,6 +47,15 @@ interface FAQItem {
   category: string;
 }
 
+interface ApiResponseBase {
+  success: boolean;
+  message?: string;
+}
+
+interface CurriculumListResponse extends ApiResponseBase {
+  data: Curriculum[];
+}
+
 const FAQ_DATA: FAQItem[] = [
   { category: '서비스 이용', question: '비전공자도 바이브 코딩을 배울 수 있나요?', answer: '네, 물론입니다! 바이브 코딩은 복잡한 문법보다 논리적 흐름과 AI 활용 능력을 중시하므로 비전공자분들이 더 빠르게 결과물을 만드는 경우가 많습니다.' },
   { category: '서비스 이용', question: '수강 기간에 제한이 있나요?', answer: '현재 제공되는 모든 사전 학습 및 가이드 자료는 기간 제한 없이 영구적으로 이용하실 수 있습니다.' },
@@ -137,7 +146,7 @@ export default function ContactPage() {
     setCurriculumLoading(true);
     try {
       const res = await fetch('/api/curriculum');
-      const data = await res.json();
+      const data = await res.json() as CurriculumListResponse;
       if (data.success) {
         setCurriculums(data.data);
       }
@@ -171,7 +180,7 @@ export default function ContactPage() {
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      const data = await res.json() as ApiResponseBase;
       if (data.success) {
         setShowSuccessModal(true);
         setFormData({ type: '교육 문의', name: '', title: '', contact: '', message: '' });
@@ -206,7 +215,7 @@ export default function ContactPage() {
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      const data = await res.json() as ApiResponseBase;
       if (data.success) {
         setShowSuccessModal(true);
         setApplyData({ name: '', contact: '', days: [], studyTypes: [], message: '' });
@@ -274,7 +283,7 @@ export default function ContactPage() {
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      const data = await res.json() as ApiResponseBase;
       if (data.success) {
         setIsCurriculumModalOpen(false);
         fetchCurriculums();
@@ -288,7 +297,7 @@ export default function ContactPage() {
     if (!confirm('정말 삭제하시겠습니까?')) return;
     try {
       const res = await fetch(`/api/curriculum?id=${id}`, { method: 'DELETE' });
-      const data = await res.json();
+      const data = await res.json() as ApiResponseBase;
       if (data.success) {
         fetchCurriculums();
       }

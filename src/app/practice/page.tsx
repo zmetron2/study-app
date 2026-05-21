@@ -98,6 +98,18 @@ export default function PracticePage() {
     setMounted(true);
   }, []);
 
+  const getLevelCount = (level: string) => {
+    const list = projects.filter(p => isAdmin || p.is_hidden !== 1);
+    if (level === '전체') return list.length;
+    return list.filter(p => p.level === level).length;
+  };
+
+  const getCategoryCount = (category: string) => {
+    const list = projects.filter(p => isAdmin || p.is_hidden !== 1);
+    if (category === '전체') return list.length;
+    return list.filter(p => p.category === category).length;
+  };
+
   // Filtering & Sorting Logic
   useEffect(() => {
     let result = [...projects];
@@ -247,23 +259,23 @@ export default function PracticePage() {
         <aside className="lg:w-64 space-y-8 shrink-0">
           <div className="space-y-6">
             <FilterSection title="커리큘럼">
-              <Checkbox label="전체" checked={selectedLevels.includes('전체')} onChange={() => toggleLevel('전체')} />
-              <Checkbox label="입문" checked={selectedLevels.includes('입문')} onChange={() => toggleLevel('입문')} />
-              <Checkbox label="기초" checked={selectedLevels.includes('기초')} onChange={() => toggleLevel('기초')} />
-              <Checkbox label="실전" checked={selectedLevels.includes('실전')} onChange={() => toggleLevel('실전')} />
-              <Checkbox label="심화" checked={selectedLevels.includes('심화')} onChange={() => toggleLevel('심화')} />
+              <Checkbox label="전체" count={getLevelCount('전체')} checked={selectedLevels.includes('전체')} onChange={() => toggleLevel('전체')} />
+              <Checkbox label="입문" count={getLevelCount('입문')} checked={selectedLevels.includes('입문')} onChange={() => toggleLevel('입문')} />
+              <Checkbox label="기초" count={getLevelCount('기초')} checked={selectedLevels.includes('기초')} onChange={() => toggleLevel('기초')} />
+              <Checkbox label="실전" count={getLevelCount('실전')} checked={selectedLevels.includes('실전')} onChange={() => toggleLevel('실전')} />
+              <Checkbox label="심화" count={getLevelCount('심화')} checked={selectedLevels.includes('심화')} onChange={() => toggleLevel('심화')} />
             </FilterSection>
 
             <FilterSection title="카테고리">
-              <Checkbox label="전체" checked={selectedCategory.includes('전체')} onChange={() => toggleCategory('전체')} />
-              <Checkbox label="UI/UX" checked={selectedCategory.includes('UI/UX')} onChange={() => toggleCategory('UI/UX')} />
-              <Checkbox label="데이터 처리" checked={selectedCategory.includes('데이터 처리')} onChange={() => toggleCategory('데이터 처리')} />
-              <Checkbox label="인증/보안" checked={selectedCategory.includes('인증/보안')} onChange={() => toggleCategory('인증/보안')} />
-              <Checkbox label="CRUD" checked={selectedCategory.includes('CRUD')} onChange={() => toggleCategory('CRUD')} />
-              <Checkbox label="파일 관리" checked={selectedCategory.includes('파일 관리')} onChange={() => toggleCategory('파일 관리')} />
-              <Checkbox label="상태 관리" checked={selectedCategory.includes('상태 관리')} onChange={() => toggleCategory('상태 관리')} />
-              <Checkbox label="API 연동" checked={selectedCategory.includes('API 연동')} onChange={() => toggleCategory('API 연동')} />
-              <Checkbox label="기타" checked={selectedCategory.includes('기타')} onChange={() => toggleCategory('기타')} />
+              <Checkbox label="전체" count={getCategoryCount('전체')} checked={selectedCategory.includes('전체')} onChange={() => toggleCategory('전체')} />
+              <Checkbox label="UI/UX" count={getCategoryCount('UI/UX')} checked={selectedCategory.includes('UI/UX')} onChange={() => toggleCategory('UI/UX')} />
+              <Checkbox label="데이터 처리" count={getCategoryCount('데이터 처리')} checked={selectedCategory.includes('데이터 처리')} onChange={() => toggleCategory('데이터 처리')} />
+              <Checkbox label="인증/보안" count={getCategoryCount('인증/보안')} checked={selectedCategory.includes('인증/보안')} onChange={() => toggleCategory('인증/보안')} />
+              <Checkbox label="CRUD" count={getCategoryCount('CRUD')} checked={selectedCategory.includes('CRUD')} onChange={() => toggleCategory('CRUD')} />
+              <Checkbox label="파일 관리" count={getCategoryCount('파일 관리')} checked={selectedCategory.includes('파일 관리')} onChange={() => toggleCategory('파일 관리')} />
+              <Checkbox label="상태 관리" count={getCategoryCount('상태 관리')} checked={selectedCategory.includes('상태 관리')} onChange={() => toggleCategory('상태 관리')} />
+              <Checkbox label="API 연동" count={getCategoryCount('API 연동')} checked={selectedCategory.includes('API 연동')} onChange={() => toggleCategory('API 연동')} />
+              <Checkbox label="기타" count={getCategoryCount('기타')} checked={selectedCategory.includes('기타')} onChange={() => toggleCategory('기타')} />
             </FilterSection>
 
             <div className="space-y-3">
@@ -537,7 +549,7 @@ function FilterSection({ title, children }: { title: string, children: React.Rea
   );
 }
 
-function Checkbox({ label, checked = false, onChange }: { label: string, checked?: boolean, onChange?: () => void }) {
+function Checkbox({ label, count, checked = false, onChange }: { label: string, count?: number, checked?: boolean, onChange?: () => void }) {
   return (
     <label className="flex items-center gap-2.5 group cursor-pointer" onClick={onChange}>
       <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
@@ -545,7 +557,14 @@ function Checkbox({ label, checked = false, onChange }: { label: string, checked
       }`}>
         {checked && <Check className="w-3.5 h-3.5 text-white" />}
       </div>
-      <span className={`text-xs font-bold transition-colors ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200'}`}>{label}</span>
+      <span className={`text-xs font-bold transition-colors flex items-center ${checked ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200'}`}>
+        {label}
+        {count !== undefined && (
+          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium ml-1.5">
+            {count}
+          </span>
+        )}
+      </span>
     </label>
   );
 }
