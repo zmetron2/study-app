@@ -1057,22 +1057,22 @@ function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeP
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 dark:border-white/5 flex items-start justify-between bg-slate-50/50 dark:bg-white/5">
+        <div className="p-5 md:px-6 md:py-4.5 border-b border-slate-100 dark:border-white/5 flex items-start justify-between bg-slate-50/50 dark:bg-white/5">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
-              <IconComponent className="w-6 h-6 text-indigo-600" />
+            <div className="p-2.5 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+              <IconComponent className="w-5.5 h-5.5 text-indigo-600" />
             </div>
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-0.5">
                 <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400">{category}</span>
                 <span className="w-1 h-1 rounded-full bg-slate-300" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{level} 단계</span>
               </div>
-              <h2 className="text-xl font-black text-slate-800 dark:text-white">{title}</h2>
+              <h2 className="text-lg md:text-xl font-black text-slate-800 dark:text-white leading-snug">{title}</h2>
               {trackList.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                <div className="flex flex-wrap gap-1 mt-1">
                   {trackList.map((track: string, i: number) => (
                     <span key={i} className="text-[9px] font-black px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20">{track}</span>
                   ))}
@@ -1080,19 +1080,19 @@ function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeP
               )}
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors">
-            <X className="w-5 h-5 text-slate-500" />
+          <button onClick={onClose} className="p-1.5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full transition-colors">
+            <X className="w-4.5 h-4.5 text-slate-500" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
-          <section className="space-y-3">
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">프로젝트 개요</h3>
-            <p className="text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{description}</p>
-            <div className="flex flex-wrap gap-2 pt-2">
+        <div className="flex-1 overflow-y-auto p-5 md:p-6 space-y-5 md:space-y-6 custom-scrollbar">
+          <section className="space-y-2">
+            <h3 className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest">필수 요구사항</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{description}</p>
+            <div className="flex flex-wrap gap-1.5 pt-1">
               {tagList.map((tag, i) => (
-                <span key={i} className="text-[10px] font-black px-2 py-1 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 rounded-md">#{tag.trim()}</span>
+                <span key={i} className="text-[9px] md:text-[10px] font-black px-2 py-0.5 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 rounded-md">#{tag.trim()}</span>
               ))}
             </div>
           </section>
@@ -1100,15 +1100,15 @@ function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeP
           <div className="h-px bg-slate-100 dark:bg-white/5" />
 
           <section>
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">실습 과정 가이드</h3>
-            <div className="bg-slate-50 dark:bg-white/5 rounded-2xl p-6 border border-slate-100 dark:border-white/5">
+            <h3 className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-3">실습 과정 가이드</h3>
+            <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-4 md:p-5 border border-slate-100 dark:border-white/5">
               {renderMarkdown(content || '')}
             </div>
           </section>
 
           {/* Completion Section */}
-          <section className="pt-4">
-            <div className={`rounded-2xl p-6 border transition-all ${isCompleting ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/5'}`}>
+          <section className="pt-2">
+            <div className={`rounded-xl p-4 md:p-5 border transition-all ${isCompleting ? 'bg-indigo-600 text-white border-indigo-500' : 'bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/5'}`}>
               {!isCompleting ? (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">

@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           { 
             id: '1', 
             title: '로그인 기능 만들기 (Dev)', 
-            description: '이메일/비밀번호 로그인 기능을 구현해보세요.', 
+            description: '이메일 형식 유효성 체크 및 패스워드 최소 8자 이상 입력 조건을 검증하고, 로그인 성공 시 세션/쿠키를 생성하며, 잘못된 정보 입력 시 사용자 친화적인 에러 메시지를 표시해야 합니다.', 
             level: '입문', 
             category: '인증/보안', 
             tags: '인증,폼 처리', 
@@ -46,12 +46,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 3, 
             icon_name: 'ShieldCheck', 
             is_hidden: 0,
-            content: `### 🔐 실습 과정 안내\n\n이 실습에서는 사용자 인증의 가장 기본인 **이메일 로그인**을 구현합니다.\n\n#### 1. 환경 설정\n- Firebase 또는 Auth.js(NextAuth) 라이브러리를 설치합니다.\n- 인증 공급자(Provider) 설정을 완료합니다.\n\n#### 2. 주요 구현 내용\n- **인풋 유효성 검사**: 이메일 형식 및 비밀번호 길이를 체크합니다.\n- **에러 핸들링**: 로그인 실패 시 사용자에게 적절한 메시지를 노출합니다.\n- **세션 유지**: 로그인 성공 시 쿠키 또는 로컬스토리지를 통해 상태를 유지합니다.\n\n> 💡 **Tip**: 보안을 위해 비밀번호는 항상 암호화되어 전송되어야 합니다.`
+            content: `### 🛠 실습 준비 및 환경 설정\n- React hook form 및 Zod (유효성 검사용) 설치를 권장합니다.\n- 인증 상태를 클라이언트 전역으로 공유할 수 있는 AuthContext 파일을 생성합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[인풋 제어 및 유효성 검사]**: 이메일 정규표현식 매칭 및 비밀번호 유효성 조건을 검사하여 실시간 에러 경고를 UI에 반영합니다.\n2. **[API 연동 및 에러 처리]**: Mock API를 사용하여 자격 증명을 전송하고, 네트워크 오류나 계정 불일치 시 401 에러와 오류 메시지를 화면에 출력합니다.\n3. **[로그인 상태 영속화]**: 인증 토큰을 브라우저의 Cookie 또는 LocalStorage에 저장하여 새로고침 시에도 로그인 상태가 풀리지 않도록 조치합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **보안 권장**: 비밀번호 및 토큰과 같은 민감 정보는 어떠한 경우에도 일반 텍스트 형태로 로컬 저장소에 상시 노출되어선 안 되며, HTTPS 환경에서만 전송되도록 보안 옵션을 고려하세요.`
           },
           { 
             id: '2', 
             title: '할 일 리스트 (Dev)', 
-            description: '할 일 추가, 수정, 삭제가 가능한 Todo 앱을 만들어보세요.', 
+            description: '새로운 할 일 등록(Create), 목록 렌더링 및 완료 체크(Read/Update), 할 일 삭제(Delete) 기능을 포함하고, 데이터 상태를 LocalStorage에 실시간 동기화하여 지속성을 보장해야 합니다.', 
             level: '기초', 
             category: 'CRUD', 
             tags: 'CRUD,로컬스토리지', 
@@ -60,12 +60,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 2, 
             icon_name: 'CheckCircle2', 
             is_hidden: 0,
-            content: `### ✅ 실습 과정 안내\n\n기초적인 **CRUD(Create, Read, Update, Delete)** 로직을 마스터합니다.\n\n#### 1. 데이터 구조 설계\n\`\`\`typescript\ninterface Todo {\n  id: number;\n  text: string;\n  completed: boolean;\n}\n\`\`\`\n\n#### 2. 기능 구현 순서\n1. 리스트 렌더링 (\`map\` 함수 활용)\n2. 새로운 할 일 추가 (\`useState\` 활용)\n3. 완료 체크 기능\n4. 항목 삭제 기능\n\n#### 3. 영구 저장\n- \`useEffect\`를 사용하여 데이터가 변경될 때마다 **LocalStorage**에 저장하세요.`
+            content: `### 🛠 실습 준비 및 환경 설정\n- React의 기본 Hook인 \`useState\`와 \`useEffect\`만을 사용하여 외부 도구 없이 순수 리액트 상태 구조로 실습을 준비합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[목록 추가 및 출력]**: 사용자 텍스트 입력을 받아 유니크한 ID값(\`Date.now()\` 활용)을 지닌 Todo 객체를 생성하고 목록 리스트에 동적 렌더링합니다.\n2. **[완료 상태 토글]**: 각 Todo 카드의 체크박스를 눌렀을 때 특정 Todo 객체의 \`completed\` 상태 불리언 값을 실시간 반전 업데이트합니다.\n3. **[LocalStorage 동기화]**: \`useEffect\` 훅을 활용하여 Todo 배열 상태가 변경될 때마다 로컬저장소에 JSON 문자열로 저장하고, 최초 컴포넌트 마운트 시 이를 로드해 초기 상태를 채웁니다.\n\n### 💡 구현 팁 및 주의 사항\n> **UX 개선**: 사용자가 빈 텍스트를 등록하지 못하게 앞뒤 공백을 제거(\`.trim()\`)하는 예외 처리를 필수로 반영하고, 목록이 비어있을 때 친절한 플레이스홀더를 보여주세요.`
           },
           { 
             id: '3', 
             title: '반응형 내비게이션 바 (Dev)', 
-            description: '모바일과 데스크톱 환경에 최적화된 메뉴바를 제작합니다.', 
+            description: '데스크톱 뷰(가로 나열)와 모바일 뷰(햄버거 버튼 터치 시 드롭다운 펼침)를 유연하게 지원하고, 전환 애니메이션 및 모바일 스크롤 락 기능이 정상 작동해야 합니다.', 
             level: '실전', 
             category: 'UI/UX', 
             tags: 'UI/UX,반응형,CSS', 
@@ -74,12 +74,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 1, 
             icon_name: 'Menu', 
             is_hidden: 1,
-            content: `### 📱 실습 과정 안내\n\n모든 기기에서 완벽하게 작동하는 **Responsive Navbar**를 제작합니다.\n\n#### 핵심 포인트\n- **Media Queries**: 브레이크포인트 설정 (768px)\n- **Hamburger Menu**: 모바일 뷰에서 메뉴 펼치기/접기 애니메이션\n- **Flexbox/Grid**: 레이아웃 배치 최적화\n\n#### 사용 기술\n- Tailwind CSS (또는 Vanilla CSS)\n- React useState (메뉴 토글 상태 관리)`
+            content: `### 🛠 실습 준비 및 환경 설정\n- Tailwind CSS 또는 Custom Vanilla CSS 브레이크포인트 설정을 확인합니다.\n- 메뉴 오픈/클로즈 토글을 위한 불리언 상태(\`isOpen\`)를 컴포넌트 내부에 생성합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[모바일 해상도 감지 및 레이아웃]**: CSS Media Query 또는 Tailwind의 \`md:\` 접두사를 활용하여 768px 이하 해상도에서 헤더 메뉴를 감추고 햄버거 아이콘을 배치합니다.\n2. **[드로워 토글 및 애니메이션]**: 햄버거 단추를 탭했을 때 모바일 드로워 메뉴가 부드러운 Slide-down 혹은 Fade-in 애니메이션과 함께 열리도록 구현합니다.\n3. **[포커스 아웃 및 스크롤 차단]**: 모바일 드롭다운 메뉴가 열려 있는 상태에서 외부 영역을 탭하면 창이 닫히도록 바깥 배경 레이어를 배치하고 스크롤을 차단합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **웹 접근성**: 스크린 리더 사용자를 위해 모바일 토글 버튼에 \`aria-expanded\` 및 \`aria-label\` 속성을 명시하여 누구나 편리하게 탐색할 수 있는 반응형 레이아웃을 고안하세요.`
           },
           { 
             id: '4', 
             title: '다크모드 테마 스위처 (Dev)', 
-            description: '시스템 설정과 연동되는 완벽한 다크모드 기능을 구현합니다.', 
+            description: '사용자가 설정한 다크/라이트 테마 상태를 로컬저장소에 보관하고, 최초 방문 시 운영체제의 다크모드 환경설정 값을 자동 판별하여 기본 테마로 주입해야 합니다.', 
             level: '심화', 
             category: 'UI/UX', 
             tags: 'CSS,상태관리', 
@@ -88,12 +88,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 1, 
             icon_name: 'Moon', 
             is_hidden: 0,
-            content: `### 🌙 실습 과정 안내\n\n사용자 경험을 향상시키는 **Dark Mode**를 구현합니다.\n\n#### 구현 단계\n1. CSS 변수(\`--background\`, \`--foreground\`) 정의\n2. \`localStorage\`에 테마 설정 저장\n3. \`matchMedia\`를 통한 시스템 테마 감지\n\n> **Challenge**: 테마 변경 시 매끄러운 트랜지션 효과를 추가해 보세요!`
+            content: `### 🛠 실습 준비 및 환경 설정\n- 전역 테마 상태에 바로 접근할 수 있는 CSS CSS Custom Properties(테마 변수)를 \`:root\` 및 \`.dark\` 클래스 스코프별로 선언해 둡니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[초기 테마 자동 감지]**: \`window.matchMedia('(prefers-color-scheme: dark)')\` API를 실행하여 운영체제나 브라우저의 기본 설정이 다크모드인지 확인하고 매핑합니다.\n2. **[테마 토글 제어 및 DOM 주입]**: 테마 스위치 스냅 단추를 클릭할 때마다 HTML 엘리먼트(\`document.documentElement\`)의 클래스명 리스트에 \`dark\`를 탈부착합니다.\n3. **[사용자 기본 설정 저장]**: 바뀐 테마 정보를 로컬스토리지에 영구적으로 보존하여, 재방문 또는 다른 페이지로 이동하더라도 일치하는 테마로 강제 로딩되게 세팅합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **화면 깜빡임 제어**: CSR 환경에서 로딩 순간 흰색 배경이 잠깐 보였다가 다크모드로 바뀌는 깜빡임(Flash of unstyled content) 현상을 막기 위해, 바디 태그 최상단에 간단한 차단 인라인 스크립트를 주입해 두는 것이 이상적입니다.`
           },
           { 
             id: 'p26_kakao', 
             title: '카카오톡 SDK 활용 링크 공유기', 
-            description: '카카오톡 Javascript SDK를 연동하여 모바일에 최적화된 리치 카드 링크와 딥링크 공유 기능을 제작합니다.', 
+            description: '비동기로 카카오 Javascript SDK를 안전하게 초기화하고, 썸네일/텍스트/버튼이 있는 피드 템플릿 정보를 작성하여 모바일 기기에서 카카오톡 인앱 브라우저 랜딩 및 설치 여부에 따른 딥링크 분기 처리를 구현해야 합니다.', 
             level: '입문', 
             category: 'API 연동', 
             tags: '카카오톡,공유,SDK,API', 
@@ -102,12 +102,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 2, 
             icon_name: 'MessageSquare', 
             is_hidden: 0,
-            content: `### 💬 실습 과정 안내\n\n국내 모바일 환경에서 유입률을 극대화할 수 있는 **카카오톡 공유 기능(KakaoTalk Share Link)**을 구현합니다.\n\n#### 1. 카카오 디벨로퍼스 설정\n- 카카오 디벨로퍼스 콘솔에 접속하여 애플리케이션을 생성합니다.\n- 플랫폼 설정에서 웹 사이트 도메인(Localhost 및 프로덕션 도메인)을 등록합니다.\n- JavaScript 키를 발급받아 환경 변수 또는 안전한 상수 파일에 배치합니다.\n\n#### 2. 카카오 SDK 로드 및 초기화\n- Next.js의 \`Script\` 컴포넌트를 사용하여 카카오 SDK(\`https://t1.kakaocdn.net/kakao/js/sdk/2.7.0/kakao.min.js\`)를 비동기로 안전하게 로드합니다.\n- \`window.Kakao.isInitialized()\`를 확인한 뒤 발급받은 JavaScript 키를 활용해 초기화(\`window.Kakao.init(KEY)\`)를 수행합니다.\n\n#### 3. 리치 카드 공유 구현\n- **기본 커스텀 템플릿**: 제목, 설명, 썸네일 이미지 및 버튼 텍스트가 포함된 리치 피드(Feed) 유형을 전송합니다.\n- **웹뷰 및 모바일 앱 딥링크**: 카카오톡 인앱 브라우저 및 설치된 모바일 네이티브 앱으로 다이렉트 랜딩이 가능하도록 커스텀 링크 경로를 설정합니다.\n\n> 💡 **Tip**: 공유 카드 이미지 크기는 가급적 **800x400 (2:1 비율)**을 권장하며, 카카오톡 인앱 브라우저 호환성을 사전에 고려해야 합니다.`
+            content: `### 🛠 실습 준비 및 환경 설정\n- [카카오 디벨로퍼스](https://developers.kakao.com)에 로그인 후 신규 어플리케이션을 생성하고, 로컬 웹 호스트 주소(예: localhost:3000)를 플랫폼 도메인에 추가합니다.\n- 카카오로부터 발급받은 JavaScript 키를 발췌하여 환경변수 파일에 바인딩합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[SDK 비동기 로딩 및 검증]**: Next.js의 \`Script\` 컴포넌트를 활용해 카카오 SDK 라이브러리를 안전하게 호출하고, 마운트 직후 \`window.Kakao.isInitialized()\` 여부를 판단해 초기화 단계를 거칩니다.\n2. **[공유 피드 템플릿 빌드]**: 카카오톡 공유 API인 \`window.Kakao.Share.sendDefault\` 메서드를 주입하고, 이미지 URL(가로세로 2:1 권장), 제목, 본문 설명 및 랜딩 URL 파라미터를 JSON 구조로 정의합니다.\n3. **[딥링크 연동 모바일 테스트]**: 모바일 환경에서 공유된 링크 터치 시 카카오톡 앱이 열리면서 내부 인앱 웹뷰로 안전하게 진입하는지 다이렉트 랜딩 성능을 검증합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **주의 사항**: 카카오 SDK 함수들은 전역 객체 \`window\`가 완전하게 생성된 후 사용되어야 하므로 클라이언트 컴포넌트(\`'use client'\`) 레벨에서 라이프사이클 훅에 맞추어 선언해야 스크립트 오작동을 피할 수 있습니다.`
           },
           { 
             id: 'p27_zustand_i18n', 
             title: 'Zustand 기반 다국어(i18n) 시스템', 
-            description: 'Zustand와 JSON 번들 파일을 활용해 번역 데이터를 캐싱하고, 새로고침 없이 전역 다국어(ko, en, ja)를 지원하는 시스템을 만듭니다.', 
+            description: 'Zustand 스토어 내부에 다국어 사전 번들 데이터를 바인딩하여 새로고침 없는 실시간 3개 언어(한국어, 영어, 일본어) 다국어 스위칭 환경을 구성하고 로컬 스토리지에 세션을 유지해야 합니다.', 
             level: '기초', 
             category: '상태 관리', 
             tags: 'Zustand,i18n,다국어,상태관리', 
@@ -116,12 +116,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 3, 
             icon_name: 'Menu', 
             is_hidden: 0,
-            content: `### 🌐 실습 과정 안내\n\n전역 상태 관리 라이브러리인 **Zustand**를 응용하여 로딩 지연 없는 **다국어 지원(i18n) 시스템**을 구현합니다.\n\n#### 1. 다국어 딕셔너리 구축\n- 각 언어별(\`ko.json\`, \`en.json\`, \`ja.json\`)로 대응하는 번역 키-값 사전(Dictionary)을 설계합니다.\n- 복잡한 중첩 구조(Nested object)를 유연하게 탐색할 수 있도록 헬퍼 유틸리티 함수를 준비합니다.\n\n#### 2. Zustand를 이용한 전역 스토어 설계\n- 현재 선택된 언어(\`locale\`) 상태와 번역 함수(\`t\`)를 포함한 Zustand 스토어를 생성합니다.\n- 사용자가 언어를 변경하면 스토어 내 번역 데이터가 즉시 갱신되어, React 컴포넌트 전체가 리렌더링 없이 즉시 언어 전환 효과를 갖습니다.\n\n#### 3. 세션 영속화 및 시스템 언어 감지\n- \`navigator.language\`를 파싱하여 브라우저의 기본 설정 언어를 최초의 기본값으로 자동 매핑합니다.\n- Zustand의 \`persist\` 미들웨어를 결합하여 사용자가 변경한 다국어 테마를 **LocalStorage**에 보관 및 유지합니다.\n\n> 🛠 **Challenge**: 텍스트 사이에 변수를 주입하여 완성도 높은 동적 문장을 렌더링하는 \`t("welcome", { name: "바이브코더" })\` 형태의 포맷터를 추가해 보세요!`
+            content: `### 🛠 실습 준비 및 환경 설정\n- Zustand 패키지를 설치합니다.\n- 다국어 사전 파일 번들인 \`ko.json\`, \`en.json\`, \`ja.json\`을 로컬 디렉토리에 생성하여 기본 텍스트 딕셔너리를 구비합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[Zustand 번역 스토어 설계]**: 현재 브라우저 로케일 상태를 기억하고, 사전 키값을 인자로 받아 번역 문장을 즉시 응답하는 \`t(key)\` 전역 리액티브 함수를 갖춘 Zustand 스토어를 만듭니다.\n2. **[실시간 번역 바인딩 및 트리거]**: 리액트 UI 단에서 \`t("home.title")\` 처럼 사용하여 텍스트 컴포넌트를 감싸고, 언어 전환 셀렉터를 탭하면 리렌더링 없이 페이지 전체 텍스트가 즉시 다국어로 전환되는 화면을 완성합니다.\n3. **[시스템 언어 우선 순위 설정]**: 로컬스토리지에 기존 선택한 번역 세션이 없다면 \`navigator.language\`를 읽어 사용자의 기본 OS 언어에 맞추어 화면을 초기화합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **동적 텍스트 팁**: 단순 번역 매핑을 넘어 \`t("welcome.message", { name: "홍길동" })\` 처럼 동적 변수를 파라미터로 받아 문자열 내부 치환 처리를 지원하는 고급 포맷터 함수를 Zustand 스토어 내부에 보강해 보세요.`
           },
           { 
             id: 'p28_playwright_e2e', 
             title: 'Playwright 브라우저 E2E 테스트 자동화', 
-            description: 'Playwright를 활용하여 로그인, 검색 및 데이터 생성 시나리오를 시뮬레이션하고 헤드리스 브라우저 테스트를 자동화합니다.', 
+            description: 'Playwright 테스트 러너를 구축하여 복잡한 시나리오(인풋 입력, 클릭, 비동기 상태 확인, 페이지 이동 등)를 헤드리스 모드로 시뮬레이션하고 검증해야 합니다.', 
             level: '실전', 
             category: '기타', 
             tags: 'Playwright,테스트,자동화,CI', 
@@ -130,12 +130,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 2, 
             icon_name: 'CheckCircle2', 
             is_hidden: 0,
-            content: `### 🧪 실습 과정 안내\n\n현업에서 가장 각광받는 E2E(End-to-End) 테스트 프레임워크인 **Playwright**를 활용하여 애플리케이션의 핵심 비즈니스 로직을 브라우저 수준에서 자동으로 검증합니다.\n\n#### 1. Playwright 설치 및 기본 시나리오 작성\n- \`@playwright/test\` 라이브러리를 설치하고 초기화 및 \`playwright.config.ts\` 구성을 수행합니다.\n- 특정 페이지에 직접 접속하여 DOM 요소를 선택하고 상호작용하는 기본 테스트 코드를 작성합니다.\n\n#### 2. 로그인 및 CRUD 흐름 시뮬레이션\n- **인풋 타이핑 & 클릭**: 테스트 계정 정보를 인풋 박스에 채워 넣고 로그인 버튼을 클릭하는 자동화 스텝을 설계합니다.\n- **요소 존재 여부 검증**: 로그인 성공 후 유저 닉네임 엘리먼트가 나타나거나 마이페이지로 이동했는지 \`expect(page).toHaveURL()\` 메서드로 확인합니다.\n- **상태 보존**: 로그인 쿠키 및 세션 상태를 저장(storageState)하여 중복 로그인 과정 없이 다양한 개별 시나리오를 연속 테스트합니다.\n\n#### 3. 로컬 테스트 및 CI 파이프라인 탑재\n- Playwright UI Mode를 실행하여 브라우저 동작 화면과 타임라인 트레이스(Trace) 분석 기능을 활용합니다.\n- GitHub Actions 워크플로우에 통합하여 빌드 시 E2E 테스트가 자동으로 통과해야만 배포되도록 구조를 보강합니다.`
+            content: `### 🛠 실습 준비 및 환경 설정\n- \`@playwright/test\` 설치 커맨드를 실행하여 러너 엔진을 세팅하고, 로컬 디렉토리에 기본 \`playwright.config.ts\` 구성 파일을 생성합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[E2E 시나리오 테스트 케이스 작성]**: \`test('테스트 명칭', async ({ page }) => { ... })\` 블록을 구성하고 지정된 실무 URL에 브라우저가 자동 이동하게 설계합니다.\n2. **[인풋 제어 및 상태 어설션]**: 사용자 로그인 Input 및 Button 선택자를 타겟하고 타이핑과 클릭 이벤트를 강제한 뒤, \`expect(page).toHaveURL()\`을 사용해 성공 페이지 이동 여부를 검증합니다.\n3. **[테스트 리포트 분석 및 CI 연동]**: 테스트 완료 후 생성되는 HTML 리포터를 로컬 브라우저로 띄워 각 단계별 타임라인 스냅샷 및 비동기 통신 이력을 상세 확인합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **테스트 격리**: 매 테스트 시나리오마다 매번 번거로운 로그인을 수행하는 비효율을 방지하기 위해, 최초 로그인 세션 데이터(Cookie 및 Session Storage)를 별도로 구워둔 뒤 개별 테스트에 안전하게 복사/주입하는 스토리지 상태 재사용 패턴을 적용해 보세요.`
           },
           { 
             id: 'adv-a4_webrtc', 
             title: 'WebRTC 1:1 실시간 화상 미팅 룸', 
-            description: 'WebRTC 기술과 임시 시그널링 서버를 연동하여 플러그인 없이 브라우저 간 1:1 화상 및 음성 연결을 구현합니다.', 
+            description: '미디어 스트림 오디비주얼 캡처 및 화면 제어 장치를 구현하고, P2P 통신 성립을 위한 RTCPeerConnection을 구성하여 Offer/Answer/ICE Candidate 교환을 거쳐 실시간 1:1 비디오 스트리밍을 완성해야 합니다.', 
             level: '심화', 
             category: 'API 연동', 
             tags: 'WebRTC,P2P,미디어,실시간', 
@@ -144,12 +144,12 @@ export async function GET(request: NextRequest) {
             completion_rate: 4, 
             icon_name: 'MessageSquare', 
             is_hidden: 0,
-            content: `### 📹 실습 과정 안내\n\n웹 기반 P2P 실시간 통신의 업계 표준인 **WebRTC(Web Real-Time Communication)**를 사용하여 화면 공유 및 1:1 실시간 화상 회의 룸을 설계하고 구현합니다.\n\n#### 1. 미디어 스트림 제어\n- 브라우저의 \`navigator.mediaDevices.getUserMedia()\` API를 호출하여 카메라와 마이크 입력을 획득합니다.\n- 획득한 미디어 스트림(MediaStream)을 \`<video>\` 엘리먼트에 바인딩하여 실시간 로컬 화면을 보여주고, 오디오 음소거 및 비디오 끄기 기능을 스위칭합니다.\n\n#### 2. RTCPeerConnection & Signaling 시퀀스\n- \`RTCPeerConnection\` 객체를 구성하여 브라우저 간 연결 구조를 세팅합니다.\n- WebSocket 또는 Supabase/Firebase Realtime 채널을 시그널링 서버로 지정하여 **Offer**, **Answer**, 그리고 P2P 통신 경로 탐색을 위한 **ICE Candidate** 패킷을 상호 교환합니다.\n\n#### 3. 미디어 및 데이터 채널 연동\n- 상대방으로부터 전달된 원격 스트림(Remote Stream)을 실시간 감지(\`ontrack\`)하여 두 번째 비디오 플레이어에 바인딩합니다.\n- 추가로 \`createDataChannel\`을 생성해 연결이 확립된 피어끼리 별도 서버 없이 완전한 P2P 방식의 초고속 채팅 데이터를 전송합니다.\n\n> ⚠️ **주의**: 실제 통신 환경에서는 공유기 뒤의 기기들을 찾기 위해 STUN 및 TURN 서버(예: Google STUN 또는 Coturn 인프라) 환경 설정이 사전에 동반되어야 정상 동작합니다.`
+            content: `### 🛠 실습 준비 및 환경 설정\n- 피어 간 신호 패킷 전달을 담당할 Signaling 서버(WebSocket 또는 Supabase Realtime 채널) 클라이언트를 준비합니다.\n- 비디오와 오디오를 렌더링할 로컬 플레이어 및 상대방 플레이어 \`<video>\` 태그 2개를 배치합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[카메라/마이크 미디어 스트림 제어]**: \`navigator.mediaDevices.getUserMedia()\` API를 호출하여 입력 장치 장치로부터 미디어 스트림을 가져와 내 화면에 바인딩하고 비활성화 스위치를 연결합니다.\n2. **[RTCPeerConnection 피어 생성]**: \`RTCPeerConnection\` 객체를 생성하고, 로컬 미디어 트랙들을 연결에 추가(\`addTrack\`)합니다.\n3. **[시그널링 및 P2P 실시간 송수신]**: Offer SDP 생성 후 시그널링 서버를 통해 전달하고, 상대방이 응답한 Answer SDP를 \`setRemoteDescription\` 처리하며, ICE Candidate를 교환하여 연결을 완성한 뒤 상대방 미디어를 수신(\`ontrack\`)합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **네트워크 환경 호환성**: 대부분의 일반적인 네트워크망(특히 대칭형 NAT 등)에서는 다이렉트 P2P 경로 탐색이 실패할 수 있으므로, 상용 서비스 출시 단계에서는 STUN 서버뿐만 아니라 데이터 릴레이를 중계하는 TURN 서버 인프라가 반드시 동반 세팅되어야 함에 유의하세요.`
           },
           { 
             id: 'adv-c4_redis_rate_limit', 
             title: 'Upstash Redis 기반 API 속도 제한기', 
-            description: 'Cloudflare Workers Edge 미들웨어 환경에서 Upstash Redis를 사용하여 IP 및 Token 기준 API 호출 제한(Rate Limiting) 장치를 설계합니다.', 
+            description: 'Cloudflare Workers 또는 Next.js Edge Middleware 환경에서 글로벌 분산 DB인 Upstash Redis 서버리스 인스턴스를 활용하여 IP 및 API Token 기준 실시간 Rate Limiting 미들웨어를 구축해야 합니다.', 
             level: '심화', 
             category: '인증/보안', 
             tags: 'Redis,RateLimit,보안,Edge', 
@@ -158,7 +158,7 @@ export async function GET(request: NextRequest) {
             completion_rate: 3, 
             icon_name: 'Lock', 
             is_hidden: 0,
-            content: `### ⚡ 실습 과정 안내\n\n서버리스 에지 인프라(Cloudflare Workers)의 성능 저하를 방지하고 비용 절감 및 DDoS 공격을 원천 제어할 수 있는 에지 기반 **API Rate Limiter**를 구축합니다.\n\n#### 1. Upstash Redis 서버리스 인스턴스 구축\n- 글로벌 엣지 통신 속도에 맞추어 HTTP 연결을 지원하는 Upstash Serverless Redis를 구성합니다.\n- API Route에서 통신 가능한 \`@upstash/redis\` SDK 및 자격 증명 환경 변수(\`UPSTASH_REDIS_REST_URL\`, \`TOKEN\`)를 설정합니다.\n\n#### 2. Sliding Window Log 및 Fixed Window 알고리즘\n- 단위 시간당 들어오는 요청 수를 엄밀하게 통제하기 위한 카운트 기반 제한 시스템을 설계합니다.\n- 클라이언트의 고유 IP 또는 로그인 세션 토큰 정보를 고유 Key로 정하고 Redis의 \`incr\` 및 \`expire\` 원자적(Atomic) 연산을 수행합니다.\n\n#### 3. Edge Middleware 및 HTTP 응답 처리\n- Next.js 미들웨어(\`middleware.ts\`) 레이어에서 수신 요청의 헤더를 읽어 차단 여부를 에지 레벨에서 1ms 이내로 판별합니다.\n- 제한 한도 초과 시 **HTTP Status 429 (Too Many Requests)** 응답 코드와 함께 남은 복구 시간을 \`Retry-After\` 헤더에 실어 응답합니다.\n\n> 🔒 **보안**: IP 위변조 방지를 위해 로드 밸런서 헤더(\`x-forwarded-for\`, \`cf-connecting-ip\`) 신뢰 가이드를 엄격히 적용해야 합니다.`
+            content: `### 🛠 실습 준비 및 환경 설정\n- Upstash 콘솔에서 서버리스 Redis DB 인스턴스를 하나 띄우고, \`UPSTASH_REDIS_REST_URL\`과 \`UPSTASH_REDIS_REST_TOKEN\` 자격 증명 환경 변수를 시스템에 설정합니다.\n- API 미들웨어 통신을 위해 에지 런타임 호환을 보장하는 \`@upstash/redis\` 라이브러리를 연동합니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[클라이언트 식별자 탐색]**: Next.js Edge Middleware 스코프 내에서 요청을 보낸 사용자의 고유 식별자(프록시 환경에서도 신뢰할 수 있는 IP 주소 또는 로그인 Bearer JWT 토큰)를 추출합니다.\n2. **[원자적 카운팅 로직 구현]**: Redis 내부에 고유 키값(예: \`rate_limit:ip_주소\`)으로 1분간 들어온 요청 값을 1씩 가산하고, 만료시간(expire)을 설정하는 원자적 연산을 구현합니다.\n3. **[HTTP 429 및 제한 초과 헤더 응답]**: 요청 카운트가 지정 기준(예: 분당 60회)을 넘어서면, API 호출을 미들웨어단에서 조기 중단(Early Return) 처리하고 **HTTP 429 Too Many Requests** 오류코드와 함께 남은 대기 만료시간을 담아 반환합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **IP 스푸핑 보안**: 프록시 뒤나 Cloudflare CDN 프론트를 통과해 들어오는 트래픽의 실제 소스 IP를 탐색할 때, 일반적인 클라이언트 위변조가 쉬운 \`X-Forwarded-For\` 헤더 값을 그대로 신뢰하는 보안 약점을 보강하기 위해 CDN에서 전용 제공하는 신뢰할 수 있는 헤더(\`CF-Connecting-IP\`) 정보를 우선 검증하는 습관을 들이는 것이 안전합니다.`
           }
         ];
         return Response.json({ success: true, projects: mockProjects });
