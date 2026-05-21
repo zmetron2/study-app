@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
             views: '3.2K', 
             completion_rate: 1, 
             icon_name: 'Moon', 
-            is_hidden: 0,
+            is_hidden: 1,
             content: `### 🛠 실습 준비 및 환경 설정\n- 전역 테마 상태에 바로 접근할 수 있는 CSS CSS Custom Properties(테마 변수)를 \`:root\` 및 \`.dark\` 클래스 스코프별로 선언해 둡니다.\n\n### 🔐 핵심 기능 구현 단계\n1. **[초기 테마 자동 감지]**: \`window.matchMedia('(prefers-color-scheme: dark)')\` API를 실행하여 운영체제나 브라우저의 기본 설정이 다크모드인지 확인하고 매핑합니다.\n2. **[테마 토글 제어 및 DOM 주입]**: 테마 스위치 스냅 단추를 클릭할 때마다 HTML 엘리먼트(\`document.documentElement\`)의 클래스명 리스트에 \`dark\`를 탈부착합니다.\n3. **[사용자 기본 설정 저장]**: 바뀐 테마 정보를 로컬스토리지에 영구적으로 보존하여, 재방문 또는 다른 페이지로 이동하더라도 일치하는 테마로 강제 로딩되게 세팅합니다.\n\n### 💡 구현 팁 및 주의 사항\n> **화면 깜빡임 제어**: CSR 환경에서 로딩 순간 흰색 배경이 잠깐 보였다가 다크모드로 바뀌는 깜빡임(Flash of unstyled content) 현상을 막기 위해, 바디 태그 최상단에 간단한 차단 인라인 스크립트를 주입해 두는 것이 이상적입니다.`
           },
           { 

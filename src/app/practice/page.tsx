@@ -1090,11 +1090,6 @@ function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeP
           <section className="space-y-2">
             <h3 className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest">필수 요구사항</h3>
             <p className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{description}</p>
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {tagList.map((tag, i) => (
-                <span key={i} className="text-[9px] md:text-[10px] font-black px-2 py-0.5 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 rounded-md">#{tag.trim()}</span>
-              ))}
-            </div>
           </section>
 
           <div className="h-px bg-slate-100 dark:bg-white/5" />
@@ -1155,6 +1150,17 @@ function ProjectDetailModal({ project, onClose, onUpdate }: { project: PracticeP
                   <p className="text-[11px] text-indigo-200">완료한 횟수는 실습 목록의 메트릭에 반영됩니다.</p>
                 </div>
               )}
+            </div>
+          </section>
+
+          <div className="h-px bg-slate-100 dark:bg-white/5" />
+
+          <section className="space-y-2 pt-1">
+            <h3 className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest">연관 기술 태그</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {tagList.map((tag, i) => (
+                <span key={i} className="text-[9px] md:text-[10px] font-black px-2 py-0.5 bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 rounded-md">#{tag.trim()}</span>
+              ))}
             </div>
           </section>
         </div>
