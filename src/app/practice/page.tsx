@@ -269,7 +269,6 @@ export default function PracticePage() {
             <FilterSection title="카테고리">
               <Checkbox label="전체" count={getCategoryCount('전체')} checked={selectedCategory.includes('전체')} onChange={() => toggleCategory('전체')} />
               <Checkbox label="UI/UX" count={getCategoryCount('UI/UX')} checked={selectedCategory.includes('UI/UX')} onChange={() => toggleCategory('UI/UX')} />
-              <Checkbox label="데이터 처리" count={getCategoryCount('데이터 처리')} checked={selectedCategory.includes('데이터 처리')} onChange={() => toggleCategory('데이터 처리')} />
               <Checkbox label="인증/보안" count={getCategoryCount('인증/보안')} checked={selectedCategory.includes('인증/보안')} onChange={() => toggleCategory('인증/보안')} />
               <Checkbox label="CRUD" count={getCategoryCount('CRUD')} checked={selectedCategory.includes('CRUD')} onChange={() => toggleCategory('CRUD')} />
               <Checkbox label="파일 관리" count={getCategoryCount('파일 관리')} checked={selectedCategory.includes('파일 관리')} onChange={() => toggleCategory('파일 관리')} />
@@ -771,7 +770,7 @@ function ProjectAdminModal({ isOpen, onClose, project, onSuccess }: { isOpen: bo
             <div className="space-y-1.5 col-span-2 md:col-span-1">
               <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">카테고리</label>
               <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm outline-none dark:text-white focus:border-indigo-500 transition-colors cursor-pointer">
-                <option>UI/UX</option><option>데이터 처리</option><option>인증/보안</option><option>CRUD</option><option>파일 관리</option><option>상태 관리</option><option>API 연동</option><option>기타</option>
+                <option>UI/UX</option><option>인증/보안</option><option>CRUD</option><option>파일 관리</option><option>상태 관리</option><option>API 연동</option><option>기타</option>
               </select>
             </div>
 
