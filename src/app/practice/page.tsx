@@ -40,6 +40,7 @@ export default function PracticePage() {
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'level'>('latest');
   const [selectedProject, setSelectedProject] = useState<PracticeProject | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchProjects = async () => {
     setIsLoading(true);
@@ -129,6 +130,17 @@ export default function PracticePage() {
       result = result.filter(p => p.curriculum_link.includes(selectedCurriculum.replace(' 단계', '')));
     }
 
+    // Search Query Filter
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(p => 
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.tags.toLowerCase().includes(q) ||
+        p.curriculum_link.toLowerCase().includes(q)
+      );
+    }
+
     // Sorting
     result.sort((a, b) => {
       if (sortBy === 'latest') {
@@ -144,7 +156,7 @@ export default function PracticePage() {
     });
 
     setFilteredProjects(result);
-  }, [projects, selectedLevels, selectedCategory, selectedCurriculum, sortBy]);
+  }, [projects, selectedLevels, selectedCategory, selectedCurriculum, sortBy, searchQuery]);
 
   const toggleLevel = (level: string) => {
     if (level === '전체') {
@@ -322,8 +334,19 @@ export default function PracticePage() {
                <input 
                  type="text" 
                  placeholder="어떤 기능을 구현해볼까요?" 
-                 className="w-full bg-card dark:bg-slate-800/50 border border-border rounded-2xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+                 className="w-full bg-card dark:bg-slate-800/50 border border-border rounded-2xl py-3 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors dark:text-white"
                />
+               {searchQuery && (
+                 <button 
+                   onClick={() => setSearchQuery('')}
+                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer p-1 rounded-full hover:bg-slate-100 dark:hover:bg-white/10"
+                   type="button"
+                 >
+                   <X className="w-4 h-4" />
+                 </button>
+               )}
              </div>
              <div className="flex gap-2">
                <button 
@@ -414,18 +437,24 @@ export default function PracticePage() {
                   </div>
                 ))
               ) : (
-                <div className="col-span-full py-20 text-center space-y-4 bg-slate-50 dark:bg-white/5 rounded-3xl border border-dashed border-slate-200 dark:border-white/10">
-                  <Search className="w-12 h-12 text-slate-300 mx-auto" />
-                  <p className="text-slate-500 font-bold">조건에 맞는 실습 프로젝트가 없습니다.</p>
+                <div className="col-span-full py-20 text-center space-y-6 bg-slate-50 dark:bg-white/5 rounded-3xl border border-dashed border-slate-200 dark:border-white/10">
+                  <div className="w-16 h-16 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center mx-auto text-slate-400 dark:text-slate-500">
+                    <Search className="w-8 h-8" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-black text-slate-800 dark:text-white">일치하는 실습 프로젝트가 없습니다</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">검색어 철자를 확인하거나 아래 버튼을 통해 전체 필터를 초기화해 보세요.</p>
+                  </div>
                   <button 
                     onClick={() => {
                       setSelectedLevels(['전체']);
                       setSelectedCategory(['전체']);
                       setSelectedCurriculum('전체 단계');
+                      setSearchQuery('');
                     }}
-                    className="text-indigo-600 font-black hover:underline"
+                    className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs px-5 py-3 rounded-xl transition-all shadow-md hover:shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 cursor-pointer"
                   >
-                    필터 초기화하기
+                    필터 및 검색어 초기화하기
                   </button>
                 </div>
               )
