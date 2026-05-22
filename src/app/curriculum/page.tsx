@@ -10,8 +10,11 @@ import {
   Clock, ChevronDown, ChevronRight, LayoutGrid, Timer, Target, Sparkles, Cpu, Box, X
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CurriculumPage() {
+  const router = useRouter();
+  const [courseType, setCourseType] = useState<'regular' | 'special'>('regular');
   const [activeSection, setActiveSection] = useState('core');
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isMaterialOpen, setIsMaterialOpen] = useState(false);
@@ -27,6 +30,13 @@ export default function CurriculumPage() {
       alert('강의 신청자에게 제공되는 자료입니다. 로그인이 필요합니다.');
     } else {
       setIsMaterialOpen(true);
+    }
+  };
+
+  const handleCourseTypeChange = (type: 'regular' | 'special') => {
+    setCourseType(type);
+    if (type === 'special') {
+      router.push('/curriculum/special-saas');
     }
   };
 
@@ -168,11 +178,35 @@ export default function CurriculumPage() {
       {/* --- Main Section --- */}
       <main className="max-w-7xl mx-auto w-full px-6 py-10 space-y-8">
         
+        {/* Course Type Switcher */}
+        <div className="flex items-center gap-2 bg-slate-100/80 dark:bg-white/5 p-1 rounded-2xl w-fit border border-slate-200 dark:border-white/5 shadow-inner">
+          <button 
+            onClick={() => handleCourseTypeChange('regular')}
+            className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
+              courseType === 'regular' 
+                ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
+                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-350'
+            }`}
+          >
+            정규과정 (Step 1-4)
+          </button>
+          <button 
+            onClick={() => handleCourseTypeChange('special')}
+            className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
+              courseType === 'special' 
+                ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
+                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-350'
+            }`}
+          >
+            단일주제과정 (심화 트랙)
+          </button>
+        </div>
+
         {/* Roadmap Bar */}
         <div className="bg-card rounded-xl border border-border p-2 flex items-center gap-2 overflow-x-auto shadow-sm no-scrollbar transition-colors relative z-20">
           <div className="flex items-center gap-2 px-4 whitespace-nowrap group cursor-pointer">
             <LayoutGrid className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-bold text-slate-500 dark:text-slate-400">커리큘럼 로드맵</span>
+            <span className="text-sm font-bold text-slate-500 dark:text-slate-400">정규과정 로드맵</span>
           </div>
           <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
           <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" active />
