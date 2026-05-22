@@ -36,7 +36,6 @@ export default function PracticePage() {
   // Filter States
   const [selectedLevels, setSelectedLevels] = useState<string[]>(['전체']);
   const [selectedCategory, setSelectedCategory] = useState<string[]>(['전체']);
-  const [selectedCurriculum, setSelectedCurriculum] = useState('전체 단계');
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'level'>('latest');
   const [selectedProject, setSelectedProject] = useState<PracticeProject | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -125,11 +124,6 @@ export default function PracticePage() {
       result = result.filter(p => selectedCategory.includes(p.category));
     }
 
-    // Curriculum Filter
-    if (selectedCurriculum !== '전체 단계') {
-      result = result.filter(p => p.curriculum_link.includes(selectedCurriculum.replace(' 단계', '')));
-    }
-
     // Search Query Filter
     if (searchQuery.trim() !== '') {
       const q = searchQuery.toLowerCase().trim();
@@ -156,7 +150,7 @@ export default function PracticePage() {
     });
 
     setFilteredProjects(result);
-  }, [projects, selectedLevels, selectedCategory, selectedCurriculum, sortBy, searchQuery]);
+  }, [projects, selectedLevels, selectedCategory, sortBy, searchQuery]);
 
   const toggleLevel = (level: string) => {
     if (level === '전체') {
@@ -288,24 +282,6 @@ export default function PracticePage() {
               <Checkbox label="API 연동" count={getCategoryCount('API 연동')} checked={selectedCategory.includes('API 연동')} onChange={() => toggleCategory('API 연동')} />
               <Checkbox label="기타" count={getCategoryCount('기타')} checked={selectedCategory.includes('기타')} onChange={() => toggleCategory('기타')} />
             </FilterSection>
-
-            <div className="space-y-3">
-              <h3 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest">연계 커리큘럼</h3>
-              <div className="relative">
-                <select 
-                  value={selectedCurriculum}
-                  onChange={(e) => setSelectedCurriculum(e.target.value)}
-                  className="w-full bg-card dark:bg-slate-800/50 border border-border rounded-lg px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors cursor-pointer"
-                >
-                  <option>전체 단계</option>
-                  <option>입문 단계</option>
-                  <option>기초 단계</option>
-                  <option>실전 단계</option>
-                  <option>심화 단계</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-              </div>
-            </div>
           </div>
 
           {/* Suggestion Box */}
@@ -449,7 +425,6 @@ export default function PracticePage() {
                     onClick={() => {
                       setSelectedLevels(['전체']);
                       setSelectedCategory(['전체']);
-                      setSelectedCurriculum('전체 단계');
                       setSearchQuery('');
                     }}
                     className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs px-5 py-3 rounded-xl transition-all shadow-md hover:shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 cursor-pointer"
