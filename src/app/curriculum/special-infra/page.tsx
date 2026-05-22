@@ -47,7 +47,7 @@ export default function SpecialInfraPage() {
 
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
           <div className="space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-450 text-xs font-bold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
               <Cpu size={14} className="animate-pulse" /> 단일주제과정 · Track C
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">OS & AI 인프라 (OS & Local AI)</h1>
@@ -58,7 +58,7 @@ export default function SpecialInfraPage() {
             <div className="flex gap-3 pt-2">
               <Link 
                 href="/contact"
-                className="bg-emerald-650 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-emerald-600/20"
+                className="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-emerald-600/20"
               >
                 <PlayCircle className="w-5 h-5" /> 특강 과정 신청하기
               </Link>
@@ -78,7 +78,7 @@ export default function SpecialInfraPage() {
               <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-500" /> 습득 역량
               </h3>
-              <div className="bg-emerald-600/10 text-emerald-650 dark:text-emerald-450 text-[12px] font-black px-2 py-0.5 rounded-full border border-emerald-500/20">
+              <div className="bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-2 py-0.5 rounded-full border border-emerald-500/20">
                 SPECIALIST
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function SpecialInfraPage() {
               
               <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5 space-y-1.5">
                 <div className="flex items-center justify-between bg-emerald-600/5 dark:bg-emerald-500/10 rounded-xl px-3 py-2 border border-emerald-500/10">
-                  <span className="text-[12px] font-bold text-emerald-650/70 dark:text-emerald-450/70 uppercase">Goal</span>
+                  <span className="text-[12px] font-bold text-emerald-600/70 dark:text-emerald-400/70 uppercase">Goal</span>
                   <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">독립 인프라 & 로컬 AI 데스크톱 완성</span>
                 </div>
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
@@ -100,7 +100,7 @@ export default function SpecialInfraPage() {
                     <Clock className="w-3 h-3 text-emerald-500" />
                     단일 과정 (특강)
                   </span>
-                  <span className="text-[12px] font-black text-emerald-605 dark:text-emerald-400">3시간 마스터</span>
+                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">3시간 마스터</span>
                 </div>
               </div>
             </div>
@@ -118,7 +118,7 @@ export default function SpecialInfraPage() {
             className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
               courseType === 'regular' 
                 ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
-                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-300'
+                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-350'
             }`}
           >
             정규과정 (Step 1-4)
@@ -128,7 +128,7 @@ export default function SpecialInfraPage() {
             className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
               courseType === 'special' 
                 ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
-                : 'text-slate-700 dark:text-white'
+                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-350'
             }`}
           >
             단일주제과정 (심화 트랙)
@@ -179,10 +179,10 @@ export default function SpecialInfraPage() {
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 pb-8 border-b border-border text-left">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-450 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">OS & Infrastructure Specialist</span>
+                    <span className="bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">OS & Infrastructure Specialist</span>
                   </div>
                   <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">OS & AI 인프라 (OS & Local AI)</h2>
-                  <p className="text-emerald-600 dark:text-emerald-450 font-bold text-lg leading-relaxed max-w-2xl">
+                  <p className="text-emerald-600 dark:text-emerald-400 font-bold text-lg leading-relaxed max-w-2xl">
                     "내 서비스만의 강력한 독립 데스크톱 패키징과 프라이빗 로컬 AI 두뇌 장착하기"
                   </p>
                 </div>
@@ -199,7 +199,7 @@ export default function SpecialInfraPage() {
                     { title: "Ollama & 로컬 AI 모델 API 연동", desc: "PC의 GPU 자원을 활용해 로컬 AI 모델을 가동하고 Next.js 백엔드와 스트리밍 연계" },
                   ].map((item, idx) => (
                     <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-emerald-500/30 transition-all flex items-start gap-4 group">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-555 mt-0.5 shrink-0" />
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
                       <div>
                         <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1 group-hover:text-emerald-600 transition-colors">{item.title}</h4>
                         <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-relaxed">{item.desc}</p>
@@ -223,7 +223,7 @@ export default function SpecialInfraPage() {
                 <div className="pt-2">
                   <button 
                     onClick={handleStartPractice}
-                    className="px-8 py-3 bg-emerald-650 hover:bg-emerald-600 dark:bg-emerald-650 dark:hover:bg-emerald-500 text-white font-black rounded-xl transition-all text-sm shadow-lg shadow-emerald-600/20"
+                    className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-black rounded-xl transition-all text-sm shadow-lg shadow-emerald-600/20"
                   >
                     가이드 자료 다운로드
                   </button>
@@ -260,7 +260,7 @@ export default function SpecialInfraPage() {
 function OutcomeItem({ icon, label, desc }: { icon: React.ReactNode, label: string, desc: string }) {
   return (
     <div className="flex items-center gap-3 py-1 px-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all group/item">
-      <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-450 shrink-0 group-hover/item:scale-110 transition-transform">
+      <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 group-hover/item:scale-110 transition-transform">
         {icon}
       </div>
       <div className="space-y-0">
@@ -274,7 +274,7 @@ function OutcomeItem({ icon, label, desc }: { icon: React.ReactNode, label: stri
 function BenefitItem({ text }: { text: string }) {
   return (
     <li className="flex items-start gap-2 group cursor-default">
-      <CheckCircle2 className="w-3 h-3 text-emerald-555 mt-0.5 shrink-0 transition-transform group-hover:scale-125" />
+      <CheckCircle2 className="w-3 h-3 text-emerald-600 mt-0.5 shrink-0 transition-transform group-hover:scale-125" />
       <span className="text-[12px] font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors leading-tight">
         {text}
       </span>
@@ -286,7 +286,7 @@ function RoadmapItem({ label, href, active = false }: { label: string, href: str
   return (
     <Link href={href} className="block shrink-0">
       <div className={`flex flex-col items-center gap-0.5 px-6 py-2 rounded-xl transition-all cursor-pointer ${
-        active ? 'bg-emerald-650 text-white shadow-lg shadow-emerald-600/20 scale-105' : 'hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400'
+        active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 scale-105' : 'hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400'
       }`}>
         <span className={`text-xs font-black ${active ? 'text-white' : 'text-slate-400'}`}>{label}</span>
       </div>
@@ -301,7 +301,7 @@ function RoadmapArrow() {
 function GuideStep({ number, title, desc }: { number: string, title: string, desc: string }) {
   return (
     <div className="flex gap-4 text-left">
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-650 text-white flex items-center justify-center text-xs font-black">
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-black">
         {number}
       </div>
       <div className="space-y-1">
