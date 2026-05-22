@@ -11,7 +11,11 @@
 ## 🛠 Management Rules
 1. **Edge Runtime First**: 모든 API와 서버 로직은 `export const runtime = 'edge';`를 포함해야 합니다.
 2. **Binding Usage**: `getRequestContext()`를 통해 `env.DB`와 `env.BUCKET`에 접근합니다.
-3. **Local Dev**: Windows 환경에서는 `npm run dev`(포트 3000)와 `npm run pages:dev`(포트 8788 프록시)를 동시에 실행하며, 프록시 설정 시 호스트 해석 오류 방지를 위해 `http://127.0.0.1:3000` 전체 주소를 사용합니다.
+3. **Local Dev (Windows & Cloudflare 에뮬레이터 통합)**:
+   - Windows 환경에서는 Vercel CLI 심볼릭 링크 보안 권한 오류(`EPERM`)로 인해 로컬 빌드(`.vercel/output`) 및 `8788` 포트의 `wrangler pages dev` 프록시 구동이 비정상화됩니다.
+   - 이를 원천 예방하기 위해 [next.config.ts](file:///c:/Users/samsung/Desktop/study/next.config.ts)에 `@cloudflare/next-on-pages/next-dev` 라이브러리의 **`setupDevPlatform()`**이 연동되어 있습니다.
+   - 따라서, 로컬 개발 시에는 번거로운 8788 wrangler 프록시 기동 필요 없이 **`npm run dev` (`3000` 포트) 단독 실행**만으로 에지 컨텍스트(D1 DB, KV 등)가 완벽히 직접 연동 및 에뮬레이트됩니다.
+   - 로컬 구동 요청이 오면 바로 `npm run dev`만 단독 실행하고, 브라우저에서는 `http://localhost:3000`으로 접속하도록 안내하십시오.
 4. **Deploy**: `npm run pages:deploy`로 빌드 후 즉시 배포합니다.
 
 ## 📏 Coding Rules (Prevent Recurring Issues)
