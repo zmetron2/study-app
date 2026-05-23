@@ -109,44 +109,44 @@ export default function SpecialSaaSPage() {
       {/* --- Main Section --- */}
       <main className="max-w-7xl mx-auto w-full px-6 py-10 space-y-8">
         
-        {/* Course Type Switcher */}
-        <div className="flex items-center gap-2 bg-slate-100/80 dark:bg-white/5 p-1 rounded-2xl w-fit border border-slate-200 dark:border-white/5 shadow-inner">
-          <button 
-            onClick={() => handleCourseTypeChange('regular')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
-              courseType === 'regular' 
-                ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
-                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-300'
-            }`}
-          >
-            정규과정 (Step 1-4)
-          </button>
-          <button 
-            onClick={() => handleCourseTypeChange('special')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
-              courseType === 'special' 
-                ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
-                : 'text-slate-700 dark:text-white'
-            }`}
-          >
-            단일주제과정 (심화 트랙)
-          </button>
-        </div>
-
-        {/* Roadmap Bar */}
-        <div className="bg-card rounded-xl border border-border p-2 flex items-center gap-2 overflow-x-auto shadow-sm no-scrollbar transition-colors relative z-20">
-          <div className="flex items-center gap-2 px-4 whitespace-nowrap group cursor-pointer">
-            <LayoutGrid className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-bold text-slate-500 dark:text-slate-400">단일주제 로드맵</span>
+        {/* Binder Tabs Wrapper */}
+        <div className="flex flex-col w-full relative z-20">
+          {/* Binder Tabs Header */}
+          <div className="flex gap-1.5 pl-3">
+            <button 
+              onClick={() => handleCourseTypeChange('regular')}
+              className={`px-5 py-3 text-xs font-black rounded-t-xl border-t border-x transition-all duration-200 relative -mb-[1px] ${
+                courseType === 'regular' 
+                  ? 'bg-card border-border text-slate-800 dark:text-white z-20 pb-[14px] pt-3' 
+                  : 'bg-slate-100/50 dark:bg-white/5 border-transparent text-slate-400 hover:text-slate-650 dark:hover:text-slate-350 z-10 pb-2.5 pt-2.5'
+              }`}
+            >
+              정규과정
+            </button>
+            <button 
+              onClick={() => handleCourseTypeChange('special')}
+              className={`px-5 py-3 text-xs font-black rounded-t-xl border-t border-x transition-all duration-200 relative -mb-[1px] ${
+                courseType === 'special' 
+                  ? 'bg-card border-border text-slate-800 dark:text-white z-20 pb-[14px] pt-3' 
+                  : 'bg-slate-100/50 dark:bg-white/5 border-transparent text-slate-400 hover:text-slate-650 dark:hover:text-slate-350 z-10 pb-2.5 pt-2.5'
+              }`}
+            >
+              특화과정
+            </button>
           </div>
-          <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
-          <RoadmapItem label="A. 수익형 빌딩" href="/curriculum/special-saas" active />
-          <RoadmapArrow />
-          <RoadmapItem label="B. 플랫폼 확장" href="/curriculum/special-platform" />
-          <RoadmapArrow />
-          <RoadmapItem label="C. OS & AI 인프라" href="/curriculum/special-infra" />
-          <RoadmapArrow />
-          <RoadmapItem label="D. 자동화 파이프라인" href="/curriculum/special-automation" />
+
+          {/* Roadmap Bar (Binder Body) */}
+          <div className="bg-card rounded-xl border border-border p-2 flex items-center gap-2 overflow-x-auto shadow-sm no-scrollbar transition-colors relative z-10">
+            <div className="flex items-center gap-2 px-4 whitespace-nowrap group cursor-pointer">
+              <LayoutGrid className="w-4 h-4 text-slate-400" />
+              <span className="text-sm font-bold text-slate-500 dark:text-slate-400">특화과정 로드맵</span>
+            </div>
+            <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
+            <RoadmapItem label="A. 수익형 빌딩" href="/curriculum/special-saas" active />
+            <RoadmapItem label="B. 플랫폼 확장" href="/curriculum/special-platform" />
+            <RoadmapItem label="C. OS & AI 인프라" href="/curriculum/special-infra" />
+            <RoadmapItem label="D. 자동화 파이프라인" href="/curriculum/special-automation" />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -155,7 +155,7 @@ export default function SpecialSaaSPage() {
           <aside className="lg:col-span-3 space-y-6 sticky top-24">
             <div className="bg-card rounded-2xl border border-border p-6 space-y-6 shadow-sm transition-colors text-left">
               <h3 className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
-                <span className="text-lg">👑</span> 마스터 클래스 가이드
+                <span className="text-lg">👑</span> 특화과정 가이드
               </h3>
               <div className="space-y-4">
                 <p className="text-[12px] text-slate-500 leading-relaxed">
@@ -165,6 +165,27 @@ export default function SpecialSaaSPage() {
                   <BenefitItem text="Toss Payments 결제 연동" />
                   <BenefitItem text="B2B SaaS 구독 서비스 설계" />
                   <BenefitItem text="웹 게임 인앱 광고 수익 모델" />
+                </div>
+              </div>
+            </div>
+
+            {/* Course Distinction Card */}
+            <div className="bg-card rounded-2xl border border-border p-6 space-y-4 shadow-sm transition-colors text-left">
+              <h3 className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
+                <span className="text-lg">💡</span> 과정 구분 안내
+              </h3>
+              <div className="space-y-3">
+                <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
+                  <h4 className="text-[12px] font-bold text-purple-600 dark:text-purple-400 mb-1">정규 심화과정</h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                    정규과정과 긴밀히 연계되어 있으며, 연계성을 고려해 중복되지 않는 핵심 고급 실무 커리큘럼이 특징입니다.
+                  </p>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
+                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">독립 특화과정</h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                    독립성 유지를 위해 최소한의 필수 기초 내용과 함께 구성되었으며, 특정 실무 목적을 달성하기 위한 전체 라이프사이클을 심도 있게 다룹니다.
+                  </p>
                 </div>
               </div>
             </div>

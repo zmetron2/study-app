@@ -175,44 +175,47 @@ export default function CurriculumPage() {
       {/* --- Main Section --- */}
       <main className="max-w-7xl mx-auto w-full px-6 py-10 space-y-8">
         
-        {/* Course Type Switcher */}
-        <div className="flex items-center gap-2 bg-slate-100/80 dark:bg-white/5 p-1 rounded-2xl w-fit border border-slate-200 dark:border-white/5 shadow-inner">
-          <button 
-            onClick={() => handleCourseTypeChange('regular')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
-              courseType === 'regular' 
-                ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
-                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-350'
-            }`}
-          >
-            정규과정 (Step 1-4)
-          </button>
-          <button 
-            onClick={() => handleCourseTypeChange('special')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
-              courseType === 'special' 
-                ? 'bg-white dark:bg-slate-900 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5' 
-                : 'text-slate-400 hover:text-slate-650 dark:hover:text-slate-350'
-            }`}
-          >
-            단일주제과정 (심화 트랙)
-          </button>
-        </div>
-
-        {/* Roadmap Bar */}
-        <div className="bg-card rounded-xl border border-border p-2 flex items-center gap-2 overflow-x-auto shadow-sm no-scrollbar transition-colors relative z-20">
-          <div className="flex items-center gap-2 px-4 whitespace-nowrap group cursor-pointer">
-            <LayoutGrid className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-bold text-slate-500 dark:text-slate-400">정규과정 로드맵</span>
+        {/* Binder Tabs Wrapper */}
+        <div className="flex flex-col w-full relative z-20">
+          {/* Binder Tabs Header */}
+          <div className="flex gap-1.5 pl-3">
+            <button 
+              onClick={() => handleCourseTypeChange('regular')}
+              className={`px-5 py-3 text-xs font-black rounded-t-xl border-t border-x transition-all duration-200 relative -mb-[1px] ${
+                courseType === 'regular' 
+                  ? 'bg-card border-border text-slate-800 dark:text-white z-20 pb-[14px] pt-3' 
+                  : 'bg-slate-100/50 dark:bg-white/5 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 z-10 pb-2.5 pt-2.5'
+              }`}
+            >
+              정규과정
+            </button>
+            <button 
+              onClick={() => handleCourseTypeChange('special')}
+              className={`px-5 py-3 text-xs font-black rounded-t-xl border-t border-x transition-all duration-200 relative -mb-[1px] ${
+                courseType === 'special' 
+                  ? 'bg-card border-border text-slate-800 dark:text-white z-20 pb-[14px] pt-3' 
+                  : 'bg-slate-100/50 dark:bg-white/5 border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 z-10 pb-2.5 pt-2.5'
+              }`}
+            >
+              특화과정
+            </button>
           </div>
-          <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
-          <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" active />
-          <RoadmapArrow />
-          <RoadmapItem label="2. 기초" rounds="System & Structure" href="/curriculum/basic" />
-          <RoadmapArrow />
-          <RoadmapItem label="3. 실전" rounds="Execution & Build" href="/curriculum/practice" />
-          <RoadmapArrow />
-          <RoadmapItem label="4. 심화" rounds="Scale & Real World" href="/curriculum/advanced" />
+
+          {/* Roadmap Bar (Binder Body) */}
+          <div className="bg-card rounded-xl border border-border p-2 flex items-center gap-2 overflow-x-auto shadow-sm no-scrollbar transition-colors relative z-10">
+            <div className="flex items-center gap-2 px-4 whitespace-nowrap group cursor-pointer">
+              <LayoutGrid className="w-4 h-4 text-slate-400" />
+              <span className="text-sm font-bold text-slate-500 dark:text-slate-400">정규과정 로드맵</span>
+            </div>
+            <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
+            <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" active />
+            <RoadmapArrow />
+            <RoadmapItem label="2. 기초" rounds="System & Structure" href="/curriculum/basic" />
+            <RoadmapArrow />
+            <RoadmapItem label="3. 실전" rounds="Execution & Build" href="/curriculum/practice" />
+            <RoadmapArrow />
+            <RoadmapItem label="4. 심화" rounds="Scale & Real World" href="/curriculum/advanced" />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
