@@ -272,7 +272,7 @@ function OutcomeItem({ icon, label, desc }: { icon: React.ReactNode, label: stri
 function BenefitItem({ text }: { text: string }) {
   return (
     <li className="flex items-start gap-2 group cursor-default">
-      <CheckCircle2 className="w-3 h-3 text-orange-505 mt-0.5 shrink-0 transition-transform group-hover:scale-125" />
+      <CheckCircle2 className="w-3 h-3 text-orange-500 mt-0.5 shrink-0 transition-transform group-hover:scale-125" />
       <span className="text-[12px] font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors leading-tight">
         {text}
       </span>
