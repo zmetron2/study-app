@@ -96,9 +96,9 @@ export default function SpecialAutomationPage() {
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
                   <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
                     <Clock className="w-3 h-3 text-orange-500" />
-                    단일 과정 (특강)
+                    교육시간
                   </span>
-                  <span className="text-[12px] font-black text-orange-600 dark:text-orange-400">3시간 마스터</span>
+                  <span className="text-[12px] font-black text-orange-600 dark:text-orange-400">4시간</span>
                 </div>
               </div>
             </div>
