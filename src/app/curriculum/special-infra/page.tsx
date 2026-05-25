@@ -46,7 +46,7 @@ export default function SpecialInfraPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
           <div className="space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-              <Cpu size={14} className="animate-pulse" /> 단일주제과정 · Track C
+              <Cpu size={14} className="animate-pulse" /> 특화과정 · Track C
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">OS & AI 인프라 (OS & Local AI)</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
@@ -236,7 +236,7 @@ export default function SpecialInfraPage() {
                 <div className="space-y-2">
                   <h4 className="text-lg font-black text-slate-800 dark:text-white">상세 커리큘럼 준비 중</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-                    본 과정은 특강 신청자 분들을 위한 단일주제 집중 심화 세션입니다. 보다 상세한 회차별 진행 일자 및 상세 강의 스터디 실습 패키지는 마스터 세션 문의 및 상담을 통해 수령하실 수 있습니다.
+                    본 과정은 특강 신청자 분들을 위한 특화과정 집중 심화 세션입니다. 보다 상세한 회차별 진행 일자 및 상세 강의 스터디 실습 패키지는 마스터 세션 문의 및 상담을 통해 수령하실 수 있습니다.
                   </p>
                 </div>
                 <div className="pt-2">

@@ -93,7 +93,7 @@ export default function BasicCurriculumPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-bold">
               <Database size={14} className="animate-pulse" /> Step 02. System & Service
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 기초</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 기초</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
               결과물이 만들어지는 원리를 설계하고 실무급 서비스를 모두 구현해보는 단계입니다.<br />
               도메인 DNS 심화 설정부터 각종 데이터베이스 및 기능성 서버 활용, 보안 인증 대시보드 구축까지 실전 경쟁력을 기릅니다.

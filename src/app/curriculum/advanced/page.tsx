@@ -92,7 +92,7 @@ export default function AdvancedCurriculumPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold">
               <Crown size={14} className="animate-pulse" /> Step 04. Scale Up
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 심화 마스터</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 심화 마스터</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
               이미 바이브코딩을 활용하여 스스로 빌딩할 수 있는 분들을 위한 단계입니다.<br />
               자신의 목표에 맞는 전문 주제를 자유롭게 선택하여 스페셜리스트 트랙을 마스터하세요.

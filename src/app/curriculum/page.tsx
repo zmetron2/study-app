@@ -93,7 +93,7 @@ export default function CurriculumPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
               <Zap size={14} className="animate-pulse" /> Step 01. Mindset
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 입문</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 입문</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
               코딩 실력 이전에 AI와 소통하는 법(Mindset)을 먼저 익힙니다.<br />
               명확한 지시가 어떻게 드라마틱한 결과의 차이를 만드는지 직접 경험해보세요.

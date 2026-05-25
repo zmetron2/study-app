@@ -93,7 +93,7 @@ export default function PracticeCurriculumPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold">
               <Rocket size={14} className="animate-pulse" /> Step 03. Serverless & Global Execution
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">커리큘럼 : 실전</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 실전</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
               해외 플랫폼을 활용하여 서버리스 아키텍처로 웹 서비스를 실전 운영하는 단계입니다.<br />
               글로벌 배포, 기능별 최적의 서버리스 조합, 그리고 지능형 에이전트와 인증 기능까지 완벽하게 결합합니다.
