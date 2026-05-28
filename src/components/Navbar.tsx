@@ -73,6 +73,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/curriculum', label: '커리큘럼' },
+    { href: '/pricing', label: '교육비용' },
     { href: '/practice', label: '기능실습' },
     { href: '/resources', label: '자료실' },
     { href: '/guide', label: '사전학습' },

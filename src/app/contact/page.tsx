@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { 
   Code2, ArrowRight, 
   BookOpen, 
@@ -687,61 +688,26 @@ export default function ContactPage() {
                       </p>
                     </div>
 
-                    {/* Fees Table */}
-                    <div className="mt-10 space-y-4">
-                      <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">교육 비용 안내 (회차별/단위: 만원)</label>
-                      <div className="overflow-x-auto border border-slate-200 dark:border-white/10 rounded-3xl">
-                        <table className="w-full text-sm text-left border-collapse min-w-[500px]">
-                          <thead>
-                            <tr className="bg-slate-50 dark:bg-white/5 text-slate-400">
-                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">수강 형태</th>
-                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">입문</th>
-                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">실전</th>
-                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">확장</th>
-                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">심화</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                            <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
-                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">일반 과정</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">12만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">17만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">29만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">39만</td>
-                            </tr>
-                            <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
-                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">그룹 신청</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">19만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">25만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">39만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">55만</td>
-                            </tr>
-                            <tr className="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 transition-colors">
-                              <td className="px-6 py-4 font-black text-slate-700 dark:text-slate-200">1:1 멘토링</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">29만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">39만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">59만</td>
-                              <td className="px-6 py-4 font-bold text-slate-500">79만</td>
-                            </tr>
-                          </tbody>
-                        </table>
+                    {/* Education Cost Link Banner */}
+                    <div className="mt-10 p-8 rounded-3xl bg-gradient-to-br from-indigo-50 via-slate-50 to-purple-50 dark:from-indigo-950/20 dark:via-slate-900/40 dark:to-purple-950/20 border border-indigo-100 dark:border-white/5 shadow-md space-y-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                      <div className="space-y-2">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest">
+                          <HelpCircle className="w-3.5 h-3.5" /> Tuition Cost Guide
+                        </span>
+                        <h4 className="text-lg font-black text-slate-800 dark:text-white tracking-tight">
+                          교육비용 및 패키지 혜택 안내
+                        </h4>
+                        <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium max-w-xl">
+                          그룹(2~3명) 신청, 일반 과정(10인 이하), 1:1 멘토링 등 다양한 수강 형태와 단계별 상세 교육비는 물론, 특별 혜택까지 한눈에 확인하실 수 있습니다.
+                        </p>
                       </div>
-                    </div>
-
-                    {/* Package Pricing */}
-                    <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div className="p-5 bg-indigo-50/30 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-3xl shadow-sm">
-                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">일반 전체 패키지</p>
-                        <p className="text-xl font-black text-slate-900 dark:text-white">79<span className="text-sm font-bold ml-1 text-slate-400">만</span></p>
-                      </div>
-                      <div className="p-5 bg-indigo-50/30 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-3xl shadow-sm">
-                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">그룹 전체 패키지</p>
-                        <p className="text-xl font-black text-slate-900 dark:text-white">109<span className="text-sm font-bold ml-1 text-slate-400">만</span></p>
-                      </div>
-                      <div className="p-5 bg-indigo-50/30 dark:bg-indigo-500/5 border border-indigo-100 dark:border-indigo-500/20 rounded-3xl shadow-sm">
-                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">1:1 전체 패키지</p>
-                        <p className="text-xl font-black text-slate-900 dark:text-white">159<span className="text-sm font-bold ml-1 text-slate-400">만</span></p>
-                      </div>
+                      <Link 
+                        href="/pricing" 
+                        className="self-start md:self-center shrink-0 inline-flex items-center gap-2 px-6 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-sm transition-all hover:scale-105 active:scale-95 group/price shadow-lg shadow-indigo-600/20"
+                      >
+                        교육비용 자세히 보기 
+                        <ArrowRight size={16} className="group-hover/price:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
                   </div>
 
