@@ -63,15 +63,37 @@ export default function PracticePage() {
         }
       }
 
-      setProjects(finalProjects);
-      setFilteredProjects(finalProjects);
+      const migrated = finalProjects.map((p: any) => {
+        let newLevel = p.level;
+        if (p.level === '기초') newLevel = '실전';
+        else if (p.level === '실전') newLevel = '확장';
+        
+        let newCurriculumLink = p.curriculum_link;
+        if (p.curriculum_link === '기초 단계') newCurriculumLink = '실전 단계';
+        else if (p.curriculum_link === '실전 단계') newCurriculumLink = '확장 단계';
+        
+        return { ...p, level: newLevel, curriculum_link: newCurriculumLink };
+      });
+      setProjects(migrated);
+      setFilteredProjects(migrated);
     } catch (error) {
       console.error('Failed to fetch projects:', error);
       const localData = localStorage.getItem('local_practice_projects');
       if (localData) {
-        const lp = JSON.parse(localData);
-        setProjects(lp);
-        setFilteredProjects(lp);
+        const lp = JSON.parse(localData) as any[];
+        const migratedLp = lp.map((p: any) => {
+          let newLevel = p.level;
+          if (p.level === '기초') newLevel = '실전';
+          else if (p.level === '실전') newLevel = '확장';
+          
+          let newCurriculumLink = p.curriculum_link;
+          if (p.curriculum_link === '기초 단계') newCurriculumLink = '실전 단계';
+          else if (p.curriculum_link === '실전 단계') newCurriculumLink = '확장 단계';
+          
+          return { ...p, level: newLevel, curriculum_link: newCurriculumLink };
+        });
+        setProjects(migratedLp);
+        setFilteredProjects(migratedLp);
       }
     } finally {
       setIsLoading(false);
@@ -143,7 +165,7 @@ export default function PracticePage() {
         const parseViews = (v: string) => parseFloat(v.replace('K', '')) * (v.includes('K') ? 1000 : 1);
         return parseViews(b.views) - parseViews(a.views);
       } else if (sortBy === 'level') {
-        const levelMap: Record<string, number> = { '입문': 1, '기초': 2, '실전': 3, '심화': 4 };
+        const levelMap: Record<string, number> = { '입문': 1, '실전': 2, '확장': 3, '심화': 4 };
         return levelMap[a.level] - levelMap[b.level];
       }
       return 0;
@@ -267,8 +289,8 @@ export default function PracticePage() {
             <FilterSection title="커리큘럼">
               <Checkbox label="전체" count={getLevelCount('전체')} checked={selectedLevels.includes('전체')} onChange={() => toggleLevel('전체')} />
               <Checkbox label="입문" count={getLevelCount('입문')} checked={selectedLevels.includes('입문')} onChange={() => toggleLevel('입문')} />
-              <Checkbox label="기초" count={getLevelCount('기초')} checked={selectedLevels.includes('기초')} onChange={() => toggleLevel('기초')} />
               <Checkbox label="실전" count={getLevelCount('실전')} checked={selectedLevels.includes('실전')} onChange={() => toggleLevel('실전')} />
+              <Checkbox label="확장" count={getLevelCount('확장')} checked={selectedLevels.includes('확장')} onChange={() => toggleLevel('확장')} />
               <Checkbox label="심화" count={getLevelCount('심화')} checked={selectedLevels.includes('심화')} onChange={() => toggleLevel('심화')} />
             </FilterSection>
 
@@ -458,22 +480,22 @@ export default function PracticePage() {
             />
             <StepArrow />
             <StepItem 
-              step="기초 단계" 
-              title="흐름 설계" 
-              count={projects.filter(p => p.level === '기초').length.toString()} 
+              step="실전 단계" 
+              title="실무 스킬 구현" 
+              count={projects.filter(p => p.level === '실전').length.toString()} 
               color="sky"
             />
             <StepArrow />
             <StepItem 
-              step="실전 단계" 
-              title="연결 구현" 
-              count={projects.filter(p => p.level === '실전').length.toString()} 
+              step="확장 단계" 
+              title="서비스 연결" 
+              count={projects.filter(p => p.level === '확장').length.toString()} 
               color="indigo"
             />
             <StepArrow />
             <StepItem 
               step="심화 단계" 
-              title="서비스 확장" 
+              title="비즈니스 확장" 
               count={projects.filter(p => p.level === '심화').length.toString()} 
               color="purple"
             />
@@ -611,8 +633,8 @@ function ProjectCard({ project, onEdit, onDelete, onHide, onRefresh }: { project
   })();
   const levelColors: Record<string, string> = {
     '입문': 'text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400',
-    '기초': 'text-sky-500 bg-sky-50 dark:bg-sky-500/10 dark:text-sky-400',
-    '실전': 'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 dark:text-indigo-400',
+    '실전': 'text-sky-500 bg-sky-50 dark:bg-sky-500/10 dark:text-sky-400',
+    '확장': 'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 dark:text-indigo-400',
     '심화': 'text-purple-500 bg-purple-50 dark:bg-purple-500/10 dark:text-purple-400'
   };
 
@@ -781,7 +803,7 @@ function ProjectAdminModal({ isOpen, onClose, project, onSuccess }: { isOpen: bo
             <div className="space-y-1.5 col-span-2 md:col-span-1">
               <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">커리큘럼 설정</label>
               <div className="flex gap-1.5">
-                {['입문', '기초', '실전', '심화'].map(l => (
+                {['입문', '실전', '확장', '심화'].map(l => (
                   <button key={l} type="button" onClick={() => setFormData({...formData, level: l})} className={`flex-1 py-2 rounded-lg text-[11px] font-black border transition-all ${formData.level === l ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-400 hover:border-slate-300'}`}>
                     {l}
                   </button>
@@ -823,7 +845,7 @@ function ProjectAdminModal({ isOpen, onClose, project, onSuccess }: { isOpen: bo
                 </div>
               ) : (
                 <select value={formData.curriculum_link} onChange={e => setFormData({...formData, curriculum_link: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-sm outline-none dark:text-white focus:border-indigo-500 transition-colors cursor-pointer">
-                  <option>입문 단계</option><option>기초 단계</option><option>실전 단계</option>
+                  <option>입문 단계</option><option>실전 단계</option><option>확장 단계</option>
                 </select>
               )}
             </div>
