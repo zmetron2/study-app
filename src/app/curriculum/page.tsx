@@ -303,7 +303,7 @@ export default function CurriculumPage() {
                   </div>
                   <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">1. 입문: 웹 인프라 및 사이트 제작</h2>
                   <p className="text-emerald-600 font-bold text-lg leading-relaxed max-w-2xl">
-                    "국내 호스팅 환경에서 실전 웹사이트 제작하기"
+                    "바이브코딩의 원리를 이해하고 원하는 아이디어를 직접 구현하는 과정"
                   </p>
                   <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                     코딩 실력 이전에 웹의 본질적인 원리(서버, DNS, DB)를 직관적으로 학습합니다.<br />
