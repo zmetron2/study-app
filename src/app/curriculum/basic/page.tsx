@@ -93,7 +93,7 @@ export default function BasicCurriculumPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-bold">
               <Database size={14} className="animate-pulse" /> Step 02. System & Service
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 기초</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 실전</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
               결과물이 만들어지는 원리를 설계하고 실무급 서비스를 모두 구현해보는 단계입니다.<br />
               도메인 DNS 심화 설정부터 각종 데이터베이스 및 기능성 서버 활용, 보안 인증 대시보드 구축까지 실전 경쟁력을 기릅니다.
@@ -190,9 +190,9 @@ export default function BasicCurriculumPage() {
             <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
             <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" />
             <RoadmapArrow />
-            <RoadmapItem label="2. 기초" rounds="System & Structure" href="/curriculum/basic" active />
+            <RoadmapItem label="2. 실전" rounds="System & Structure" href="/curriculum/basic" active />
             <RoadmapArrow />
-            <RoadmapItem label="3. 실전" rounds="Execution & Build" href="/curriculum/practice" />
+            <RoadmapItem label="3. 확장" rounds="Execution & Build" href="/curriculum/practice" />
             <RoadmapArrow />
             <RoadmapItem label="4. 심화" rounds="Scale & Real World" href="/curriculum/advanced" />
           </div>
@@ -206,9 +206,9 @@ export default function BasicCurriculumPage() {
               <div className="p-5 border-b border-border bg-slate-50/50 dark:bg-slate-800/50 flex flex-col gap-1 transition-colors">
                 <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
                   <span className="bg-sky-600 text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">2</span> 
-                  기초 단계
+                  실전 단계
                 </h3>
-                <p className="text-[12px] text-sky-500 font-bold">"왜 결과가 달라지는지 이해하는 단계"</p>
+                <p className="text-[12px] text-sky-500 font-bold">"국내 호스팅 환경을 기반으로 실무 필수 스킬을 완전히 구현하는 과정"</p>
               </div>
               <div className="divide-y divide-border">
                 <SidebarItem 
@@ -292,9 +292,9 @@ export default function BasicCurriculumPage() {
                   <div className="flex items-center gap-2">
                     <span className="bg-sky-100 text-sky-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">System & Structure</span>
                   </div>
-                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">2. 기초: 시스템 사고의 시작</h2>
+                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">2. 실전: 실무에 바로 사용하는 시스템구현</h2>
                   <p className="text-sky-600 font-bold text-lg leading-relaxed max-w-2xl">
-                    "왜 결과가 달라지는지 이해하는 단계"
+                    "국내 호스팅 환경을 기반으로 실무 필수 스킬을 완전히 구현하는 과정"
                   </p>
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
                     AI가 결과를 만들어내는 기술적 배경과 데이터의 흐름을 학습합니다.<br />
@@ -442,7 +442,7 @@ export default function BasicCurriculumPage() {
                 </Link>
                 <Link href="/curriculum/practice">
                   <button className="bg-slate-900 dark:bg-white/20 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-600 transition-all shadow-lg hover:shadow-emerald-500/20">
-                    3. 실전 단계: 프로덕트 빌딩 <ChevronRight className="w-4 h-4" />
+                    3. 확장 단계: 프로덕트 빌딩 <ChevronRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>

@@ -98,7 +98,7 @@ export default function SpecialAutomationPage() {
                     <Clock className="w-3 h-3 text-orange-500" />
                     교육시간
                   </span>
-                  <span className="text-[12px] font-black text-orange-600 dark:text-orange-400">4시간</span>
+                  <span className="text-[12px] font-black text-orange-600 dark:text-orange-400">6시간</span>
                 </div>
               </div>
             </div>
@@ -146,6 +146,7 @@ export default function SpecialAutomationPage() {
             <RoadmapItem label="B. 플랫폼 확장" href="/curriculum/special-platform" />
             <RoadmapItem label="C. OS & AI 인프라" href="/curriculum/special-infra" />
             <RoadmapItem label="D. 자동화 파이프라인" href="/curriculum/special-automation" active />
+            <RoadmapItem label="E. AI 에이전트" href="/curriculum/special-agent" />
           </div>
         </div>
 
@@ -176,15 +177,15 @@ export default function SpecialAutomationPage() {
               </h3>
               <div className="space-y-3">
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-orange-600 dark:text-orange-400 mb-1">정규 심화과정</h4>
+                  <h4 className="text-[12px] font-bold text-orange-600 dark:text-orange-400 mb-1">정규과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    정규과정과 긴밀히 연계되어 있으며, 연계성을 고려해 중복되지 않는 핵심 고급 실무 커리큘럼이 특징입니다.
+                    중복 없이 단계별로 연계되어 탄탄하게 실력을 완성해 나가는 체계적인 로드맵 교육과정입니다.
                   </p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">독립 특화과정</h4>
+                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">특화과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    독립성 유지를 위해 최소한의 필수 기초 내용과 함께 구성되었으며, 특정 실무 목적을 달성하기 위한 전체 라이프사이클을 심도 있게 다룹니다.
+                    선수 지식 없이도 누구나 참여해 특정 주제를 기초부터 결과 완성까지 단번에 마스터하는 단일 교육과정입니다.
                   </p>
                 </div>
               </div>
@@ -228,21 +229,69 @@ export default function SpecialAutomationPage() {
                 </div>
               </div>
 
-              {/* Preparation Notice (Premium Card Design) */}
-              <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 rounded-3xl p-8 text-center space-y-4">
-                <div className="w-16 h-16 bg-orange-100 dark:bg-orange-500/10 rounded-full flex items-center justify-center mx-auto">
-                  <Box className="w-8 h-8 text-orange-500" />
+              {/* Detailed Curriculum Section */}
+              <div className="space-y-6 text-left">
+                <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-orange-500" /> 상세 커리큘럼 (총 6시간)
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    {
+                      session: "세션 1 (2시간)",
+                      title: "n8n 워크플로우 엔진 기반 노드 연결 및 API 데이터 전송",
+                      details: [
+                        "n8n 오픈소스 워크플로우 자동화 툴의 컨테이너 설치 및 기본 사용법",
+                        "다양한 웹앱(Gmail, Notion, Slack 등) API 연동 노드 설계 및 데이터 정제",
+                        "Webhook 트리거 및 HTTP Request 노드를 이용한 실시간 외부 서비스 통합 연동"
+                      ]
+                    },
+                    {
+                      session: "세션 2 (2시간)",
+                      title: "생성형 AI 멀티미디어 파이프라인 및 크론 스케줄링",
+                      details: [
+                        "OpenAI, Midjourney API 및 클라우드 TTS 서비스 연동 및 매개변수 최적화",
+                        "자동 이미지 생성, 대본 작성 및 보이스 합성 파이프라인의 연쇄 워크플로우 설계",
+                        "Cloudflare Workers Cron Trigger 및 GitHub Actions를 활용한 무인 크롤러 및 적재 엔진 구축"
+                      ]
+                    },
+                    {
+                      session: "세션 3 (2시간)",
+                      title: "디스코드/텔레그램 봇 연동 및 실시간 파이프라인 예외 처리",
+                      details: [
+                        "n8n 워크플로우와 디스코드/텔레그램 봇 연동을 통한 실시간 알림 채널 구축",
+                        "파이프라인 실행 에러 발생 시 자동 재시도(Retry) 및 담당자 대상 디스코드 웹훅 경보 설계",
+                        "자동 수집 및 생성 데이터를 데이터베이스(Supabase 등)로 전송하고 일괄 관리하는 대량 파이프라인 마스터"
+                      ]
+                    }
+                  ].map((curri, idx) => (
+                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-orange-500/30 transition-all space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-black text-orange-600 dark:text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded shrink-0 self-start sm:self-auto">{curri.session}</span>
+                        <h4 className="text-sm font-black text-slate-800 dark:text-white flex-1">{curri.title}</h4>
+                      </div>
+                      <ul className="space-y-1.5 pl-1.5">
+                        {curri.details.map((detail, dIdx) => (
+                          <li key={dIdx} className="text-[12px] text-slate-500 dark:text-slate-400 flex items-start gap-2">
+                            <span className="text-orange-500 mt-1 shrink-0">•</span>
+                            <span className="leading-relaxed">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-lg font-black text-slate-800 dark:text-white">상세 커리큘럼 준비 중</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-                    본 과정은 특강 신청자 분들을 위한 특화과정 집중 심화 세션입니다. 보다 상세한 회차별 진행 일자 및 상세 강의 스터디 실습 패키지는 마스터 세션 문의 및 상담을 통해 수령하실 수 있습니다.
-                  </p>
-                </div>
-                <div className="pt-2">
-                  <button 
+                
+                {/* Download Guide Material Card */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 rounded-3xl p-6 text-center flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <div className="text-left space-y-1">
+                    <h4 className="text-sm font-black text-slate-800 dark:text-white">특화과정 실습 가이드 패키지</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                      회차별 세부 소스코드와 템플릿 파일이 포함된 패키지를 다운로드할 수 있습니다.
+                    </p>
+                  </div>
+                  <button
                     onClick={handleStartPractice}
-                    className="px-8 py-3 bg-orange-600 text-white font-black rounded-xl hover:bg-orange-500 transition-all text-sm shadow-lg shadow-orange-600/20"
+                    className="px-6 py-2.5 bg-orange-600 text-white font-black rounded-xl hover:bg-orange-500 transition-all text-xs shadow-md shadow-orange-600/15 whitespace-nowrap"
                   >
                     가이드 자료 다운로드
                   </button>
@@ -256,9 +305,9 @@ export default function SpecialAutomationPage() {
                     <ArrowRight className="w-4 h-4 rotate-180" /> C. OS & AI 인프라 단계로
                   </button>
                 </Link>
-                <Link href="/curriculum">
+                <Link href="/curriculum/special-agent">
                   <button className="bg-slate-900 dark:bg-white/20 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-500/20 text-xs">
-                    정규 과정 첫 단계로 <ChevronRight className="w-4 h-4" />
+                    E. AI 에이전트 구축 (AI Agent) <ChevronRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>

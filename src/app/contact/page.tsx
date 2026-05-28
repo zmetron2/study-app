@@ -80,6 +80,7 @@ export default function ContactPage() {
     studyTypes: [] as string[],
     message: ''
   });
+  const [selectedSteps, setSelectedSteps] = useState<string[]>(['입문', '실전', '확장', '심화']);
 
   // Inquiry Form State
   const [responseType, setResponseType] = useState<'sms' | 'phone' | 'email'>('sms');
@@ -199,6 +200,11 @@ export default function ContactPage() {
       return;
     }
 
+    if (selectedCourse?.includes('정규과정') && selectedSteps.length === 0) {
+      alert('희망 수강 단계를 최소 하나 이상 선택해 주세요.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const payload = {
@@ -206,7 +212,11 @@ export default function ContactPage() {
         title: `[교육신청] ${selectedCourse}`,
         category: '교육 문의',
         phone: applyData.contact,
-        message: `[수강 신청 상세]\n- 과정명: ${selectedCourse}\n- 가능요일: ${applyData.days.join(', ')}\n- 수강형태: ${applyData.studyTypes.join(', ')}\n\n[추가 문의]\n${applyData.message || '없음'}`
+        message: `[수강 신청 상세]\n- 과정명: ${selectedCourse}\n${
+          selectedCourse?.includes('정규과정') 
+            ? `- 희망 단계: ${selectedSteps.join(', ')}\n` 
+            : ''
+        }- 가능요일: ${applyData.days.join(', ')}\n- 수강형태: ${applyData.studyTypes.join(', ')}\n\n[추가 문의]\n${applyData.message || '없음'}`
       };
 
       const res = await fetch('/api/inquiries', {
@@ -219,6 +229,7 @@ export default function ContactPage() {
       if (data.success) {
         setShowSuccessModal(true);
         setApplyData({ name: '', contact: '', days: [], studyTypes: [], message: '' });
+        setSelectedSteps(['입문', '실전', '확장', '심화']);
         setSelectedCourse(null);
         setIsAgreed(false);
       }
@@ -227,6 +238,88 @@ export default function ContactPage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const getDisplayCurriculums = () => {
+    const regularSteps = curriculums.filter(c => 
+      c.title.includes('바이브코딩') && 
+      (c.category === '입문' || c.category === '기초' || c.category === '실전' || c.category === '확장' || c.category === '심화')
+    );
+    
+    const otherCurriculums = curriculums.filter(c => 
+      !(c.title.includes('바이브코딩') && 
+        (c.category === '입문' || c.category === '기초' || c.category === '실전' || c.category === '확장' || c.category === '심화'))
+    );
+
+    const displayList = [...otherCurriculums];
+
+    if (regularSteps.length > 0) {
+      displayList.unshift({
+        id: 999,
+        title: '바이브코딩 정규과정 (입문 ~ 심화)',
+        date_time: '상시 모집 및 개강',
+        location: '온라인/오프라인',
+        description: 'AI 협업 코딩 기법인 바이브코딩을 적용해 원하는 것을 직접 구현하는 입문부터 실무 실전, 글로벌 확장, 자율형 스페셜리스트 심화까지 일관되게 성장하는 정규 올인원 패키지 과정입니다.',
+        category: '정규과정',
+        status: 'active',
+        created_at: new Date().toISOString()
+      });
+    }
+
+    const specialTracks = [
+      {
+        id: 1001,
+        title: '특화과정 Track A: 수익형 빌딩',
+        date_time: '상시 모집 (6시간)',
+        location: '온라인/오프라인',
+        description: '결제 및 인앱 광고 파이프라인을 완전히 구축하고 실제 현금 흐름을 만들어내는 프로덕트를 직접 완성하는 특화 세션입니다. (Toss Payments 연동, SaaS 구독제 설계, HTML5 게임 및 광고 통합)',
+        category: '특화과정 · Track A',
+        status: 'active',
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 1002,
+        title: '특화과정 Track B: 플랫폼 확장',
+        date_time: '상시 모집 (6시간)',
+        location: '온라인/오프라인',
+        description: '모바일 앱과 브라우저 확장 프로그램 생태계로 서비스를 성공적으로 확장하여 사용자 접점을 극대화하는 특화 세션입니다. (API Gateway 구축, Manifest V3 크롬 익스텐션, PWA 및 웹 푸시 연동)',
+        category: '특화과정 · Track B',
+        status: 'active',
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 1003,
+        title: '특화과정 Track C: OS & AI 인프라',
+        date_time: '상시 모집 (6시간)',
+        location: '온라인/오프라인',
+        description: '내 서비스만의 강력한 독립 데스크톱 패키징과 프라이빗 로컬 AI 두뇌를 장착하여 완전히 제어하는 인프라 세션입니다. (Tauri 데스크톱 빌드, Ubuntu VPS & Docker, Ollama 로컬 LLM API 스트리밍)',
+        category: '특화과정 · Track C',
+        status: 'active',
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 1004,
+        title: '특화과정 Track D: 자동화 파이프라인',
+        date_time: '상시 모집 (6시간)',
+        location: '온라인/오프라인',
+        description: '24시간 스스로 작동하는 AI 에이전트와 무인 비즈니스 자동화 워크플로우 파이프라인을 구축하는 마스터 세션입니다. (n8n 자동화 시나리오, 생성형 AI API 통합, 스케줄링 크롤러, 디스코드 알림 봇)',
+        category: '특화과정 · Track D',
+        status: 'active',
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 1005,
+        title: '특화과정 Track E: AI 에이전트 구축',
+        date_time: '상시 모집 (6시간)',
+        location: '온라인/오프라인',
+        description: '자율형 AI 에이전트(Autonomous AI Agents)를 설계하고 비즈니스 의사결정과 자동 작업을 위임하는 시스템을 구축하는 특화 세션입니다. (LangChain/LangGraph 에이전트 프레임워크, Agentic Workflow 설계, RAG 및 벡터 DB 통합, 도구 사용(Tool Calling) 연동)',
+        category: '특화과정 · Track E',
+        status: 'active',
+        created_at: new Date().toISOString()
+      }
+    ];
+
+    return [...displayList, ...specialTracks];
   };
 
   const toggleDay = (day: string) => {
@@ -411,30 +504,69 @@ export default function ContactPage() {
                   </div>
                 ) : (
                   mounted ? (
-                    <DndContext 
-                      sensors={sensors}
-                      collisionDetection={closestCenter}
-                      onDragEnd={handleDragEnd}
-                      modifiers={[restrictToFirstScrollableAncestor]}
-                    >
-                      <SortableContext 
-                        items={curriculums.map(c => c.id)}
-                        strategy={rectSortingStrategy}
+                    isAdmin ? (
+                      <DndContext 
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                        modifiers={[restrictToFirstScrollableAncestor]}
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                          {curriculums.map((curr) => (
-                            <SortableCurriculumCard 
-                              key={curr.id} 
-                              curr={curr} 
-                              isAdmin={isAdmin}
-                              onEdit={() => handleOpenCurriculumModal(curr)}
-                              onDelete={() => handleDeleteCurriculum(curr.id)}
-                              onApply={() => setSelectedCourse(curr.title)}
-                            />
-                          ))}
-                        </div>
-                      </SortableContext>
-                    </DndContext>
+                        <SortableContext 
+                          items={curriculums.map(c => c.id)}
+                          strategy={rectSortingStrategy}
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {curriculums.map((curr) => (
+                              <SortableCurriculumCard 
+                                key={curr.id} 
+                                curr={curr} 
+                                isAdmin={isAdmin}
+                                onEdit={() => handleOpenCurriculumModal(curr)}
+                                onDelete={() => handleDeleteCurriculum(curr.id)}
+                                onApply={() => setSelectedCourse(curr.title)}
+                              />
+                            ))}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {getDisplayCurriculums().map((curr) => (
+                          <div key={curr.id} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all flex flex-col relative">
+                            <div className="flex justify-between items-start mb-6 pr-8">
+                              <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100 dark:border-indigo-500/20">
+                                {curr.category || '일반'}
+                              </span>
+                              <span className="px-3 py-1 text-[10px] font-black rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600">
+                                모집중
+                              </span>
+                            </div>
+                            
+                            <div className="flex-1">
+                              <h3 className="text-xl font-black text-slate-800 dark:text-white group-hover:text-indigo-600 transition-colors mb-4">{curr.title}</h3>
+                              <div className="space-y-3 mb-8">
+                                <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+                                  <Clock size={14} className="text-slate-400" /> {curr.date_time}
+                                </div>
+                                <div className="flex items-center gap-2.5 text-[13px] text-slate-500 font-medium">
+                                  <MapPin size={14} className="text-slate-400" /> {curr.location}
+                                </div>
+                                <p className="text-[13px] text-slate-400 leading-relaxed line-clamp-4 mt-4 italic">
+                                  {curr.description}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <button 
+                              onClick={() => setSelectedCourse(curr.title)}
+                              className="w-full py-4 bg-slate-900 dark:bg-indigo-600 text-white rounded-2xl font-black text-sm hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-all flex items-center justify-center gap-2 group/btn shadow-lg"
+                            >
+                              신청하기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {curriculums.map((curr) => (
@@ -471,6 +603,37 @@ export default function ContactPage() {
                     <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">신청 중인 과정</p>
                     <h3 className="text-lg font-black text-slate-800 dark:text-white">{selectedCourse}</h3>
                   </div>
+
+                  {selectedCourse?.includes('정규과정') && (
+                    <div className="space-y-4">
+                      <label className="text-xs font-black text-slate-900 dark:text-slate-300 uppercase tracking-widest px-1">
+                        희망 수강 단계 (다중 선택 가능) <span className="text-indigo-600">*</span>
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {['입문', '실전', '확장', '심화'].map(step => (
+                          <button
+                            key={step}
+                            type="button"
+                            onClick={() => {
+                              setSelectedSteps(prev => 
+                                prev.includes(step) 
+                                  ? prev.filter(s => s !== step) 
+                                  : [...prev, step]
+                              );
+                            }}
+                            className={`py-4 rounded-xl border-2 font-black transition-all text-sm flex items-center justify-center gap-2 ${
+                              selectedSteps.includes(step) 
+                                ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20' 
+                                : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-white/5 text-slate-400 hover:border-indigo-200'
+                            }`}
+                          >
+                            {selectedSteps.includes(step) && <Check size={16} />}
+                            {step}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Personal Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -533,8 +696,8 @@ export default function ContactPage() {
                             <tr className="bg-slate-50 dark:bg-white/5 text-slate-400">
                               <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">수강 형태</th>
                               <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">입문</th>
-                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">기초</th>
                               <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">실전</th>
+                              <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">확장</th>
                               <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] border-b border-slate-100 dark:border-white/5">심화</th>
                             </tr>
                           </thead>
@@ -824,6 +987,7 @@ export default function ContactPage() {
                     <option value="입문">입문</option>
                     <option value="기초">기초</option>
                     <option value="실전">실전</option>
+                    <option value="확장">확장</option>
                     <option value="심화">심화</option>
                     <option value="디자인">디자인</option>
                     <option value="기타">기타</option>

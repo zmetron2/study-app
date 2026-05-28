@@ -209,9 +209,9 @@ export default function AdvancedCurriculumPage() {
             <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
             <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" />
             <RoadmapArrow />
-            <RoadmapItem label="2. 기초" rounds="System & Structure" href="/curriculum/basic" />
+            <RoadmapItem label="2. 실전" rounds="System & Structure" href="/curriculum/basic" />
             <RoadmapArrow />
-            <RoadmapItem label="3. 실전" rounds="Execution & Build" href="/curriculum/practice" />
+            <RoadmapItem label="3. 확장" rounds="Execution & Build" href="/curriculum/practice" />
             <RoadmapArrow />
             <RoadmapItem label="4. 심화" rounds="Scale & Real World" href="/curriculum/advanced" active />
           </div>
@@ -227,7 +227,7 @@ export default function AdvancedCurriculumPage() {
                   <span className="bg-purple-600 text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">4</span> 
                   심화 단계
                 </h3>
-                <p className="text-[12px] text-purple-500 font-bold">"자율형 스페셜리스트 트랙"</p>
+                <p className="text-[12px] text-purple-500 font-bold">"맞춤형 전문 주제를 선택해 자율형 스페셜리스트로 성장하는 심화과정"</p>
               </div>
               <div className="divide-y divide-border">
                 <SidebarItem 
@@ -453,7 +453,7 @@ export default function AdvancedCurriculumPage() {
               <div className="pt-8 border-t border-border flex justify-between">
                 <Link href="/curriculum/practice">
                   <button className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all">
-                    <ArrowRight className="w-4 h-4 rotate-180" /> 3. 실전 단계로
+                    <ArrowRight className="w-4 h-4 rotate-180" /> 3. 확장 단계로
                   </button>
                 </Link>
                 <div className="text-xs font-bold text-slate-400 italic flex items-center gap-2">

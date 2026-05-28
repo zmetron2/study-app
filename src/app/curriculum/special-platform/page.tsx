@@ -98,7 +98,7 @@ export default function SpecialPlatformPage() {
                     <Clock className="w-3 h-3 text-blue-500" />
                     교육시간
                   </span>
-                  <span className="text-[12px] font-black text-blue-600 dark:text-blue-400">4시간</span>
+                  <span className="text-[12px] font-black text-blue-600 dark:text-blue-400">6시간</span>
                 </div>
               </div>
             </div>
@@ -146,6 +146,7 @@ export default function SpecialPlatformPage() {
             <RoadmapItem label="B. 플랫폼 확장" href="/curriculum/special-platform" active />
             <RoadmapItem label="C. OS & AI 인프라" href="/curriculum/special-infra" />
             <RoadmapItem label="D. 자동화 파이프라인" href="/curriculum/special-automation" />
+            <RoadmapItem label="E. AI 에이전트" href="/curriculum/special-agent" />
           </div>
         </div>
 
@@ -176,15 +177,15 @@ export default function SpecialPlatformPage() {
               </h3>
               <div className="space-y-3">
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-blue-600 dark:text-blue-400 mb-1">정규 심화과정</h4>
+                  <h4 className="text-[12px] font-bold text-blue-600 dark:text-blue-400 mb-1">정규과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    정규과정과 긴밀히 연계되어 있으며, 연계성을 고려해 중복되지 않는 핵심 고급 실무 커리큘럼이 특징입니다.
+                    중복 없이 단계별로 연계되어 탄탄하게 실력을 완성해 나가는 체계적인 로드맵 교육과정입니다.
                   </p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">독립 특화과정</h4>
+                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">특화과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    독립성 유지를 위해 최소한의 필수 기초 내용과 함께 구성되었으며, 특정 실무 목적을 달성하기 위한 전체 라이프사이클을 심도 있게 다룹니다.
+                    선수 지식 없이도 누구나 참여해 특정 주제를 기초부터 결과 완성까지 단번에 마스터하는 단일 교육과정입니다.
                   </p>
                 </div>
               </div>
@@ -228,21 +229,69 @@ export default function SpecialPlatformPage() {
                 </div>
               </div>
 
-              {/* Preparation Notice */}
-              <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 rounded-3xl p-8 text-center space-y-4">
-                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-500/10 rounded-full flex items-center justify-center mx-auto">
-                  <Box className="w-8 h-8 text-blue-500" />
+              {/* Detailed Curriculum Section */}
+              <div className="space-y-6 text-left">
+                <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-blue-500" /> 상세 커리큘럼 (총 6시간)
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    {
+                      session: "세션 1 (2시간)",
+                      title: "다양한 크로스 플랫폼과의 API Gateway 구축",
+                      details: [
+                        "크로스 플랫폼(웹, 앱, 브라우저 확장앱) 통신을 위한 통합 API Gateway 설계",
+                        "API Key 발급 및 토큰 기반 인증(OAuth 2.0 / JWT) 보안 강화",
+                        "대용량 트래픽 대비를 위한 캐싱(Redis) 및 레이트 리밋(Rate Limit) 설계"
+                      ]
+                    },
+                    {
+                      session: "세션 2 (2시간)",
+                      title: "크롬 확장 프로그램(Chrome Extension) 개발",
+                      details: [
+                        "Manifest V3 기반의 크롬 확장 프로그램 기본 구조 및 백그라운드 서비스 워커 설정",
+                        "브라우저 웹페이지의 돔(DOM) 분석 및 실시간 데이터 추출(Content Script) 구현",
+                        "확장 프로그램 팝업 UI와 메인 플랫폼 웹사이트 간의 실시간 메시지 패싱(Message Passing) 통신"
+                      ]
+                    },
+                    {
+                      session: "세션 3 (2시간)",
+                      title: "모바일 환경 최적화 및 PWA(Progressive Web App) 도입",
+                      details: [
+                        "웹앱을 모바일 앱처럼 설치할 수 있게 하는 PWA 설정 및 Service Worker 오프라인 캐싱",
+                        "Web Push 알림 수신 동의창 구현 및 백그라운드 푸시 메시지 발송 시스템 연동",
+                        "다양한 모바일 디바이스 뷰포트 대응을 위한 초경량 고반응형 하이브리드 UX 최적화"
+                      ]
+                    }
+                  ].map((curri, idx) => (
+                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-blue-500/30 transition-all space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-black text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded shrink-0 self-start sm:self-auto">{curri.session}</span>
+                        <h4 className="text-sm font-black text-slate-800 dark:text-white flex-1">{curri.title}</h4>
+                      </div>
+                      <ul className="space-y-1.5 pl-1.5">
+                        {curri.details.map((detail, dIdx) => (
+                          <li key={dIdx} className="text-[12px] text-slate-500 dark:text-slate-400 flex items-start gap-2">
+                            <span className="text-blue-500 mt-1 shrink-0">•</span>
+                            <span className="leading-relaxed">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-lg font-black text-slate-800 dark:text-white">상세 커리큘럼 준비 중</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-                    본 과정은 특강 신청자 분들을 위한 특화과정 집중 심화 세션입니다. 보다 상세한 회차별 진행 일자 및 상세 강의 스터디 실습 패키지는 마스터 세션 문의 및 상담을 통해 수령하실 수 있습니다.
-                  </p>
-                </div>
-                <div className="pt-2">
-                  <button 
+                
+                {/* Download Guide Material Card */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 rounded-3xl p-6 text-center flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <div className="text-left space-y-1">
+                    <h4 className="text-sm font-black text-slate-800 dark:text-white">특화과정 실습 가이드 패키지</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                      회차별 세부 소스코드와 템플릿 파일이 포함된 패키지를 다운로드할 수 있습니다.
+                    </p>
+                  </div>
+                  <button
                     onClick={handleStartPractice}
-                    className="px-8 py-3 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-500 transition-all text-sm shadow-lg shadow-blue-600/20"
+                    className="px-6 py-2.5 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-500 transition-all text-xs shadow-md shadow-blue-600/15 whitespace-nowrap"
                   >
                     가이드 자료 다운로드
                   </button>

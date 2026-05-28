@@ -3,12 +3,51 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, Zap, CheckCircle2, 
-  PlayCircle, Clock, LayoutGrid, Crown, Sparkles, X, Box, ChevronRight
+  PlayCircle, Clock, LayoutGrid, Sparkles, X, Box, ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function SpecialSaaSPage() {
+// Custom SVG components for reliability (as per AGENTS.md)
+function BotIcon({ className = "w-6 h-6" }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <path d="M12 8V4H8" />
+      <rect width="16" height="12" x="4" y="8" rx="2" />
+      <path d="M2 14h2" />
+      <path d="M20 14h2" />
+      <path d="M15 13v2" />
+      <path d="M9 13v2" />
+    </svg>
+  );
+}
+
+function BrainIcon({ className = "w-6 h-6" }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-3.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2z" />
+      <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-3.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2z" />
+    </svg>
+  );
+}
+
+export default function SpecialAgentPage() {
   const router = useRouter();
   const [courseType, setCourseType] = useState<'regular' | 'special'>('special');
   const [isGuideOpen, setIsGuideOpen] = useState(false);
@@ -40,23 +79,23 @@ export default function SpecialSaaSPage() {
 
       {/* --- Header Area --- */}
       <header className="relative bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-white py-16 transition-colors border-b border-slate-200 dark:border-white/5 text-left overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-indigo-500/5 dark:from-purple-500/10 dark:to-indigo-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-purple-500/5 dark:from-violet-500/10 dark:to-purple-500/10" />
         <div className="absolute inset-0 backdrop-blur-[2px]" />
 
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-10 relative z-10">
           <div className="space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold">
-              <Crown size={14} className="animate-pulse" /> 특화과정 · Track A
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-500/10 border border-violet-100 dark:border-violet-500/20 text-violet-600 dark:text-violet-400 text-xs font-bold">
+              <BotIcon className="w-3.5 h-3.5 animate-pulse" /> 특화과정 · Track E
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">수익형 빌딩 (SaaS & Game)</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">AI 에이전트 구축 (AI Agent Building)</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
-              결제 및 인앱 광고 파이프라인을 완전히 구축합니다.<br />
-              단순한 토이 프로젝트를 넘어 실제 현금 흐름을 만들어내는 프로덕트를 직접 완성하세요.
+              스스로 생각하고 행동하는 자율형 AI 에이전트를 구축합니다.<br />
+              LangChain, LangGraph 상태 머신 및 벡터 DB(RAG)를 통해 실무 업무를 스스로 처리하는 AI 두뇌를 지배하세요.
             </p>
             <div className="flex gap-3 pt-2">
               <Link 
                 href="/contact"
-                className="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-purple-600/20"
+                className="bg-violet-600 hover:bg-violet-500 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 transition-all text-white shadow-lg shadow-violet-600/20"
               >
                 <PlayCircle className="w-5 h-5" /> 특강 과정 신청하기
               </Link>
@@ -69,36 +108,36 @@ export default function SpecialSaaSPage() {
             </div>
           </div>
           
-          <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-5 w-full max-w-md shadow-2xl shadow-purple-900/10 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 w-20 h-20 bg-purple-500/5 rounded-full blur-xl" />
+          <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl p-5 w-full max-w-md shadow-2xl shadow-violet-900/10 relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-20 h-20 bg-violet-500/5 rounded-full blur-xl" />
             
             <div className="flex items-center justify-between mb-4 relative z-10">
               <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-purple-500" /> 습득 역량
+                <Sparkles className="w-3.5 h-3.5 text-violet-500" /> 습득 역량
               </h3>
-              <div className="bg-purple-600/10 text-purple-600 dark:text-purple-400 text-[12px] font-black px-2 py-0.5 rounded-full border border-purple-500/20">
+              <div className="bg-violet-600/10 text-violet-600 dark:text-violet-400 text-[12px] font-black px-2 py-0.5 rounded-full border border-violet-500/20">
                 SPECIALIST
               </div>
             </div>
             
             <div className="space-y-1 relative z-10">
               <div className="grid grid-cols-1 gap-1">
-                <OutcomeItem icon={<Crown size={12} />} label="SaaS 구독 설계" desc="결제 게이트웨이 및 멤버십 연동 실무" />
-                <OutcomeItem icon={<Zap size={12} />} label="광고 수익 모델" desc="웹 게임 내 광고 연동 및 CPM 수익화 구조" />
-                <OutcomeItem icon={<Box size={12} />} label="결제 보안 검증" desc="웹훅(Webhook) 및 결제 영수증 무결성 검증" />
+                <OutcomeItem icon={<BotIcon className="w-3.5 h-3.5 text-violet-600" />} label="Tool Calling 에이전트" desc="LLM의 외부 도구 사용(Function Call) 매핑 설계" />
+                <OutcomeItem icon={<BrainIcon className="w-3.5 h-3.5 text-violet-600" />} label="LangGraph 상태 머신" desc="멀티 에이전트 간의 워크플로우 협업 및 제어" />
+                <OutcomeItem icon={<Box size={12} />} label="RAG 벡터 DB 및 챗봇" desc="pgvector/Pinecone 지식 기반 검색 및 서비스 탑재" />
               </div>
               
               <div className="pt-3 mt-1 border-t border-slate-100 dark:border-white/5 space-y-1.5">
-                <div className="flex items-center justify-between bg-purple-600/5 dark:bg-purple-500/10 rounded-xl px-3 py-2 border border-purple-500/10">
-                  <span className="text-[12px] font-bold text-purple-600/70 dark:text-purple-400/70 uppercase">Goal</span>
-                  <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">실전 상용 수익 프로덕트 빌딩 완료</span>
+                <div className="flex items-center justify-between bg-violet-600/5 dark:bg-violet-500/10 rounded-xl px-3 py-2 border border-violet-500/10">
+                  <span className="text-[12px] font-bold text-violet-600/70 dark:text-violet-400/70 uppercase">Goal</span>
+                  <span className="text-[12px] font-black text-slate-700 dark:text-slate-200">독립 자율형 AI 에이전트 시스템 작동</span>
                 </div>
                 <div className="flex items-center justify-between bg-slate-50 dark:bg-white/5 rounded-xl px-3 py-2 border border-slate-200 dark:border-white/10">
                   <span className="flex items-center gap-1.5 text-[12px] font-bold text-slate-500 dark:text-slate-400">
-                    <Clock className="w-3 h-3 text-purple-500" />
+                    <Clock className="w-3 h-3 text-violet-500" />
                     교육시간
                   </span>
-                  <span className="text-[12px] font-black text-purple-600 dark:text-purple-400">6시간</span>
+                  <span className="text-[12px] font-black text-violet-600 dark:text-violet-400">6시간</span>
                 </div>
               </div>
             </div>
@@ -142,11 +181,11 @@ export default function SpecialSaaSPage() {
               <span className="text-sm font-bold text-slate-500 dark:text-slate-400">특화과정 로드맵</span>
             </div>
             <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
-            <RoadmapItem label="A. 수익형 빌딩" href="/curriculum/special-saas" active />
+            <RoadmapItem label="A. 수익형 빌딩" href="/curriculum/special-saas" />
             <RoadmapItem label="B. 플랫폼 확장" href="/curriculum/special-platform" />
             <RoadmapItem label="C. OS & AI 인프라" href="/curriculum/special-infra" />
             <RoadmapItem label="D. 자동화 파이프라인" href="/curriculum/special-automation" />
-            <RoadmapItem label="E. AI 에이전트" href="/curriculum/special-agent" />
+            <RoadmapItem label="E. AI 에이전트" href="/curriculum/special-agent" active />
           </div>
         </div>
 
@@ -160,12 +199,12 @@ export default function SpecialSaaSPage() {
               </h3>
               <div className="space-y-4">
                 <p className="text-[12px] text-slate-500 leading-relaxed">
-                  결제 시스템 연동, 영수증 검증, 웹훅 설계 등 유료화의 전 과정과 HTML5 게임 제작 및 광고 수익 모델의 아키텍처를 집중 마스터합니다.
+                  자율형 AI 의사결정을 실현하는 에이전틱 워크플로우 설계 능력과 LangGraph, RAG 데이터베이스를 연동하는 프리미엄 구축법을 배웁니다.
                 </p>
                 <div className="space-y-3">
-                  <BenefitItem text="Toss Payments 결제 연동" />
-                  <BenefitItem text="B2B SaaS 구독 서비스 설계" />
-                  <BenefitItem text="웹 게임 인앱 광고 수익 모델" />
+                  <BenefitItem text="LLM Tool Calling 설계 및 연동" />
+                  <BenefitItem text="LangGraph 멀티 에이전트 오케스트레이션" />
+                  <BenefitItem text="pgvector RAG 검색 파이프라인 탑재" />
                 </div>
               </div>
             </div>
@@ -177,7 +216,7 @@ export default function SpecialSaaSPage() {
               </h3>
               <div className="space-y-3">
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-purple-600 dark:text-purple-400 mb-1">정규과정</h4>
+                  <h4 className="text-[12px] font-bold text-violet-600 dark:text-violet-400 mb-1">정규과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
                     중복 없이 단계별로 연계되어 탄탄하게 실력을 완성해 나가는 체계적인 로드맵 교육과정입니다.
                   </p>
@@ -199,11 +238,11 @@ export default function SpecialSaaSPage() {
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 pb-8 border-b border-border text-left">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="bg-purple-100 text-purple-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">SaaS & Game Specialist</span>
+                    <span className="bg-violet-100 text-violet-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Autonomous AI & Agent Specialist</span>
                   </div>
-                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">수익형 빌딩 (SaaS & Game)</h2>
-                  <p className="text-purple-600 font-bold text-lg leading-relaxed max-w-2xl">
-                    "가장 빠르게 나의 서비스를 현금 흐름 프로덕트로 전환하기"
+                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">AI 에이전트 구축 (AI Agent Building)</h2>
+                  <p className="text-violet-600 font-bold text-lg leading-relaxed max-w-2xl">
+                    "단순 챗봇을 넘어 스스로 추론하고 행동하는 완벽한 AI 동료(Agent) 완성하기"
                   </p>
                 </div>
               </div>
@@ -213,15 +252,15 @@ export default function SpecialSaaSPage() {
                 <h3 className="text-xl font-black text-slate-800 dark:text-white">실습 구성 항목</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { title: "토스페이먼츠(Toss Payments) 연동", desc: "실제 신용카드 결제창을 브라우저에 임베딩하고 API 승인 요청 처리" },
-                    { title: "SaaS 구독 만료 및 결제 정보 갱신", desc: "영수증 확인 및 유저 등급 스키마 업데이트 로직" },
-                    { title: "HTML5 웹 게임 제작 기초", desc: "Canvas 및 경량 게임엔진을 활용한 반응형 캐주얼 게임 루프 설계" },
-                    { title: "구글 애드센스 / 유니티 애즈 광고 통합", desc: "게임 화면 내 보상형 광고 탑재 및 광고 수익 생성 파이프라인 연계" },
+                    { title: "Tool Calling 및 ReAct 구조화", desc: "LLM이 스스로 웹 검색, DB 쿼리, 이메일 등의 적절한 도구를 동적 선택 및 실행하게 설계" },
+                    { title: "LangGraph 기반 멀티 에이전트 협업", desc: "분산된 역할을 수행하는 에이전트들이 상호 협력하고 피드백을 수용하는 상태 그래프 코딩" },
+                    { title: "벡터 DB (Supabase / pgvector) 연동", desc: "기업 전용 비정형 지식 데이터를 임베딩(Embedding)하고 고속 코사인 유사도 검색 시스템 구현" },
+                    { title: "실시간 모니터링 & 프로덕션 배포", desc: "에이전트 실행의 중간 과정(Trace)을 실시간 추적하고 최종 Slack/Discord/웹 채널에 배포" },
                   ].map((item, idx) => (
-                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-purple-500/30 transition-all flex items-start gap-4 group">
-                      <CheckCircle2 className="w-5 h-5 text-purple-500 mt-0.5 shrink-0" />
+                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-violet-500/30 transition-all flex items-start gap-4 group">
+                      <CheckCircle2 className="w-5 h-5 text-violet-500 mt-0.5 shrink-0" />
                       <div>
-                        <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1 group-hover:text-purple-600 transition-colors">{item.title}</h4>
+                        <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-1 group-hover:text-violet-600 transition-colors">{item.title}</h4>
                         <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
@@ -232,47 +271,47 @@ export default function SpecialSaaSPage() {
               {/* Detailed Curriculum Section */}
               <div className="space-y-6 text-left">
                 <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-purple-500" /> 상세 커리큘럼 (총 6시간)
+                  <Clock className="w-4 h-4 text-violet-500" /> 상세 커리큘럼 (총 6시간)
                 </h3>
                 <div className="space-y-4">
                   {[
                     {
                       session: "세션 1 (2시간)",
-                      title: "Toss Payments 결제 연동 및 웹훅 처리",
+                      title: "AI 에이전트 이론 및 도구 사용(Tool Calling) 아키텍처",
                       details: [
-                        "Toss Payments 클라이언트 SDK 연동 및 실제 신용카드 결제창 임베딩",
-                        "백엔드 결제 승인 API 호출 및 결제 검증 (Verify) 로직 구축",
-                        "웹훅(Webhook) 설계를 통한 비동기 결제 완료 처리 및 트랜잭션 안전성 확보"
+                        "LLM 에이전트의 정의와 자율 지능 추론 구조(ReAct 프레임워크) 이해",
+                        "OpenAI / Anthropic API를 이용한 도구 정의 스키마 설계 및 Tool Calling 연동",
+                        "안정적인 에이전트 동작을 위한 구조화된 출력(Structured Output) 및 프롬프트 제어 기법"
                       ]
                     },
                     {
                       session: "세션 2 (2시간)",
-                      title: "SaaS 구독 및 과금 회원 등급 관리",
+                      title: "LangGraph 프레임워크 기반 상태 머신 및 Multi-Agent 오케스트레이션",
                       details: [
-                        "SaaS 비즈니스 모델을 위한 구독 스키마 및 DB 테이블 설계",
-                        "영수증 유효성 검증 및 구독 만료일 자동 계산 시스템 구현",
-                        "결제 성공/만료 시 회원 등급 자동 갱신 및 등급별 API 요청 제한(Rate Limiting) 구현"
+                        "LangGraph를 활용하여 흐름 상태(State)가 영구 보존(Persistence)되는 의사결정 그래프 설계",
+                        "기획 에이전트, 코딩 에이전트, 검증 에이전트 간의 자동화된 순환적(Cyclic) 피드백 설계",
+                        "결정적 분기 처리 및 인간 관여(Human-in-the-loop) 개입 검증 시나리오 구축"
                       ]
                     },
                     {
                       session: "세션 3 (2시간)",
-                      title: "HTML5 게임 제작 및 광고 수익 모델 연동",
+                      title: "pgvector RAG 지식 저장소 구축 및 실전 에이전트 서비스 통합",
                       details: [
-                        "Canvas 및 경량 JS 엔진을 활용한 반응형 캐주얼 HTML5 웹 게임 루프 설계",
-                        "구글 애드센스(AdSense) 및 보상형 광고(Reward Ad) SDK 탑재",
-                        "게임 클리어 시 광고 노출 및 광고 수익 연계 데이터베이스 파이프라인 연동"
+                        "Supabase pgvector / Pinecone을 활용한 비정형 PDF/텍스트 데이터의 다차원 벡터화 적재",
+                        "에이전트가 상황에 따라 벡터 DB 검색 도구를 호출하여 전문 지식을 반영하는 하이브리드 RAG 구현",
+                        "자율 지능 에이전트를 Next.js 웹 앱 및 Slack/Discord 채널에 탑재하여 실시간 스트리밍 대화형 배포"
                       ]
                     }
                   ].map((curri, idx) => (
-                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-purple-500/30 transition-all space-y-3">
+                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-violet-500/30 transition-all space-y-3">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <span className="text-xs font-black text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2.5 py-0.5 rounded shrink-0 self-start sm:self-auto">{curri.session}</span>
+                        <span className="text-xs font-black text-violet-600 dark:text-violet-400 bg-violet-500/10 px-2.5 py-0.5 rounded shrink-0 self-start sm:self-auto">{curri.session}</span>
                         <h4 className="text-sm font-black text-slate-800 dark:text-white flex-1">{curri.title}</h4>
                       </div>
                       <ul className="space-y-1.5 pl-1.5">
                         {curri.details.map((detail, dIdx) => (
                           <li key={dIdx} className="text-[12px] text-slate-500 dark:text-slate-400 flex items-start gap-2">
-                            <span className="text-purple-500 mt-1 shrink-0">•</span>
+                            <span className="text-violet-500 mt-1 shrink-0">•</span>
                             <span className="leading-relaxed">{detail}</span>
                           </li>
                         ))}
@@ -286,12 +325,12 @@ export default function SpecialSaaSPage() {
                   <div className="text-left space-y-1">
                     <h4 className="text-sm font-black text-slate-800 dark:text-white">특화과정 실습 가이드 패키지</h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                      회차별 세부 소스코드와 템플릿 파일이 포함된 패키지를 다운로드할 수 있습니다.
+                      회차별 세부 소스코드와 에이전트 템플릿 파일이 포함된 패키지를 다운로드할 수 있습니다.
                     </p>
                   </div>
                   <button
                     onClick={handleStartPractice}
-                    className="px-6 py-2.5 bg-purple-600 text-white font-black rounded-xl hover:bg-purple-500 transition-all text-xs shadow-md shadow-purple-600/15 whitespace-nowrap"
+                    className="px-6 py-2.5 bg-violet-600 text-white font-black rounded-xl hover:bg-violet-500 transition-all text-xs shadow-md shadow-violet-600/15 whitespace-nowrap"
                   >
                     가이드 자료 다운로드
                   </button>
@@ -300,14 +339,14 @@ export default function SpecialSaaSPage() {
 
               {/* Navigation */}
               <div className="pt-8 border-t border-border flex justify-between">
-                <Link href="/curriculum">
+                <Link href="/curriculum/special-automation">
                   <button className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all text-xs">
-                    <ArrowRight className="w-4 h-4 rotate-180" /> 정규 과정 첫 단계로
+                    <ArrowRight className="w-4 h-4 rotate-180" /> D. 자동화 파이프라인 단계로
                   </button>
                 </Link>
-                <Link href="/curriculum/special-platform">
-                  <button className="bg-slate-900 dark:bg-white/20 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-purple-600 transition-all shadow-lg hover:shadow-purple-500/20 text-xs">
-                    B. 플랫폼 확장 (Mobile & Extensions) <ChevronRight className="w-4 h-4" />
+                <Link href="/curriculum">
+                  <button className="bg-slate-900 dark:bg-white/20 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-violet-600 transition-all shadow-lg hover:shadow-violet-500/20 text-xs">
+                    정규 과정 첫 단계로 <ChevronRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
@@ -328,7 +367,7 @@ export default function SpecialSaaSPage() {
 function OutcomeItem({ icon, label, desc }: { icon: React.ReactNode, label: string, desc: string }) {
   return (
     <div className="flex items-center gap-3 py-1 px-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all group/item">
-      <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0 group-hover/item:scale-110 transition-transform">
+      <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-500/10 flex items-center justify-center text-violet-600 dark:text-violet-400 shrink-0 group-hover/item:scale-110 transition-transform">
         {icon}
       </div>
       <div className="space-y-0">
@@ -342,7 +381,7 @@ function OutcomeItem({ icon, label, desc }: { icon: React.ReactNode, label: stri
 function BenefitItem({ text }: { text: string }) {
   return (
     <li className="flex items-start gap-2 group cursor-default">
-      <CheckCircle2 className="w-3 h-3 text-purple-500 mt-0.5 shrink-0 transition-transform group-hover:scale-125" />
+      <CheckCircle2 className="w-3 h-3 text-violet-500 mt-0.5 shrink-0 transition-transform group-hover:scale-125" />
       <span className="text-[12px] font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors leading-tight">
         {text}
       </span>
@@ -354,7 +393,7 @@ function RoadmapItem({ label, href, active = false }: { label: string, href: str
   return (
     <Link href={href} className="block shrink-0">
       <div className={`flex flex-col items-center gap-0.5 px-6 py-2 rounded-xl transition-all cursor-pointer ${
-        active ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/20 scale-105' : 'hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400'
+        active ? 'bg-violet-600 text-white shadow-lg shadow-violet-600/20 scale-105' : 'hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400'
       }`}>
         <span className={`text-xs font-black ${active ? 'text-white' : 'text-slate-400'}`}>{label}</span>
       </div>
@@ -362,14 +401,10 @@ function RoadmapItem({ label, href, active = false }: { label: string, href: str
   );
 }
 
-function RoadmapArrow() {
-  return <ArrowRight className="w-4 h-4 text-slate-200 shrink-0" />;
-}
-
 function GuideStep({ number, title, desc }: { number: string, title: string, desc: string }) {
   return (
     <div className="flex gap-4 text-left">
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-black">
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-600 text-white flex items-center justify-center text-xs font-black">
         {number}
       </div>
       <div className="space-y-1">
@@ -387,8 +422,8 @@ function GuideModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
       <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-8 space-y-6">
           <div className="flex justify-between items-center">
-            <div className="bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">Download Guide</div>
-            <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+            <div className="bg-violet-600/10 text-violet-600 dark:text-violet-400 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase">Download Guide</div>
+            <button onClick={onClose} className="text-slate-400 hover:text-slate-650 transition-colors">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -406,7 +441,7 @@ function GuideModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
           <div className="pt-4">
             <button 
               onClick={onClose}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl font-black transition-all hover:-translate-y-1"
+              className="w-full bg-violet-600 hover:bg-violet-500 text-white py-4 rounded-2xl font-black transition-all hover:-translate-y-1"
             >
               확인했습니다
             </button>
@@ -424,13 +459,13 @@ function MaterialModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
       <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-8 space-y-6 text-center">
           <div className="flex justify-end">
-            <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+            <button onClick={onClose} className="text-slate-400 hover:text-slate-650 transition-colors">
               <X className="w-6 h-6" />
             </button>
           </div>
           
-          <div className="w-20 h-20 bg-purple-600/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Box className="w-10 h-10 text-purple-600" />
+          <div className="w-20 h-20 bg-violet-600/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Box className="w-10 h-10 text-violet-600" />
           </div>
           
           <div className="space-y-2">
@@ -440,13 +475,13 @@ function MaterialModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => vo
 
           <div className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-2xl p-6 text-left space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-600 dark:text-slate-300">수익형 빌딩 패키지.zip</span>
-              <button className="text-purple-600 font-black text-sm hover:underline">다운로드</button>
+              <span className="text-sm font-bold text-slate-600 dark:text-slate-300">AI-에이전트-구축-패키지.zip</span>
+              <button className="text-violet-600 font-black text-sm hover:underline">다운로드</button>
             </div>
             <div className="h-[1px] bg-slate-100 dark:bg-white/5" />
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-600 dark:text-slate-300">B2B SaaS 아키텍처 가이드.pdf</span>
-              <button className="text-purple-600 font-black text-sm hover:underline">다운로드</button>
+              <span className="text-sm font-bold text-slate-600 dark:text-slate-300">LangGraph-에이전트-가이드.pdf</span>
+              <button className="text-violet-600 font-black text-sm hover:underline">다운로드</button>
             </div>
           </div>
 

@@ -190,9 +190,9 @@ export default function CurriculumPage() {
             <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
             <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" active />
             <RoadmapArrow />
-            <RoadmapItem label="2. 기초" rounds="System & Structure" href="/curriculum/basic" />
+            <RoadmapItem label="2. 실전" rounds="System & Structure" href="/curriculum/basic" />
             <RoadmapArrow />
-            <RoadmapItem label="3. 실전" rounds="Execution & Build" href="/curriculum/practice" />
+            <RoadmapItem label="3. 확장" rounds="Execution & Build" href="/curriculum/practice" />
             <RoadmapArrow />
             <RoadmapItem label="4. 심화" rounds="Scale & Real World" href="/curriculum/advanced" />
           </div>
@@ -208,7 +208,7 @@ export default function CurriculumPage() {
                   <span className="bg-emerald-600 text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">1</span> 
                   입문 단계
                 </h3>
-                <p className="text-[12px] text-emerald-600 font-bold">"국내 호스팅 환경에 웹사이트 제작"</p>
+                <p className="text-[12px] text-emerald-600 font-bold">"바이브코딩의 원리를 이해하고 원하는 아이디어를 직접 구현하는 과정"</p>
               </div>
               <div className="divide-y divide-border">
                 <SidebarItem 
@@ -448,7 +448,7 @@ export default function CurriculumPage() {
               <div className="pt-8 border-t border-border flex justify-end">
                 <Link href="/curriculum/basic">
                   <button className="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-500 transition-all hover:scale-105 shadow-lg shadow-emerald-600/20">
-                    2. 기초 단계: 시스템 사고 <ChevronRight className="w-4 h-4" />
+                    2. 실전 단계: 실무 스킬 구현 <ChevronRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>

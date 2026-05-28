@@ -98,7 +98,7 @@ export default function SpecialInfraPage() {
                     <Clock className="w-3 h-3 text-emerald-500" />
                     교육시간
                   </span>
-                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">4시간</span>
+                  <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">6시간</span>
                 </div>
               </div>
             </div>
@@ -146,6 +146,7 @@ export default function SpecialInfraPage() {
             <RoadmapItem label="B. 플랫폼 확장" href="/curriculum/special-platform" />
             <RoadmapItem label="C. OS & AI 인프라" href="/curriculum/special-infra" active />
             <RoadmapItem label="D. 자동화 파이프라인" href="/curriculum/special-automation" />
+            <RoadmapItem label="E. AI 에이전트" href="/curriculum/special-agent" />
           </div>
         </div>
 
@@ -176,15 +177,15 @@ export default function SpecialInfraPage() {
               </h3>
               <div className="space-y-3">
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400 mb-1">정규 심화과정</h4>
+                  <h4 className="text-[12px] font-bold text-emerald-600 dark:text-emerald-400 mb-1">정규과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    정규과정과 긴밀히 연계되어 있으며, 연계성을 고려해 중복되지 않는 핵심 고급 실무 커리큘럼이 특징입니다.
+                    중복 없이 단계별로 연계되어 탄탄하게 실력을 완성해 나가는 체계적인 로드맵 교육과정입니다.
                   </p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-150 dark:border-white/5">
-                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">독립 특화과정</h4>
+                  <h4 className="text-[12px] font-bold text-slate-700 dark:text-slate-350 mb-1">특화과정</h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                    독립성 유지를 위해 최소한의 필수 기초 내용과 함께 구성되었으며, 특정 실무 목적을 달성하기 위한 전체 라이프사이클을 심도 있게 다룹니다.
+                    선수 지식 없이도 누구나 참여해 특정 주제를 기초부터 결과 완성까지 단번에 마스터하는 단일 교육과정입니다.
                   </p>
                 </div>
               </div>
@@ -228,21 +229,69 @@ export default function SpecialInfraPage() {
                 </div>
               </div>
 
-              {/* Preparation Notice (Premium Card Design) */}
-              <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 rounded-3xl p-8 text-center space-y-4">
-                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto">
-                  <Box className="w-8 h-8 text-emerald-500" />
+              {/* Detailed Curriculum Section */}
+              <div className="space-y-6 text-left">
+                <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-emerald-500" /> 상세 커리큘럼 (총 6시간)
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    {
+                      session: "세션 1 (2시간)",
+                      title: "Tauri 데스크톱 앱 빌드 및 OS 네이티브 제어",
+                      details: [
+                        "Next.js/React 웹 프로젝트 리소스를 Tauri(Rust 기반) 환경으로 포팅",
+                        "OS 네이티브 바이너리 패키징 및 초경량 크로스플랫폼(.exe, .dmg) 빌드 설정",
+                        "Tauri Command API를 통한 로컬 파일 시스템 탐색 및 OS 시스템 자원 제어"
+                      ]
+                    },
+                    {
+                      session: "세션 2 (2시간)",
+                      title: "Ubuntu Linux VPS 구축 및 Docker 기반 서비스 배포",
+                      details: [
+                        "해외 클라우드 VPS(Virtual Private Server) 인스턴스 생성 및 Ubuntu 환경 셋업",
+                        "서버 방화벽(UFW), SSH 키 인증 설정 및 보안 가이드라인 준수",
+                        "다양한 웹 어플리케이션과 DB 서비스를 Docker 및 Docker Compose로 컨테이너화하여 일괄 가동"
+                      ]
+                    },
+                    {
+                      session: "세션 3 (2시간)",
+                      title: "Ollama & 로컬 AI 모델 구축 및 API 연동",
+                      details: [
+                        "로컬 PC 및 서버의 GPU 자원을 가속화하는 Ollama/vLLM 엔진 설치",
+                        "오픈소스 LLM(Llama, Mistral 등) 로드 및 파인튜닝 모델 독립 구동 환경 확보",
+                        "로컬 AI API 서버를 Next.js 백엔드와 연결하고, 실시간 AI 답변 스트리밍(Streaming) 서비스 연동"
+                      ]
+                    }
+                  ].map((curri, idx) => (
+                    <div key={idx} className="bg-slate-50 dark:bg-white/5 p-5 rounded-2xl border border-slate-100 dark:border-white/5 hover:border-emerald-500/30 transition-all space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded shrink-0 self-start sm:self-auto">{curri.session}</span>
+                        <h4 className="text-sm font-black text-slate-800 dark:text-white flex-1">{curri.title}</h4>
+                      </div>
+                      <ul className="space-y-1.5 pl-1.5">
+                        {curri.details.map((detail, dIdx) => (
+                          <li key={dIdx} className="text-[12px] text-slate-500 dark:text-slate-400 flex items-start gap-2">
+                            <span className="text-emerald-500 mt-1 shrink-0">•</span>
+                            <span className="leading-relaxed">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-lg font-black text-slate-800 dark:text-white">상세 커리큘럼 준비 중</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-                    본 과정은 특강 신청자 분들을 위한 특화과정 집중 심화 세션입니다. 보다 상세한 회차별 진행 일자 및 상세 강의 스터디 실습 패키지는 마스터 세션 문의 및 상담을 통해 수령하실 수 있습니다.
-                  </p>
-                </div>
-                <div className="pt-2">
-                  <button 
+                
+                {/* Download Guide Material Card */}
+                <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5 rounded-3xl p-6 text-center flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <div className="text-left space-y-1">
+                    <h4 className="text-sm font-black text-slate-800 dark:text-white">특화과정 실습 가이드 패키지</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                      회차별 세부 소스코드와 템플릿 파일이 포함된 패키지를 다운로드할 수 있습니다.
+                    </p>
+                  </div>
+                  <button
                     onClick={handleStartPractice}
-                    className="px-8 py-3 bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-black rounded-xl transition-all text-sm shadow-lg shadow-emerald-600/20"
+                    className="px-6 py-2.5 bg-emerald-600 text-white font-black rounded-xl hover:bg-emerald-500 transition-all text-xs shadow-md shadow-emerald-600/15 whitespace-nowrap"
                   >
                     가이드 자료 다운로드
                   </button>

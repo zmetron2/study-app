@@ -970,6 +970,7 @@ export default function AdminDashboard() {
                     <option value="입문 정규과정">입문 정규과정</option>
                     <option value="기초 정규과정">기초 정규과정</option>
                     <option value="실전 정규과정">실전 정규과정</option>
+                    <option value="확장 정규과정">확장 정규과정</option>
                     <option value="심화 정규과정">심화 정규과정</option>
                     <option value="기타">기타</option>
                   </select>
@@ -1072,6 +1073,7 @@ export default function AdminDashboard() {
                     <option value="입문">입문</option>
                     <option value="기초">기초</option>
                     <option value="실전">실전</option>
+                    <option value="확장">확장</option>
                     <option value="심화">심화</option>
                     <option value="디자인">디자인</option>
                     <option value="기타">기타</option>

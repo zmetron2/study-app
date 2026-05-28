@@ -93,7 +93,7 @@ export default function PracticeCurriculumPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-bold">
               <Rocket size={14} className="animate-pulse" /> Step 03. Serverless & Global Execution
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 실전</h1>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">정규과정 : 확장</h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg leading-relaxed text-base font-medium">
               해외 플랫폼을 활용하여 서버리스 아키텍처로 웹 서비스를 실전 운영하는 단계입니다.<br />
               글로벌 배포, 기능별 최적의 서버리스 조합, 그리고 지능형 에이전트와 인증 기능까지 완벽하게 결합합니다.
@@ -190,9 +190,9 @@ export default function PracticeCurriculumPage() {
             <div className="h-6 w-[1px] bg-slate-100 dark:bg-white/10 mx-2" />
             <RoadmapItem label="1. 입문" rounds="Mindset & Comm." href="/curriculum" />
             <RoadmapArrow />
-            <RoadmapItem label="2. 기초" rounds="System & Structure" href="/curriculum/basic" />
+            <RoadmapItem label="2. 실전" rounds="System & Structure" href="/curriculum/basic" />
             <RoadmapArrow />
-            <RoadmapItem label="3. 실전" rounds="Execution & Build" href="/curriculum/practice" active />
+            <RoadmapItem label="3. 확장" rounds="Execution & Build" href="/curriculum/practice" active />
             <RoadmapArrow />
             <RoadmapItem label="4. 심화" rounds="Scale & Real World" href="/curriculum/advanced" />
           </div>
@@ -206,9 +206,9 @@ export default function PracticeCurriculumPage() {
               <div className="p-5 border-b border-border bg-slate-50/50 dark:bg-slate-800/50 flex flex-col gap-1 transition-colors">
                 <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
                   <span className="bg-indigo-600 text-white w-5 h-5 rounded flex items-center justify-center text-[12px]">3</span> 
-                  실전 단계
+                  확장 단계
                 </h3>
-                <p className="text-[12px] text-indigo-500 font-bold">"실제로 결과물을 만드는 단계"</p>
+                <p className="text-[12px] text-indigo-500 font-bold">"글로벌 호스팅 인프라를 깊이 이해하고 비즈니스 확장 스킬을 배우는 과정"</p>
               </div>
               <div className="divide-y divide-border">
                 <SidebarItem 
@@ -277,9 +277,9 @@ export default function PracticeCurriculumPage() {
                   <div className="flex items-center gap-2">
                     <span className="bg-indigo-100 text-indigo-600 text-[12px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Execution & Build</span>
                   </div>
-                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">3. 실전: 프로덕트 빌딩</h2>
+                  <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">3. 확장: 프로덕트 빌딩</h2>
                   <p className="text-indigo-600 font-bold text-lg leading-relaxed max-w-2xl">
-                    "실제로 결과물을 만드는 단계"
+                    "글로벌 호스팅 인프라를 깊이 이해하고 비즈니스 확장 스킬을 배우는 과정"
                   </p>
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
                     설계를 넘어 실제 사용자가 사용할 수 있는 어플리케이션을 구축합니다.<br />
@@ -416,7 +416,7 @@ export default function PracticeCurriculumPage() {
               <div className="pt-8 border-t border-border flex justify-between">
                 <Link href="/curriculum/basic">
                   <button className="bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-200 transition-all">
-                    <ArrowRight className="w-4 h-4 rotate-180" /> 2. 기초 단계로
+                    <ArrowRight className="w-4 h-4 rotate-180" /> 2. 실전 단계로
                   </button>
                 </Link>
                 <Link href="/curriculum/advanced">
