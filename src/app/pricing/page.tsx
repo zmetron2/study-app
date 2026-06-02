@@ -389,7 +389,7 @@ export default function PricingPage() {
                     pathname: '/contact',
                     query: { course: activePlan.name }
                   }}
-                  className={`w-full py-4.5 bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 text-white rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 group/btn shadow-lg ${
+                  className={`w-full py-4 bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 text-white rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 group/btn shadow-lg ${
                     selectedStages.length === 0 ? 'pointer-events-none opacity-50' : ''
                   }`}
                 >
